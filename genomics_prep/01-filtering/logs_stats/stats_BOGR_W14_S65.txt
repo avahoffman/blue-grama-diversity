@@ -1,0 +1,6 @@
+#File	BOGR_W14_S65_T_Q.fastq
+#Total	1006135
+#Matched	25339	2.51845%
+#Name	Reads	ReadsPct
+3ILL	23827	2.36817%
+5ILL	1512	0.15028%

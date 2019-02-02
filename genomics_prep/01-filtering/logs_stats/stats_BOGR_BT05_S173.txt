@@ -1,0 +1,6 @@
+#File	BOGR_BT05_S173_T_Q.fastq
+#Total	1855045
+#Matched	71106	3.83311%
+#Name	Reads	ReadsPct
+3ILL	67257	3.62563%
+5ILL	3849	0.20749%

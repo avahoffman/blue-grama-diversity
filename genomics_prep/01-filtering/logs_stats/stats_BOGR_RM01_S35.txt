@@ -1,0 +1,6 @@
+#File	BOGR_RM01_S35_T_Q.fastq
+#Total	1357622
+#Matched	11622	0.85606%
+#Name	Reads	ReadsPct
+3ILL	10415	0.76715%
+5ILL	1207	0.08891%

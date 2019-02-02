@@ -1,0 +1,6 @@
+#File	BOGR_CO05_S190_T_Q.fastq
+#Total	1948814
+#Matched	163662	8.39803%
+#Name	Reads	ReadsPct
+3ILL	158811	8.14911%
+5ILL	4851	0.24892%

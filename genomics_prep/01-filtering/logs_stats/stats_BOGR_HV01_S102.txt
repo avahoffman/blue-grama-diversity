@@ -1,0 +1,6 @@
+#File	BOGR_HV01_S102_T_Q.fastq
+#Total	2459986
+#Matched	45907	1.86615%
+#Name	Reads	ReadsPct
+3ILL	41283	1.67818%
+5ILL	4624	0.18797%

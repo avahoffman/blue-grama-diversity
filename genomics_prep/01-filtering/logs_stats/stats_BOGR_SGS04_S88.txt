@@ -1,0 +1,6 @@
+#File	BOGR_SGS04_S88_T_Q.fastq
+#Total	2412238
+#Matched	40139	1.66397%
+#Name	Reads	ReadsPct
+3ILL	35291	1.46300%
+5ILL	4848	0.20098%

@@ -1,0 +1,6 @@
+#File	BOGR_CI14_S250_T_Q.fastq
+#Total	1102043
+#Matched	6530	0.59254%
+#Name	Reads	ReadsPct
+3ILL	5632	0.51105%
+5ILL	898	0.08149%

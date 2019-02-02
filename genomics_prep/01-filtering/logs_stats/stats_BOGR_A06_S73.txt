@@ -1,0 +1,6 @@
+#File	BOGR_A06_S73_T_Q.fastq
+#Total	2925312
+#Matched	78085	2.66929%
+#Name	Reads	ReadsPct
+3ILL	73595	2.51580%
+5ILL	4490	0.15349%

@@ -1,0 +1,6 @@
+#File	BOGR_W11_S62_T_Q.fastq
+#Total	869596
+#Matched	54033	6.21358%
+#Name	Reads	ReadsPct
+3ILL	51143	5.88124%
+5ILL	2890	0.33234%

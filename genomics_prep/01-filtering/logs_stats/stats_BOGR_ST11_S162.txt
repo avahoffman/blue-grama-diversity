@@ -1,0 +1,6 @@
+#File	BOGR_ST11_S162_T_Q.fastq
+#Total	1476822
+#Matched	35336	2.39271%
+#Name	Reads	ReadsPct
+3ILL	31591	2.13912%
+5ILL	3745	0.25359%

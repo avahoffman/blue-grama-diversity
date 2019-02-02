@@ -1,0 +1,6 @@
+#File	BOGR_RM11_S45_T_Q.fastq
+#Total	2814966
+#Matched	17351	0.61638%
+#Name	Reads	ReadsPct
+3ILL	14378	0.51077%
+5ILL	2973	0.10561%

@@ -1,0 +1,6 @@
+#File	BOGR_SEV17_S236_T_Q.fastq
+#Total	1483310
+#Matched	12481	0.84143%
+#Name	Reads	ReadsPct
+3ILL	10027	0.67599%
+5ILL	2454	0.16544%

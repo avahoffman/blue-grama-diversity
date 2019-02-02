@@ -1,0 +1,6 @@
+#File	BOGR_RM09_S43_T_Q.fastq
+#Total	1711938
+#Matched	36742	2.14622%
+#Name	Reads	ReadsPct
+3ILL	33373	1.94943%
+5ILL	3369	0.19679%

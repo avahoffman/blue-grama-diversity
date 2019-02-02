@@ -1,0 +1,6 @@
+#File	BOGR_SGS12_S96_T_Q.fastq
+#Total	3160311
+#Matched	58790	1.86026%
+#Name	Reads	ReadsPct
+3ILL	53852	1.70401%
+5ILL	4938	0.15625%

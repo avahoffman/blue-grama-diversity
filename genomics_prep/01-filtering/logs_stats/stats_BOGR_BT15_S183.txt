@@ -1,0 +1,6 @@
+#File	BOGR_BT15_S183_T_Q.fastq
+#Total	1466195
+#Matched	189200	12.90415%
+#Name	Reads	ReadsPct
+3ILL	179609	12.25001%
+5ILL	9591	0.65414%

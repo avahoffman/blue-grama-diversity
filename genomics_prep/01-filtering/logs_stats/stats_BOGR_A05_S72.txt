@@ -1,0 +1,6 @@
+#File	BOGR_A05_S72_T_Q.fastq
+#Total	815656
+#Matched	42428	5.20170%
+#Name	Reads	ReadsPct
+3ILL	40257	4.93554%
+5ILL	2171	0.26617%

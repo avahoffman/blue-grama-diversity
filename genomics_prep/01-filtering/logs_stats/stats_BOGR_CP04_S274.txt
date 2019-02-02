@@ -1,0 +1,6 @@
+#File	BOGR_CP04_S274_T_Q.fastq
+#Total	1219833
+#Matched	7073	0.57983%
+#Name	Reads	ReadsPct
+3ILL	5853	0.47982%
+5ILL	1220	0.10001%

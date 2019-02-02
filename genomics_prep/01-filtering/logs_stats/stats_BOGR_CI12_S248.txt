@@ -1,0 +1,6 @@
+#File	BOGR_CI12_S248_T_Q.fastq
+#Total	1723094
+#Matched	12475	0.72399%
+#Name	Reads	ReadsPct
+3ILL	8812	0.51141%
+5ILL	3663	0.21258%

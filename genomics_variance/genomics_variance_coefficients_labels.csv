@@ -1,0 +1,13 @@
+,predict,response,Estimate,Std. Error,t value,Pr(>|t|),p.list
+c1,genotype evenness,total biomass variance,-10.53014358,7.114991086,-1.479993924,0.162697669,1
+c2,genotype richness,total biomass variance,-0.612392929,0.48656457,-1.258605675,0.230306678,1
+c3,heterozygosity,total biomass variance,139.0540799,416.9064142,0.333537876,0.744046852,1
+c4,genotype evenness,aboveground biomass variance,-4.101833766,2.047541559,-2.003296953,0.066446816,0.797361787
+c5,genotype richness,aboveground biomass variance,-0.252484312,0.140467748,-1.797453976,0.095519483,1
+c6,heterozygosity,aboveground biomass variance,96.20423804,124.6905408,0.771543995,0.454181282,1
+c7,genotype evenness,total biomass plasticity variance,-1.195465678,0.748529361,-1.597085886,0.134258738,1
+c8,genotype richness,total biomass plasticity variance,-0.084917362,0.04954411,-1.713974907,0.110260351,1
+c9,heterozygosity,total biomass plasticity variance,-17.16914898,44.31191256,-0.387461249,0.704684059,1
+c10,genotype evenness,aboveground biomass plasticity variance,-1.246800327,1.183253188,-1.053705446,0.311209161,1
+c11,genotype richness,aboveground biomass plasticity variance,-0.080731994,0.079510292,-1.015365321,0.328457352,1
+c12,heterozygosity,aboveground biomass plasticity variance,70.5755737,64.19011271,1.099477329,0.291504376,1

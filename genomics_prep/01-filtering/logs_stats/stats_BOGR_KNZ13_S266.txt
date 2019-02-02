@@ -1,0 +1,6 @@
+#File	BOGR_KNZ13_S266_T_Q.fastq
+#Total	2965544
+#Matched	23090	0.77861%
+#Name	Reads	ReadsPct
+3ILL	20459	0.68989%
+5ILL	2631	0.08872%

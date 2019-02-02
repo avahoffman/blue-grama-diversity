@@ -1,0 +1,6 @@
+#File	BOGR_HV14_S114_T_Q.fastq
+#Total	2004109
+#Matched	47839	2.38705%
+#Name	Reads	ReadsPct
+3ILL	43519	2.17149%
+5ILL	4320	0.21556%

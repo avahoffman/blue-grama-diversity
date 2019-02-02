@@ -1,0 +1,6 @@
+#File	BOGR_BT16_S184_T_Q.fastq
+#Total	1426711
+#Matched	119161	8.35215%
+#Name	Reads	ReadsPct
+3ILL	115771	8.11454%
+5ILL	3390	0.23761%

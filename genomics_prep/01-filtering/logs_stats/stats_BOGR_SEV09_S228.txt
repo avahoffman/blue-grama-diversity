@@ -1,0 +1,6 @@
+#File	BOGR_SEV09_S228_T_Q.fastq
+#Total	2008339
+#Matched	21747	1.08284%
+#Name	Reads	ReadsPct
+3ILL	18162	0.90433%
+5ILL	3585	0.17851%

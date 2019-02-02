@@ -1,0 +1,6 @@
+#File	BOGR_DM17_S134_T_Q.fastq
+#Total	3008185
+#Matched	53354	1.77363%
+#Name	Reads	ReadsPct
+3ILL	47240	1.57038%
+5ILL	6114	0.20325%

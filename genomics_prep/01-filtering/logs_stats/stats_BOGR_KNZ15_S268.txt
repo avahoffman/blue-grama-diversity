@@ -1,0 +1,6 @@
+#File	BOGR_KNZ15_S268_T_Q.fastq
+#Total	4518789
+#Matched	34230	0.75750%
+#Name	Reads	ReadsPct
+3ILL	29813	0.65976%
+5ILL	4417	0.09775%

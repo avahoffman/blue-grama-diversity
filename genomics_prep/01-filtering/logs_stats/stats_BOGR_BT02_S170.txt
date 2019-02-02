@@ -1,0 +1,6 @@
+#File	BOGR_BT02_S170_T_Q.fastq
+#Total	2458206
+#Matched	33158	1.34887%
+#Name	Reads	ReadsPct
+3ILL	29550	1.20210%
+5ILL	3608	0.14677%

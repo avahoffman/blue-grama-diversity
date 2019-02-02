@@ -1,0 +1,6 @@
+#File	BOGR_ST07_S158_T_Q.fastq
+#Total	1706409
+#Matched	93367	5.47155%
+#Name	Reads	ReadsPct
+3ILL	89362	5.23685%
+5ILL	4005	0.23470%

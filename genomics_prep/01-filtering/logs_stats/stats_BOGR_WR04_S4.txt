@@ -1,0 +1,6 @@
+#File	BOGR_WR04_S4_T_Q.fastq
+#Total	5237482
+#Matched	32140	0.61365%
+#Name	Reads	ReadsPct
+3ILL	22942	0.43803%
+5ILL	9198	0.17562%

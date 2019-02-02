@@ -1,0 +1,6 @@
+#File	BOGR_BG05_S207_T_Q.fastq
+#Total	2690069
+#Matched	92823	3.45058%
+#Name	Reads	ReadsPct
+3ILL	84917	3.15668%
+5ILL	7906	0.29390%

@@ -1,0 +1,6 @@
+#File	BOGR_HV12_S112_T_Q.fastq
+#Total	2393768
+#Matched	41766	1.74478%
+#Name	Reads	ReadsPct
+3ILL	37490	1.56615%
+5ILL	4276	0.17863%

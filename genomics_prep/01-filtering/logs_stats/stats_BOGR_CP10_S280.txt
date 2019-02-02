@@ -1,0 +1,6 @@
+#File	BOGR_CP10_S280_T_Q.fastq
+#Total	1513037
+#Matched	49762	3.28888%
+#Name	Reads	ReadsPct
+3ILL	46867	3.09754%
+5ILL	2895	0.19134%

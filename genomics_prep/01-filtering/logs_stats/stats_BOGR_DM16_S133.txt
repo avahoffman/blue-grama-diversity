@@ -1,0 +1,6 @@
+#File	BOGR_DM16_S133_T_Q.fastq
+#Total	3126083
+#Matched	72580	2.32176%
+#Name	Reads	ReadsPct
+3ILL	66546	2.12873%
+5ILL	6034	0.19302%

@@ -1,0 +1,6 @@
+#File	BOGR_RM10_S44_T_Q.fastq
+#Total	1501042
+#Matched	13546	0.90244%
+#Name	Reads	ReadsPct
+3ILL	11716	0.78052%
+5ILL	1830	0.12192%

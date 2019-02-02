@@ -1,0 +1,6 @@
+#File	BOGR_ST05_S156_T_Q.fastq
+#Total	2067296
+#Matched	89671	4.33760%
+#Name	Reads	ReadsPct
+3ILL	85968	4.15848%
+5ILL	3703	0.17912%

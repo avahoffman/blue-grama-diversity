@@ -1,0 +1,6 @@
+#File	BOGR_BG13_S215_T_Q.fastq
+#Total	2643729
+#Matched	24607	0.93077%
+#Name	Reads	ReadsPct
+3ILL	22248	0.84154%
+5ILL	2359	0.08923%

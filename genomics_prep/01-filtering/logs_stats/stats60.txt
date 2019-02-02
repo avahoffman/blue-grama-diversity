@@ -1,0 +1,6 @@
+#File	BgHq_9_1_1-1110D_S467_L006_R1_001_T_Q.fastq
+#Total	3835996
+#Matched	25427	0.66285%
+#Name	Reads	ReadsPct
+3ILL	23298	0.60735%
+5ILL	2129	0.05550%

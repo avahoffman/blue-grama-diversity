@@ -1,0 +1,6 @@
+#File	BOGR_DM05_S122_T_Q.fastq
+#Total	2165836
+#Matched	33413	1.54273%
+#Name	Reads	ReadsPct
+3ILL	28393	1.31095%
+5ILL	5020	0.23178%

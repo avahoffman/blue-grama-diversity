@@ -1,0 +1,6 @@
+#File	BOGR_CI02_S238_T_Q.fastq
+#Total	1571653
+#Matched	23236	1.47844%
+#Name	Reads	ReadsPct
+3ILL	20652	1.31403%
+5ILL	2584	0.16441%

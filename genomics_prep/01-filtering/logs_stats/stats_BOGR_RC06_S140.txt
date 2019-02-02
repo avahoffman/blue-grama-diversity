@@ -1,0 +1,6 @@
+#File	BOGR_RC06_S140_T_Q.fastq
+#Total	1750005
+#Matched	40883	2.33616%
+#Name	Reads	ReadsPct
+3ILL	36218	2.06959%
+5ILL	4665	0.26657%

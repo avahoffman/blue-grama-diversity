@@ -1,0 +1,6 @@
+#File	BOGR_DM12_S129_T_Q.fastq
+#Total	3632073
+#Matched	30560	0.84139%
+#Name	Reads	ReadsPct
+3ILL	25067	0.69016%
+5ILL	5493	0.15124%

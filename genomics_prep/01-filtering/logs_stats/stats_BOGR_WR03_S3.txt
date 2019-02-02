@@ -1,0 +1,6 @@
+#File	BOGR_WR03_S3_T_Q.fastq
+#Total	4162603
+#Matched	26055	0.62593%
+#Name	Reads	ReadsPct
+3ILL	19988	0.48018%
+5ILL	6067	0.14575%

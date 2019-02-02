@@ -1,0 +1,6 @@
+#File	BOGR_HV11_S111_T_Q.fastq
+#Total	1932621
+#Matched	76791	3.97341%
+#Name	Reads	ReadsPct
+3ILL	72815	3.76768%
+5ILL	3976	0.20573%

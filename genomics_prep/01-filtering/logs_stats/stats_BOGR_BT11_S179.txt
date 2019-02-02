@@ -1,0 +1,6 @@
+#File	BOGR_BT11_S179_T_Q.fastq
+#Total	1726779
+#Matched	99392	5.75592%
+#Name	Reads	ReadsPct
+3ILL	95207	5.51356%
+5ILL	4185	0.24236%

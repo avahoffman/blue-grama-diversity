@@ -1,0 +1,6 @@
+#File	BOGR_CP15_S285_T_Q.fastq
+#Total	417667
+#Matched	16972	4.06352%
+#Name	Reads	ReadsPct
+3ILL	15760	3.77334%
+5ILL	1212	0.29018%

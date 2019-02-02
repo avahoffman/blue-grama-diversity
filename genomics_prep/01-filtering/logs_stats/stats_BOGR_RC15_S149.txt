@@ -1,0 +1,6 @@
+#File	BOGR_RC15_S149_T_Q.fastq
+#Total	6629138
+#Matched	147815	2.22978%
+#Name	Reads	ReadsPct
+3ILL	135081	2.03769%
+5ILL	12734	0.19209%

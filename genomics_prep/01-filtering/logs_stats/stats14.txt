@@ -1,0 +1,6 @@
+#File	Bgedge_10_3_1-117D_S443_L006_R1_001_T_Q.fastq
+#Total	3999949
+#Matched	73310	1.83277%
+#Name	Reads	ReadsPct
+3ILL	67443	1.68610%
+5ILL	5867	0.14668%

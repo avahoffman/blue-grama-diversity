@@ -1,0 +1,6 @@
+#File	BOGR_BG14_S216_T_Q.fastq
+#Total	1600511
+#Matched	15228	0.95145%
+#Name	Reads	ReadsPct
+3ILL	11326	0.70765%
+5ILL	3902	0.24380%

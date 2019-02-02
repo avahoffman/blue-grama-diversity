@@ -1,0 +1,6 @@
+#File	BOGR_SGS02_S86_T_Q.fastq
+#Total	3144675
+#Matched	130476	4.14911%
+#Name	Reads	ReadsPct
+3ILL	103517	3.29182%
+5ILL	26959	0.85729%

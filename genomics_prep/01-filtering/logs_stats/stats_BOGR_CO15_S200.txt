@@ -1,0 +1,6 @@
+#File	BOGR_CO15_S200_T_Q.fastq
+#Total	2874550
+#Matched	49803	1.73255%
+#Name	Reads	ReadsPct
+3ILL	46077	1.60293%
+5ILL	3726	0.12962%

@@ -1,0 +1,6 @@
+#File	BOGR_HV08_S109_T_Q.fastq
+#Total	2382448
+#Matched	63264	2.65542%
+#Name	Reads	ReadsPct
+3ILL	59733	2.50721%
+5ILL	3531	0.14821%

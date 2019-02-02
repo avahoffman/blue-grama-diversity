@@ -1,0 +1,6 @@
+#File	BOGR_SEV13_S232_T_Q.fastq
+#Total	1297683
+#Matched	12031	0.92711%
+#Name	Reads	ReadsPct
+3ILL	10191	0.78532%
+5ILL	1840	0.14179%

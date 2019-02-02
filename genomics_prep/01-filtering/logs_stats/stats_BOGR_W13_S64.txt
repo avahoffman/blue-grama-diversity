@@ -1,0 +1,6 @@
+#File	BOGR_W13_S64_T_Q.fastq
+#Total	1027668
+#Matched	34945	3.40042%
+#Name	Reads	ReadsPct
+3ILL	33292	3.23957%
+5ILL	1653	0.16085%

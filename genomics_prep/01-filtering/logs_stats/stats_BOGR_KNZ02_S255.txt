@@ -1,0 +1,6 @@
+#File	BOGR_KNZ02_S255_T_Q.fastq
+#Total	1368352
+#Matched	59075	4.31724%
+#Name	Reads	ReadsPct
+3ILL	57019	4.16698%
+5ILL	2056	0.15025%

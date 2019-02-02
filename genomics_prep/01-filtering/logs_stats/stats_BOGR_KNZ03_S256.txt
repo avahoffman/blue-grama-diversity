@@ -1,0 +1,6 @@
+#File	BOGR_KNZ03_S256_T_Q.fastq
+#Total	236601
+#Matched	3480	1.47083%
+#Name	Reads	ReadsPct
+3ILL	3020	1.27641%
+5ILL	460	0.19442%

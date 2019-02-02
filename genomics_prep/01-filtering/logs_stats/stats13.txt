@@ -1,0 +1,6 @@
+#File	Bgedge_10_2_1-117C_S442_L006_R1_001_T_Q.fastq
+#Total	4120363
+#Matched	125401	3.04345%
+#Name	Reads	ReadsPct
+3ILL	118048	2.86499%
+5ILL	7353	0.17846%

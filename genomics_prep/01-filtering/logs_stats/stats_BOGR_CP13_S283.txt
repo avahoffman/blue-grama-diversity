@@ -1,0 +1,6 @@
+#File	BOGR_CP13_S283_T_Q.fastq
+#Total	2936657
+#Matched	30664	1.04418%
+#Name	Reads	ReadsPct
+3ILL	28617	0.97448%
+5ILL	2047	0.06971%

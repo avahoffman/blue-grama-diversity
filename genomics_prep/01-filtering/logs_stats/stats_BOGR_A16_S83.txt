@@ -1,0 +1,6 @@
+#File	BOGR_A16_S83_T_Q.fastq
+#Total	2434806
+#Matched	42806	1.75809%
+#Name	Reads	ReadsPct
+3ILL	38340	1.57466%
+5ILL	4466	0.18342%

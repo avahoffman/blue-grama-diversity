@@ -1,0 +1,6 @@
+#File	BOGR_W16_S67_T_Q.fastq
+#Total	1143218
+#Matched	42418	3.71040%
+#Name	Reads	ReadsPct
+3ILL	40203	3.51665%
+5ILL	2215	0.19375%

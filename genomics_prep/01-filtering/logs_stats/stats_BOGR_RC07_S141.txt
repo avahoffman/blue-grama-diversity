@@ -1,0 +1,6 @@
+#File	BOGR_RC07_S141_T_Q.fastq
+#Total	1630920
+#Matched	153701	9.42419%
+#Name	Reads	ReadsPct
+3ILL	132209	8.10641%
+5ILL	21492	1.31778%

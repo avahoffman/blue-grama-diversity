@@ -1,0 +1,6 @@
+#File	BOGR_CI09_S245_T_Q.fastq
+#Total	12473633
+#Matched	98493	0.78961%
+#Name	Reads	ReadsPct
+3ILL	82817	0.66394%
+5ILL	15676	0.12567%

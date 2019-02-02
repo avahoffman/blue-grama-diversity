@@ -1,0 +1,6 @@
+#File	BOGR_HV13_S113_T_Q.fastq
+#Total	1895810
+#Matched	51930	2.73920%
+#Name	Reads	ReadsPct
+3ILL	48623	2.56476%
+5ILL	3307	0.17444%

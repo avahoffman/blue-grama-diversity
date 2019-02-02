@@ -1,0 +1,6 @@
+#File	BOGR_WR01_S1_T_Q.fastq
+#Total	3815161
+#Matched	34394	0.90151%
+#Name	Reads	ReadsPct
+3ILL	28153	0.73792%
+5ILL	6241	0.16358%

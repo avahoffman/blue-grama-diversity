@@ -1,0 +1,6 @@
+#File	BOGR_CI05_S241_T_Q.fastq
+#Total	2043748
+#Matched	29310	1.43413%
+#Name	Reads	ReadsPct
+3ILL	25533	1.24932%
+5ILL	3777	0.18481%

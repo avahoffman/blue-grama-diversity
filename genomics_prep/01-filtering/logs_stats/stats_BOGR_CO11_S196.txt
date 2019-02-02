@@ -1,0 +1,6 @@
+#File	BOGR_CO11_S196_T_Q.fastq
+#Total	1389557
+#Matched	51714	3.72162%
+#Name	Reads	ReadsPct
+3ILL	48097	3.46132%
+5ILL	3617	0.26030%

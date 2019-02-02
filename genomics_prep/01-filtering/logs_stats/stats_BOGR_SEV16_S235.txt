@@ -1,0 +1,6 @@
+#File	BOGR_SEV16_S235_T_Q.fastq
+#Total	1320305
+#Matched	12850	0.97326%
+#Name	Reads	ReadsPct
+3ILL	10669	0.80807%
+5ILL	2181	0.16519%

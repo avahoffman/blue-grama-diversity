@@ -1,0 +1,6 @@
+#File	BOGR_CO03_S188_T_Q.fastq
+#Total	2043081
+#Matched	51078	2.50005%
+#Name	Reads	ReadsPct
+3ILL	47203	2.31038%
+5ILL	3875	0.18966%

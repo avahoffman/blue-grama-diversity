@@ -1,0 +1,6 @@
+#File	BOGR_CP16_S286_T_Q.fastq
+#Total	2745875
+#Matched	28258	1.02911%
+#Name	Reads	ReadsPct
+3ILL	24790	0.90281%
+5ILL	3468	0.12630%

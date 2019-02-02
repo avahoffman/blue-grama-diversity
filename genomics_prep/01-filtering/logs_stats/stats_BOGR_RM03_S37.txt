@@ -1,0 +1,6 @@
+#File	BOGR_RM03_S37_T_Q.fastq
+#Total	603941
+#Matched	14234	2.35685%
+#Name	Reads	ReadsPct
+3ILL	13487	2.23317%
+5ILL	747	0.12369%

@@ -1,0 +1,6 @@
+#File	BOGR_CI17_S253_T_Q.fastq
+#Total	2366584
+#Matched	14115	0.59643%
+#Name	Reads	ReadsPct
+3ILL	11951	0.50499%
+5ILL	2164	0.09144%

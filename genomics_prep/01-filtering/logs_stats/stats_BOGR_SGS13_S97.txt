@@ -1,0 +1,6 @@
+#File	BOGR_SGS13_S97_T_Q.fastq
+#Total	3624692
+#Matched	88652	2.44578%
+#Name	Reads	ReadsPct
+3ILL	82818	2.28483%
+5ILL	5834	0.16095%

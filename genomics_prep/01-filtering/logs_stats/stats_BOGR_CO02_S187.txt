@@ -1,0 +1,6 @@
+#File	BOGR_CO02_S187_T_Q.fastq
+#Total	1945599
+#Matched	62056	3.18956%
+#Name	Reads	ReadsPct
+3ILL	57510	2.95590%
+5ILL	4546	0.23366%

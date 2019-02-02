@@ -1,0 +1,6 @@
+#File	BOGR_HV15_S115_T_Q.fastq
+#Total	1424680
+#Matched	25974	1.82315%
+#Name	Reads	ReadsPct
+3ILL	22228	1.56021%
+5ILL	3746	0.26294%

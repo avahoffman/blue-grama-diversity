@@ -1,0 +1,6 @@
+#File	BOGR_BG01_S203_T_Q.fastq
+#Total	2039656
+#Matched	135227	6.62989%
+#Name	Reads	ReadsPct
+3ILL	132285	6.48565%
+5ILL	2942	0.14424%

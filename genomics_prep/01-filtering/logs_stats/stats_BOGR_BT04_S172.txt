@@ -1,0 +1,6 @@
+#File	BOGR_BT04_S172_T_Q.fastq
+#Total	1904647
+#Matched	39356	2.06631%
+#Name	Reads	ReadsPct
+3ILL	35131	1.84449%
+5ILL	4225	0.22183%

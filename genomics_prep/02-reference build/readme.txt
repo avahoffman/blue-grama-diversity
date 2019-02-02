@@ -1,0 +1,1 @@
+reference_samples.fasta is the same as data/Bouteloua_genome_reference.fasta

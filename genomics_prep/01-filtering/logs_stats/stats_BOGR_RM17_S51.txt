@@ -1,0 +1,6 @@
+#File	BOGR_RM17_S51_T_Q.fastq
+#Total	4819622
+#Matched	82263	1.70684%
+#Name	Reads	ReadsPct
+3ILL	76048	1.57788%
+5ILL	6215	0.12895%

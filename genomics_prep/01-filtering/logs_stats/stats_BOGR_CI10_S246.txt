@@ -1,0 +1,6 @@
+#File	BOGR_CI10_S246_T_Q.fastq
+#Total	3952988
+#Matched	44154	1.11698%
+#Name	Reads	ReadsPct
+3ILL	37019	0.93648%
+5ILL	7135	0.18050%

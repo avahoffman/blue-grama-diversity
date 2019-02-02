@@ -1,0 +1,153 @@
+Output from QualFilterFastq.pl
+Checked 3005041 reads.
+8023 failed.
+2997018 passed.
+0.00266984710025587 rejection rate.
+Writing sequences to output...
+Done.
+2997018 sequences written to output.
+Fri Jul 27 19:01:54 MDT 2018
+Output from QualFilterFastq.pl
+Checked 1374343 reads.
+5991 failed.
+1368352 passed.
+0.00435917380159101 rejection rate.
+Writing sequences to output...
+Done.
+1368352 sequences written to output.
+Fri Jul 27 19:15:16 MDT 2018
+Output from QualFilterFastq.pl
+Checked 238468 reads.
+1867 failed.
+236601 passed.
+0.00782914269419796 rejection rate.
+Writing sequences to output...
+Done.
+236601 sequences written to output.
+Fri Jul 27 19:17:37 MDT 2018
+Output from QualFilterFastq.pl
+Checked 562889 reads.
+1859 failed.
+561030 passed.
+0.00330260495408509 rejection rate.
+Writing sequences to output...
+Done.
+561030 sequences written to output.
+Fri Jul 27 19:23:07 MDT 2018
+Output from QualFilterFastq.pl
+Checked 2401000 reads.
+5671 failed.
+2395329 passed.
+0.00236193252811329 rejection rate.
+Writing sequences to output...
+Done.
+2395329 sequences written to output.
+Fri Jul 27 19:46:35 MDT 2018
+Output from QualFilterFastq.pl
+Checked 1025097 reads.
+2831 failed.
+1022266 passed.
+0.00276168986934895 rejection rate.
+Writing sequences to output...
+Done.
+1022266 sequences written to output.
+Fri Jul 27 19:56:38 MDT 2018
+Output from QualFilterFastq.pl
+Checked 2731294 reads.
+7691 failed.
+2723603 passed.
+0.00281588141005692 rejection rate.
+Writing sequences to output...
+Done.
+2723603 sequences written to output.
+Fri Jul 27 20:23:21 MDT 2018
+Output from QualFilterFastq.pl
+Checked 2792797 reads.
+9477 failed.
+2783320 passed.
+0.00339337230740365 rejection rate.
+Writing sequences to output...
+Done.
+2783320 sequences written to output.
+Fri Jul 27 20:50:30 MDT 2018
+Output from QualFilterFastq.pl
+Checked 1459990 reads.
+4808 failed.
+1455182 passed.
+0.00329317324091261 rejection rate.
+Writing sequences to output...
+Done.
+1455182 sequences written to output.
+Fri Jul 27 21:04:43 MDT 2018
+Output from QualFilterFastq.pl
+Checked 1559183 reads.
+4243 failed.
+1554940 passed.
+0.00272129698694765 rejection rate.
+Writing sequences to output...
+Done.
+1554940 sequences written to output.
+Fri Jul 27 21:20:09 MDT 2018
+Output from QualFilterFastq.pl
+Checked 2111393 reads.
+6917 failed.
+2104476 passed.
+0.00327603624716005 rejection rate.
+Writing sequences to output...
+Done.
+2104476 sequences written to output.
+Fri Jul 27 21:40:39 MDT 2018
+Output from QualFilterFastq.pl
+Checked 4100432 reads.
+10384 failed.
+4090048 passed.
+0.00253241609664543 rejection rate.
+Writing sequences to output...
+Done.
+4090048 sequences written to output.
+Fri Jul 27 22:20:20 MDT 2018
+Output from QualFilterFastq.pl
+Checked 2973866 reads.
+8322 failed.
+2965544 passed.
+0.00279837760006671 rejection rate.
+Writing sequences to output...
+Done.
+2965544 sequences written to output.
+Fri Jul 27 22:49:04 MDT 2018
+Output from QualFilterFastq.pl
+Checked 4823578 reads.
+11821 failed.
+4811757 passed.
+0.00245067043592951 rejection rate.
+Writing sequences to output...
+Done.
+4811757 sequences written to output.
+Fri Jul 27 23:35:20 MDT 2018
+Output from QualFilterFastq.pl
+Checked 4530990 reads.
+12201 failed.
+4518789 passed.
+0.00269278899313395 rejection rate.
+Writing sequences to output...
+Done.
+4518789 sequences written to output.
+Sat Jul 28 00:19:10 MDT 2018
+Output from QualFilterFastq.pl
+Checked 2837710 reads.
+7650 failed.
+2830060 passed.
+0.00269583572669512 rejection rate.
+Writing sequences to output...
+Done.
+2830060 sequences written to output.
+Sat Jul 28 00:46:30 MDT 2018
+Output from QualFilterFastq.pl
+Checked 2364280 reads.
+6385 failed.
+2357895 passed.
+0.00270061075676316 rejection rate.
+Writing sequences to output...
+Done.
+2357895 sequences written to output.
+Sat Jul 28 01:09:26 MDT 2018

@@ -1,0 +1,6 @@
+#File	BOGR_RC08_S142_T_Q.fastq
+#Total	3067562
+#Matched	43382	1.41422%
+#Name	Reads	ReadsPct
+3ILL	38197	1.24519%
+5ILL	5185	0.16903%

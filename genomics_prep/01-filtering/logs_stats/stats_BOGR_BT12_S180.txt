@@ -1,0 +1,6 @@
+#File	BOGR_BT12_S180_T_Q.fastq
+#Total	1832598
+#Matched	59442	3.24359%
+#Name	Reads	ReadsPct
+3ILL	49094	2.67893%
+5ILL	10348	0.56466%

@@ -1,0 +1,6 @@
+#File	BOGR_W04_S55_T_Q.fastq
+#Total	3836484
+#Matched	26046	0.67890%
+#Name	Reads	ReadsPct
+3ILL	22637	0.59005%
+5ILL	3409	0.08886%

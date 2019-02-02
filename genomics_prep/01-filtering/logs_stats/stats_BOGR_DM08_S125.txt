@@ -1,0 +1,6 @@
+#File	BOGR_DM08_S125_T_Q.fastq
+#Total	2095344
+#Matched	62283	2.97245%
+#Name	Reads	ReadsPct
+3ILL	58378	2.78608%
+5ILL	3905	0.18637%

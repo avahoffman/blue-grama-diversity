@@ -1,0 +1,6 @@
+#File	BOGR_BG06_S208_T_Q.fastq
+#Total	2329869
+#Matched	50053	2.14832%
+#Name	Reads	ReadsPct
+3ILL	41910	1.79881%
+5ILL	8143	0.34950%

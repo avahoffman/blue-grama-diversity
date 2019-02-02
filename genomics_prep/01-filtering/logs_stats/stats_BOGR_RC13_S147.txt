@@ -1,0 +1,6 @@
+#File	BOGR_RC13_S147_T_Q.fastq
+#Total	3333765
+#Matched	158868	4.76542%
+#Name	Reads	ReadsPct
+3ILL	153096	4.59229%
+5ILL	5772	0.17314%

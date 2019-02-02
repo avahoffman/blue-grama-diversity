@@ -1,0 +1,6 @@
+#File	BOGR_HV02_S103_T_Q.fastq
+#Total	1771673
+#Matched	54063	3.05152%
+#Name	Reads	ReadsPct
+3ILL	50135	2.82981%
+5ILL	3928	0.22171%

@@ -1,0 +1,6 @@
+#File	BOGR_CO07_S192_T_Q.fastq
+#Total	2231298
+#Matched	38035	1.70461%
+#Name	Reads	ReadsPct
+3ILL	29341	1.31497%
+5ILL	8694	0.38964%

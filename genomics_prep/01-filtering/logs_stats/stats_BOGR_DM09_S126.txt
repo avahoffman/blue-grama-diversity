@@ -1,0 +1,6 @@
+#File	BOGR_DM09_S126_T_Q.fastq
+#Total	2191161
+#Matched	83797	3.82432%
+#Name	Reads	ReadsPct
+3ILL	78841	3.59814%
+5ILL	4956	0.22618%

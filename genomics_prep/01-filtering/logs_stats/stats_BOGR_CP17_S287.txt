@@ -1,0 +1,6 @@
+#File	BOGR_CP17_S287_T_Q.fastq
+#Total	3667237
+#Matched	39288	1.07132%
+#Name	Reads	ReadsPct
+3ILL	36428	0.99334%
+5ILL	2860	0.07799%

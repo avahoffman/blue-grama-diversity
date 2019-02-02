@@ -1,0 +1,4 @@
+"","annual_mean_temp","mean_diurnal_temp_range","temperature_seasonality","max_temp_warmest_month","min_temp_coldest_month","mean_temp_driest_quarter","annual_precip","precip_seasonality","annual_AI_CGIAR","PDHI_exep_drt_months_year","median_year_PDHI"
+"eMLG",-0.033,0.218,-0.216,-0.03,0.154,-0.049,0.054,-0.412,-0.029,0.441,0.322
+"Evar",0.34,-0.32,0.627,0.517,-0.166,-0.19,0.264,0.351,0.222,-0.442,0.034
+"Hexp",0.744,0.236,-0.186,0.494,0.625,0.772,-0.318,0.704,-0.405,0.179,-0.94

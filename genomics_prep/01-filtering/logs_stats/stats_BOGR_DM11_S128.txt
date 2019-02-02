@@ -1,0 +1,6 @@
+#File	BOGR_DM11_S128_T_Q.fastq
+#Total	3126716
+#Matched	144579	4.62399%
+#Name	Reads	ReadsPct
+3ILL	137358	4.39304%
+5ILL	7221	0.23095%

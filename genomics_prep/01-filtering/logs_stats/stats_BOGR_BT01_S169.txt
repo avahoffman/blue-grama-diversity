@@ -1,0 +1,6 @@
+#File	BOGR_BT01_S169_T_Q.fastq
+#Total	2569877
+#Matched	154007	5.99278%
+#Name	Reads	ReadsPct
+3ILL	149541	5.81899%
+5ILL	4466	0.17378%

@@ -1,0 +1,6 @@
+#File	BOGR_RM02_S36_T_Q.fastq
+#Total	683479
+#Matched	24412	3.57173%
+#Name	Reads	ReadsPct
+3ILL	23360	3.41781%
+5ILL	1052	0.15392%

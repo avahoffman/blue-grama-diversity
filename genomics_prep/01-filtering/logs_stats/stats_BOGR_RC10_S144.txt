@@ -1,0 +1,6 @@
+#File	BOGR_RC10_S144_T_Q.fastq
+#Total	3009163
+#Matched	145525	4.83606%
+#Name	Reads	ReadsPct
+3ILL	139185	4.62537%
+5ILL	6340	0.21069%

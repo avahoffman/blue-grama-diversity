@@ -1,0 +1,6 @@
+#File	BOGR_SEV04_S223_T_Q.fastq
+#Total	1792621
+#Matched	25049	1.39734%
+#Name	Reads	ReadsPct
+3ILL	22089	1.23222%
+5ILL	2960	0.16512%

@@ -1,0 +1,6 @@
+#File	BOGR_HV16_S116_T_Q.fastq
+#Total	3673469
+#Matched	45169	1.22960%
+#Name	Reads	ReadsPct
+3ILL	38899	1.05892%
+5ILL	6270	0.17068%

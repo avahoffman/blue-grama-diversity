@@ -1,0 +1,6 @@
+#File	BOGR_CP08_S278_T_Q.fastq
+#Total	2329572
+#Matched	25668	1.10183%
+#Name	Reads	ReadsPct
+3ILL	22547	0.96786%
+5ILL	3121	0.13397%

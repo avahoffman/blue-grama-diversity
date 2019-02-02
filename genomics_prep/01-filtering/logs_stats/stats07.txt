@@ -1,0 +1,6 @@
+#File	Bgedge_1_1_3-113G_S414_L006_R1_001_T_Q.fastq
+#Total	3349072
+#Matched	38711	1.15587%
+#Name	Reads	ReadsPct
+3ILL	33315	0.99475%
+5ILL	5396	0.16112%

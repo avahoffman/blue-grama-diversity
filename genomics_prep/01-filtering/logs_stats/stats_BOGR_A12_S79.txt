@@ -1,0 +1,6 @@
+#File	BOGR_A12_S79_T_Q.fastq
+#Total	2102706
+#Matched	36629	1.74199%
+#Name	Reads	ReadsPct
+3ILL	29254	1.39125%
+5ILL	7375	0.35074%

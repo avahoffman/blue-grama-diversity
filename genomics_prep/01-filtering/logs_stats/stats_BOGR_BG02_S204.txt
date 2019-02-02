@@ -1,0 +1,6 @@
+#File	BOGR_BG02_S204_T_Q.fastq
+#Total	1875211
+#Matched	63932	3.40932%
+#Name	Reads	ReadsPct
+3ILL	45841	2.44458%
+5ILL	18091	0.96474%

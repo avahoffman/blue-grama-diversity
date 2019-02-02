@@ -1,0 +1,6 @@
+#File	Bgedge_9_4_1-116H_S439_L006_R1_001_T_Q.fastq
+#Total	2874751
+#Matched	65602	2.28201%
+#Name	Reads	ReadsPct
+3ILL	53733	1.86914%
+5ILL	11869	0.41287%

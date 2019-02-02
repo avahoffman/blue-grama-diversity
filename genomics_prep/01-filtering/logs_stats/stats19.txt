@@ -1,0 +1,6 @@
+#File	Bgedge_2_2_1-114E_S420_L006_R1_001_T_Q.fastq
+#Total	3574094
+#Matched	44044	1.23231%
+#Name	Reads	ReadsPct
+3ILL	35952	1.00591%
+5ILL	8092	0.22641%

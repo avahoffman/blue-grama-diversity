@@ -1,0 +1,6 @@
+#File	Bgcultivar_na_3_1-1112G_S478_L006_R1_001_T_Q.fastq
+#Total	6145571
+#Matched	658482	10.71474%
+#Name	Reads	ReadsPct
+3ILL	576119	9.37454%
+5ILL	82363	1.34020%

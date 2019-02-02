@@ -1,0 +1,6 @@
+#File	BOGR_W02_S53_T_Q.fastq
+#Total	2919111
+#Matched	19378	0.66383%
+#Name	Reads	ReadsPct
+3ILL	16594	0.56846%
+5ILL	2784	0.09537%

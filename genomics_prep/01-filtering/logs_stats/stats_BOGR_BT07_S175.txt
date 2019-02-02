@@ -1,0 +1,6 @@
+#File	BOGR_BT07_S175_T_Q.fastq
+#Total	3482548
+#Matched	15385	0.44177%
+#Name	Reads	ReadsPct
+3ILL	12230	0.35118%
+5ILL	3155	0.09059%

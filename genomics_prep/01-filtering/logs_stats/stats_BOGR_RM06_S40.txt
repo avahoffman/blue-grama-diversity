@@ -1,0 +1,6 @@
+#File	BOGR_RM06_S40_T_Q.fastq
+#Total	445461
+#Matched	13775	3.09230%
+#Name	Reads	ReadsPct
+3ILL	12594	2.82718%
+5ILL	1181	0.26512%

@@ -1,0 +1,6 @@
+#File	BOGR_HV03_S104_T_Q.fastq
+#Total	2661575
+#Matched	50512	1.89782%
+#Name	Reads	ReadsPct
+3ILL	45667	1.71579%
+5ILL	4845	0.18204%

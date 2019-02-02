@@ -1,0 +1,6 @@
+#File	BOGR_CP09_S279_T_Q.fastq
+#Total	2647761
+#Matched	13345	0.50401%
+#Name	Reads	ReadsPct
+3ILL	10697	0.40400%
+5ILL	2648	0.10001%

@@ -1,0 +1,6 @@
+#File	BOGR_CI04_S240_T_Q.fastq
+#Total	2165150
+#Matched	21642	0.99956%
+#Name	Reads	ReadsPct
+3ILL	17784	0.82137%
+5ILL	3858	0.17819%

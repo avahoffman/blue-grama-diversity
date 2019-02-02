@@ -1,0 +1,6 @@
+#File	BOGR_KNZ01_S254_T_Q.fastq
+#Total	2997018
+#Matched	24180	0.80680%
+#Name	Reads	ReadsPct
+3ILL	20092	0.67040%
+5ILL	4088	0.13640%

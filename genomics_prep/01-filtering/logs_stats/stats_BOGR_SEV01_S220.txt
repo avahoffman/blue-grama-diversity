@@ -1,0 +1,6 @@
+#File	BOGR_SEV01_S220_T_Q.fastq
+#Total	1796929
+#Matched	7906	0.43997%
+#Name	Reads	ReadsPct
+3ILL	6176	0.34370%
+5ILL	1730	0.09628%

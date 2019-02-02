@@ -1,0 +1,6 @@
+#File	BOGR_RM14_S48_T_Q.fastq
+#Total	1331466
+#Matched	43797	3.28938%
+#Name	Reads	ReadsPct
+3ILL	42353	3.18093%
+5ILL	1444	0.10845%

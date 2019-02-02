@@ -1,0 +1,6 @@
+#File	BOGR_BG09_S211_T_Q.fastq
+#Total	2269045
+#Matched	28950	1.27587%
+#Name	Reads	ReadsPct
+3ILL	26185	1.15401%
+5ILL	2765	0.12186%

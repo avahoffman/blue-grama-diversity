@@ -1,0 +1,6 @@
+#File	BgHq_2_1_1-118F_S453_L006_R1_001_T_Q.fastq
+#Total	2507591
+#Matched	54338	2.16694%
+#Name	Reads	ReadsPct
+3ILL	49585	1.97740%
+5ILL	4753	0.18954%

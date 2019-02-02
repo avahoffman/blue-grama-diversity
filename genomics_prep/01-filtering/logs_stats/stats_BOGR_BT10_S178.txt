@@ -1,0 +1,6 @@
+#File	BOGR_BT10_S178_T_Q.fastq
+#Total	1795058
+#Matched	24654	1.37344%
+#Name	Reads	ReadsPct
+3ILL	20648	1.15027%
+5ILL	4006	0.22317%

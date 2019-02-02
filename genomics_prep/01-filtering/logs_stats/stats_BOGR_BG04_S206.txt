@@ -1,0 +1,6 @@
+#File	BOGR_BG04_S206_T_Q.fastq
+#Total	2362127
+#Matched	36645	1.55136%
+#Name	Reads	ReadsPct
+3ILL	33788	1.43041%
+5ILL	2857	0.12095%

@@ -1,0 +1,6 @@
+#File	BOGR_KNZ17_S270_T_Q.fastq
+#Total	2357895
+#Matched	33866	1.43628%
+#Name	Reads	ReadsPct
+3ILL	30828	1.30744%
+5ILL	3038	0.12884%

@@ -1,0 +1,6 @@
+#File	BOGR_CP02_S272_T_Q.fastq
+#Total	2390717
+#Matched	17145	0.71715%
+#Name	Reads	ReadsPct
+3ILL	14637	0.61224%
+5ILL	2508	0.10491%

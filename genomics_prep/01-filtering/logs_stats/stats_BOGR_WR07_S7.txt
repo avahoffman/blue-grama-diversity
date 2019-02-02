@@ -1,0 +1,6 @@
+#File	BOGR_WR07_S7_T_Q.fastq
+#Total	1862866
+#Matched	13967	0.74976%
+#Name	Reads	ReadsPct
+3ILL	11780	0.63236%
+5ILL	2187	0.11740%

@@ -1,0 +1,23 @@
+java -Djava.library.path=/projects/hoffmana@colostate.edu/bbmap/jni/ -ea -Xmx19055m -Xms19055m -cp /projects/hoffmana@colostate.edu/bbmap/current/ jgi.BBDukF in=Bgedge_1_5_1-114C_S418_L006_R1_001_T_Q.fastq ref=adaptors.fasta k=12 stats=stats11.txt out=Bgedge_1_5_1-114C_S418_L006_R1_001_T_Q_A.fastq
+Executing jgi.BBDukF [in=Bgedge_1_5_1-114C_S418_L006_R1_001_T_Q.fastq, ref=adaptors.fasta, k=12, stats=stats11.txt, out=Bgedge_1_5_1-114C_S418_L006_R1_001_T_Q_A.fastq]
+Version 38.16
+
+0.035 seconds.
+Initial:
+Memory: max=19149m, total=19149m, free=18649m, used=500m
+
+Added 26 kmers; time: 	0.074 seconds.
+Memory: max=19149m, total=19149m, free=17750m, used=1399m
+
+Input is being processed as unpaired
+Started output streams:	0.073 seconds.
+Processing time:   		6.797 seconds.
+
+Input:                  	2794922 reads 		100617192 bases.
+Contaminants:           	25488 reads (0.91%) 	917568 bases (0.91%)
+Total Removed:          	25488 reads (0.91%) 	917568 bases (0.91%)
+Result:                 	2769434 reads (99.09%) 	99699624 bases (99.09%)
+
+Time:                         	6.957 seconds.
+Reads Processed:       2794k 	401.74k reads/sec
+Bases Processed:        100m 	14.46m bases/sec

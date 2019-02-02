@@ -1,0 +1,6 @@
+#File	BOGR_DM14_S131_T_Q.fastq
+#Total	3266537
+#Matched	52591	1.60999%
+#Name	Reads	ReadsPct
+3ILL	47961	1.46825%
+5ILL	4630	0.14174%

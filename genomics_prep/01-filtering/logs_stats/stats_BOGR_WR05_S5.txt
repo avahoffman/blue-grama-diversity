@@ -1,0 +1,6 @@
+#File	BOGR_WR05_S5_T_Q.fastq
+#Total	4309608
+#Matched	27427	0.63642%
+#Name	Reads	ReadsPct
+3ILL	21700	0.50353%
+5ILL	5727	0.13289%

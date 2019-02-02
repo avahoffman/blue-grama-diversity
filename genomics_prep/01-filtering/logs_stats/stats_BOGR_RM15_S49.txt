@@ -1,0 +1,6 @@
+#File	BOGR_RM15_S49_T_Q.fastq
+#Total	2572495
+#Matched	35022	1.36140%
+#Name	Reads	ReadsPct
+3ILL	32095	1.24762%
+5ILL	2927	0.11378%

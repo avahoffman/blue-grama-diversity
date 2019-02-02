@@ -1,0 +1,6 @@
+#File	BOGR_BG03_S205_T_Q.fastq
+#Total	3358545
+#Matched	39196	1.16705%
+#Name	Reads	ReadsPct
+3ILL	35851	1.06746%
+5ILL	3345	0.09960%

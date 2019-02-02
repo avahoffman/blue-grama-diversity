@@ -1,0 +1,6 @@
+#File	BOGR_KNZ11_S264_T_Q.fastq
+#Total	2104476
+#Matched	15565	0.73961%
+#Name	Reads	ReadsPct
+3ILL	12853	0.61075%
+5ILL	2712	0.12887%

@@ -1,0 +1,6 @@
+#File	BOGR_W10_S61_T_Q.fastq
+#Total	974804
+#Matched	27193	2.78959%
+#Name	Reads	ReadsPct
+3ILL	25592	2.62535%
+5ILL	1601	0.16424%

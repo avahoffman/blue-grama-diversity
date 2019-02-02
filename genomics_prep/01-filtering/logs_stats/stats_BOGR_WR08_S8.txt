@@ -1,0 +1,6 @@
+#File	BOGR_WR08_S8_T_Q.fastq
+#Total	2956235
+#Matched	21312	0.72092%
+#Name	Reads	ReadsPct
+3ILL	16633	0.56264%
+5ILL	4679	0.15828%

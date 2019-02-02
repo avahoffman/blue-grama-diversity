@@ -1,0 +1,6 @@
+#File	Bgedge_8_5_1-116B_S433_L006_R1_001_T_Q.fastq
+#Total	3237667
+#Matched	38453	1.18768%
+#Name	Reads	ReadsPct
+3ILL	32443	1.00205%
+5ILL	6010	0.18563%

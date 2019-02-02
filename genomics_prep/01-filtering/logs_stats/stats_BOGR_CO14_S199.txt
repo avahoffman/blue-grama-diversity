@@ -1,0 +1,6 @@
+#File	BOGR_CO14_S199_T_Q.fastq
+#Total	3584034
+#Matched	21567	0.60175%
+#Name	Reads	ReadsPct
+3ILL	17513	0.48864%
+5ILL	4054	0.11311%

@@ -1,0 +1,6 @@
+#File	BOGR_RM16_S50_T_Q.fastq
+#Total	2103407
+#Matched	47763	2.27074%
+#Name	Reads	ReadsPct
+3ILL	44809	2.13031%
+5ILL	2954	0.14044%

@@ -1,0 +1,6 @@
+#File	BOGR_DM10_S127_T_Q.fastq
+#Total	2546335
+#Matched	80420	3.15826%
+#Name	Reads	ReadsPct
+3ILL	75814	2.97738%
+5ILL	4606	0.18089%

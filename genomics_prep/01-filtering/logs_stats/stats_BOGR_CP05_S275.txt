@@ -1,0 +1,6 @@
+#File	BOGR_CP05_S275_T_Q.fastq
+#Total	894912
+#Matched	5799	0.64800%
+#Name	Reads	ReadsPct
+3ILL	4788	0.53502%
+5ILL	1011	0.11297%

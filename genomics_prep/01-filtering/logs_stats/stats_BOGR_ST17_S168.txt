@@ -1,0 +1,6 @@
+#File	BOGR_ST17_S168_T_Q.fastq
+#Total	2662095
+#Matched	135033	5.07243%
+#Name	Reads	ReadsPct
+3ILL	128291	4.81917%
+5ILL	6742	0.25326%

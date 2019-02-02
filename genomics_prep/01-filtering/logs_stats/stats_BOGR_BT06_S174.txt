@@ -1,0 +1,6 @@
+#File	BOGR_BT06_S174_T_Q.fastq
+#Total	2519614
+#Matched	30015	1.19125%
+#Name	Reads	ReadsPct
+3ILL	26620	1.05651%
+5ILL	3395	0.13474%

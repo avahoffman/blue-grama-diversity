@@ -1,0 +1,6 @@
+#File	BOGR_CO16_S201_T_Q.fastq
+#Total	2683537
+#Matched	66238	2.46831%
+#Name	Reads	ReadsPct
+3ILL	48950	1.82409%
+5ILL	17288	0.64422%

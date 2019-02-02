@@ -1,0 +1,6 @@
+#File	BOGR_W08_S59_T_Q.fastq
+#Total	862579
+#Matched	15827	1.83485%
+#Name	Reads	ReadsPct
+3ILL	13606	1.57736%
+5ILL	2221	0.25748%

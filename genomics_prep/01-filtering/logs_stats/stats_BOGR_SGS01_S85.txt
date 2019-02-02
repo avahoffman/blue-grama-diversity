@@ -1,0 +1,6 @@
+#File	BOGR_SGS01_S85_T_Q.fastq
+#Total	847061
+#Matched	44178	5.21544%
+#Name	Reads	ReadsPct
+3ILL	40683	4.80284%
+5ILL	3495	0.41260%

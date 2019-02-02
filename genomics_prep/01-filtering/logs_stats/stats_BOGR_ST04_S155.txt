@@ -1,0 +1,6 @@
+#File	BOGR_ST04_S155_T_Q.fastq
+#Total	2078042
+#Matched	149409	7.18989%
+#Name	Reads	ReadsPct
+3ILL	137247	6.60463%
+5ILL	12162	0.58526%

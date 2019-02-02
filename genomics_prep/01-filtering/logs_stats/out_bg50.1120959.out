@@ -1,0 +1,9 @@
+Output from QualFilterFastq.pl
+Checked 2492847 reads.
+7371 failed.
+2485476 passed.
+0.00295686016831358 rejection rate.
+Writing sequences to output...
+Done.
+2485476 sequences written to output.
+Fri Jul 27 16:24:28 MDT 2018

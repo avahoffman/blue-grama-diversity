@@ -1,0 +1,6 @@
+#File	BOGR_W09_S60_T_Q.fastq
+#Total	882252
+#Matched	30270	3.43099%
+#Name	Reads	ReadsPct
+3ILL	28666	3.24919%
+5ILL	1604	0.18181%

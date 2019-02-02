@@ -1,0 +1,6 @@
+#File	BOGR_SEV11_S230_T_Q.fastq
+#Total	1833478
+#Matched	31341	1.70937%
+#Name	Reads	ReadsPct
+3ILL	28681	1.56429%
+5ILL	2660	0.14508%

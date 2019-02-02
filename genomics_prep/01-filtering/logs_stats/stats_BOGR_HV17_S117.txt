@@ -1,0 +1,6 @@
+#File	BOGR_HV17_S117_T_Q.fastq
+#Total	1892611
+#Matched	21999	1.16236%
+#Name	Reads	ReadsPct
+3ILL	19295	1.01949%
+5ILL	2704	0.14287%

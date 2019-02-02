@@ -1,0 +1,6 @@
+#File	Bgedge_4_6_1-115E_S428_L006_R1_001_T_Q.fastq
+#Total	4281156
+#Matched	63624	1.48614%
+#Name	Reads	ReadsPct
+3ILL	52229	1.21997%
+5ILL	11395	0.26617%

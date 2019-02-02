@@ -1,0 +1,6 @@
+#File	BOGR_DM07_S124_T_Q.fastq
+#Total	2460185
+#Matched	74481	3.02746%
+#Name	Reads	ReadsPct
+3ILL	69732	2.83442%
+5ILL	4749	0.19303%

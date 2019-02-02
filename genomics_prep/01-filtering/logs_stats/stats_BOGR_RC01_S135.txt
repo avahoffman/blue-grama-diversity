@@ -1,0 +1,6 @@
+#File	BOGR_RC01_S135_T_Q.fastq
+#Total	2018610
+#Matched	126560	6.26966%
+#Name	Reads	ReadsPct
+3ILL	117065	5.79929%
+5ILL	9495	0.47037%

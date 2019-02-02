@@ -1,0 +1,6 @@
+#File	BOGR_RC04_S138_T_Q.fastq
+#Total	3525051
+#Matched	93218	2.64444%
+#Name	Reads	ReadsPct
+3ILL	87752	2.48938%
+5ILL	5466	0.15506%

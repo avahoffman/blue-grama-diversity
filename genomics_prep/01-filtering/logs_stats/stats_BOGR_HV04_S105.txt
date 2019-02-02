@@ -1,0 +1,6 @@
+#File	BOGR_HV04_S105_T_Q.fastq
+#Total	3318273
+#Matched	41755	1.25834%
+#Name	Reads	ReadsPct
+3ILL	37390	1.12679%
+5ILL	4365	0.13154%

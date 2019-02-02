@@ -1,0 +1,6 @@
+#File	BOGR_WR12_S12_T_Q.fastq
+#Total	2120767
+#Matched	20668	0.97455%
+#Name	Reads	ReadsPct
+3ILL	16790	0.79169%
+5ILL	3878	0.18286%

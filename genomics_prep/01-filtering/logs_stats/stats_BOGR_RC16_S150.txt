@@ -1,0 +1,6 @@
+#File	BOGR_RC16_S150_T_Q.fastq
+#Total	6769534
+#Matched	181491	2.68100%
+#Name	Reads	ReadsPct
+3ILL	171088	2.52732%
+5ILL	10403	0.15367%

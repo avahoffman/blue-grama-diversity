@@ -1,0 +1,6 @@
+#File	BOGR_DM06_S123_T_Q.fastq
+#Total	2536491
+#Matched	42454	1.67373%
+#Name	Reads	ReadsPct
+3ILL	38114	1.50263%
+5ILL	4340	0.17110%

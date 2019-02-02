@@ -1,0 +1,6 @@
+#File	BOGR_CP11_S281_T_Q.fastq
+#Total	1537106
+#Matched	32722	2.12881%
+#Name	Reads	ReadsPct
+3ILL	29791	1.93812%
+5ILL	2931	0.19068%
