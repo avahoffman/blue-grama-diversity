@@ -1,6 +1,6 @@
 ###########################################################################################
 ##
-## R source code to accompany Hoffman et al. (2019), last updated 10 Jan 2019.
+## R source code to accompany Hoffman et al. (2019), last updated 2 Feb 2019.
 ## Please contact Ava Hoffman (avamariehoffman@gmail.com) with questions.
 ##
 ## If you found this code useful, please use the citation below:
@@ -11,7 +11,7 @@
 ###########################################################################################
 
 ## set working directory
-wd <- "/Users/avahoffman/Dropbox/Research/Bouteloua_diversity"
+wd <- "/Users/avahoffman/Dropbox/Research/Bouteloua_diversity/blue-grama-diversity"
 setwd(wd)
 
 library(adegenet) ## deal with genind objects
@@ -21,10 +21,10 @@ library(reshape2)
 
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
 ## several options depending on what samples desired..
-load("/Users/avahoffman/Dropbox/Research/Bouteloua_diversity/Genomics/Bouteloua_genomics/04-genotyping/R_output/genind.348.40.filt.R")
+load("genomics_prep/genind_all.R")
 
 ## color palette for plots
-col.pal <- read.csv("Analysis/color_key.csv",header=T)
+col.pal <- read.csv("utils/color_key.csv",header=T)
 col.pal.v <- as.vector(col.pal[,3]) ; names(col.pal.v) <- col.pal[,2]
 col.pal.names <- as.vector(col.pal[,2]) ; names(col.pal.names) <- col.pal[,6]
 col.pal.colors <- as.vector(col.pal[,3]) ; names(col.pal.colors) <- col.pal[,6]
@@ -69,7 +69,7 @@ plot.dat <- as.data.frame(DAPC$ind.coord)
 plot.dat <- cbind(plot.dat,DAPC$grp) ; names(plot.dat)[10] <- "pop"
 plot.dat <- merge(plot.dat,col.pal)
 ## save info
-write.csv(plot.dat,file="Analysis/genomics_output/DAPC_local.csv")
+write.csv(plot.dat,file="genomics_output/DAPC_local.csv")
 ggplot(data=plot.dat, aes(x=LD1,y=LD2)) +  
   scale_color_manual(values = col.pal.colors, labels = col.pal.names) + 
   theme_classic() +
@@ -87,14 +87,14 @@ ggplot(data=plot.dat, aes(x=LD1,y=LD2)) +
              size=1) +
   labs(colour = "Site")
 #theme(legend.position = "none")
-ggsave(file="Analysis/genomics_output/figures/DAPC_local.jpg",height = 3,width=4)
+ggsave(file="genomics_output/figures/DAPC_local.jpg",height = 3,width=4)
 
 
 ## calculate population assignment probability
 summ.dapc <- summary(DAPC)
 summ.dapc.assign <- summ.dapc$assign.per.pop
 summ.dapc.assign
-write.csv(summ.dapc.assign, file="Analysis/genomics_output/Population_probability_local.csv")
+write.csv(summ.dapc.assign, file="genomics_output/Population_probability_local.csv")
 
 ## loci that differentiate site
 rownames(DAPC$var.contr) <- gsub("denovoLocus","",rownames(DAPC$var.contr))
@@ -103,18 +103,18 @@ rownames(DAPC$var.contr) <- gsub(".C","",rownames(DAPC$var.contr))
 rownames(DAPC$var.contr) <- gsub(".T","",rownames(DAPC$var.contr))
 rownames(DAPC$var.contr) <- gsub(".G","",rownames(DAPC$var.contr))
 loci.loadings <- DAPC$var.contr
-pdf(file="Analysis/genomics_output/figures/Loci_loadings_local.pdf",width=20,height=4)
+pdf(file="genomics_output/figures/Loci_loadings_local.pdf",width=20,height=4)
 loadingplot(loci.loadings, axis=2, thres=.004,main=NULL,xlab="Locus")
 dev.off()
-write.csv(loci.loadings, file="Analysis/genomics_output/Loci_loadings_local.csv")
+write.csv(loci.loadings, file="genomics_output/Loci_loadings_local.csv")
 
 
 ## "structure" plot
 posts <- DAPC$posterior
 posts <- posts[order(row.names(posts)),]
 long.dat <- melt(posts); names(long.dat)[2] <- "pop"
-write.csv(long.dat,"Analysis/genomics_output/Structure_plot_data_local.csv")
-write.csv(posts,"Analysis/genomics_output/Structure_plot_data_local_wide.csv")
+write.csv(long.dat,"genomics_output/Structure_plot_data_local.csv")
+write.csv(posts,"genomics_output/Structure_plot_data_local_wide.csv")
 ggplot(data=long.dat, aes(x=Var1,y=value, fill=pop)) +
   geom_col(size=2) +  
   theme_classic() + scale_fill_manual(values = col.pal.v) +
@@ -125,7 +125,7 @@ ggplot(data=long.dat, aes(x=Var1,y=value, fill=pop)) +
         axis.ticks=element_blank())+
   theme_void() +
   theme(legend.position = "none")
-ggsave(file="Analysis/genomics_output/figures/structure_local.jpg",height = 1.5,width=10)
+ggsave(file="genomics_output/figures/structure_local.jpg",height = 1.5,width=10)
 
 
 

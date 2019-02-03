@@ -1,6 +1,6 @@
 ###########################################################################################
 ##
-## R source code to accompany Hoffman et al. (2019), last updated 10 Jan 2019.
+## R source code to accompany Hoffman et al. (2019), last updated 2 Feb 2019.
 ## Please contact Ava Hoffman (avamariehoffman@gmail.com) with questions.
 ##
 ## If you found this code useful, please use the citation below:
@@ -11,7 +11,7 @@
 ###########################################################################################
 
 ## set working directory
-wd <- "/Users/avahoffman/Dropbox/Research/Bouteloua_diversity"
+wd <- "/Users/avahoffman/Dropbox/Research/Bouteloua_diversity/blue-grama-diversity"
 setwd(wd)
 
 library(adegenet) ## deal with genind objects
@@ -28,7 +28,7 @@ library(phangorn)
 
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
 ## several options depending on what samples desired..
-load("/Users/avahoffman/Dropbox/Research/Bouteloua_diversity/Genomics/Bouteloua_genomics/04-genotyping/R_output/genind.348.40.filt.R")
+load("genomics_prep/genind_all.R")
 indNames(genind.data1)
 genind.1clone.only <- genind.data1[c(5,12,18,21,27,33,41,44,48,50,55,58,65:335)]
 indNames(genind.1clone.only) <- gsub("Bgedge","SGS",indNames(genind.1clone.only))
@@ -44,19 +44,19 @@ genind.obj$tab <- tab(genind.obj, NA.method = "mean")
 strata(genind.obj) <- data.frame(pop(genind.obj))
 nameStrata(genind.obj) <- ~Pop
 
-if (file.exists("Analysis/genomics_output/Site_hierarchy.R")){
-  load("Analysis/genomics_output/Site_hierarchy.R")
+if (file.exists("genomics_output/Site_hierarchy.R")){
+  load("genomics_output/Site_hierarchy.R")
 } else {
   set.seed(999)
   poptree <- genind.obj %>%
     genind2genpop(pop = ~Pop) %>%
-    aboot(sample = 1000,
+    aboot(sample = 10000,
           distance = nei.dist,
           cutoff = 0,
           quiet = F,
          tree = "upgma")
-  write.tree(poptree,file = "Analysis/genomics_output/Site_hierarchy.nexus")
-  save(poptree,file="Analysis/genomics_output/Site_hierarchy.R")
+  write.tree(poptree,file = "genomics_output/Site_hierarchy.nexus")
+  save(poptree,file="genomics_output/Site_hierarchy.R")
 }
 
 colz <- c('black',"#859D59","#CBB0CE","#6BAD9E","#F88A89",
@@ -73,12 +73,12 @@ ggtree(tree, aes(color=group), layout="rectangular") +
   geom_label_repel(aes(label=label), force=0,nudge_x = 0, nudge_y = 0) +
   theme_tree() +
   scale_color_manual(values = c(colz))
-ggsave(file="Analysis/genomics_output/figures/Site_heirarchy.jpg",height = 7,width=4)
+ggsave(file="genomics_output/figures/Site_heirarchy.jpg",height = 7,width=4)
 
 
 
 
-load("/Users/avahoffman/Dropbox/Research/Bouteloua_diversity/Genomics/Bouteloua_genomics/04-genotyping/R_output/genind.348.40.filt.R")
+load("genomics_prep/genind_all.R")
 indNames(genind.data1)
 genind.1clone.only <- genind.data1[c(5,12,18,21,27,33,41,44,48,50,55,58,65:335)]
 indNames(genind.1clone.only) <- gsub("Bgedge","SGS",indNames(genind.1clone.only))
@@ -97,8 +97,8 @@ genind.obj$tab <- tab(genind.obj, NA.method = "mean")
 strata(genind.obj) <- data.frame(pop(genind.obj))
 nameStrata(genind.obj) <- ~Pop
 # Analysis
-if (file.exists("Analysis/genomics_output/Site_hierarchy_regional.R")){
-load("Analysis/genomics_output/Site_hierarchy_regional.R")
+if (file.exists("genomics_output/Site_hierarchy_regional.R")){
+load("genomics_output/Site_hierarchy_regional.R")
 } else {
 set.seed(999)
 localtree <- genind.obj %>%
@@ -108,11 +108,11 @@ localtree <- genind.obj %>%
         cutoff = 0,
         quiet = F,
         tree = 'upgma')
-write.tree(poptree,file = "Analysis/genomics_output/Site_hierarchy_regional.nexus")
-save(poptree,file="Analysis/genomics_output/Site_hierarchy_regional.R")
+write.tree(poptree,file = "genomics_output/Site_hierarchy_regional.nexus")
+save(poptree,file="genomics_output/Site_hierarchy_regional.R")
 }
 
-load("Analysis/genomics_output/Site_hierarchy_regional.R")
+load("genomics_output/Site_hierarchy_regional.R")
 colz <- c('black',"#CBB0CE","#F88A89","#E19B78","#A889C1",
           "#795199","#E73233","#FDB35A")
 colz <- as.vector(colz)
@@ -125,6 +125,6 @@ ggtree(localtree, aes(color=group), layout="rectangular") +
   geom_label_repel(aes(label=label), force=0,nudge_x = 0, nudge_y = 0) +
   theme_tree() +
   scale_color_manual(values = c(colz))
-ggsave(file="Analysis/genomics_output/figures/Site_heirarchy_regional.jpg",height = 7,width=3)
+ggsave(file="genomics_output/figures/Site_heirarchy_regional.jpg",height = 7,width=3)
 
 

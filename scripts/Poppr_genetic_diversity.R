@@ -82,5 +82,5 @@ mlg.evenness <- community_structure(mlgenotypes.melted, abundance.var = 'value',
 write.csv(mlg.evenness, file = "genomics_output/Multilocus_genos_evenness.csv")
 
 bg_diversity <- poppr(bg.gen, method = 4)
-save(bg_diversity,file="Analysis/genomics_output/Poppr_genetic_diversity.R")
+save(bg_diversity,file="genomics_output/Poppr_genetic_diversity.R")
 write.csv(bg_diversity, file="genomics_output/Poppr_genetic_diversity.csv")

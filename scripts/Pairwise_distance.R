@@ -1,6 +1,6 @@
 ###########################################################################################
 ##
-## R source code to accompany Hoffman et al. (2018), last updated 3 July 2018.
+## R source code to accompany Hoffman et al. (2019), last updated 2 Feb 2019.
 ## Please contact Ava Hoffman (avamariehoffman@gmail.com) with questions.
 ##
 ## If you found this code useful, please use the citation below:
@@ -11,7 +11,7 @@
 ###########################################################################################
 
 ## set working directory
-wd <- "/Users/avahoffman/Dropbox/Research/Bouteloua_diversity"
+wd <- "/Users/avahoffman/Dropbox/Research/Bouteloua_diversity/blue-grama-diversity"
 setwd(wd)
 
 library(adegenet) ## deal with genind objects
@@ -27,9 +27,9 @@ library(ggrepel)
 library(phangorn)
 
 ###########################################################################################
-load("/Users/avahoffman/Dropbox/Research/Bouteloua_diversity/Genomics/Bouteloua_genomics/04-genotyping/R_output/genind.348.40.filt.R")
+load("genomics_prep/genind_all.R")
 ## color palette for plots
-col.pal <- read.csv("Analysis/color_key.csv",header=T)
+col.pal <- read.csv("utils/color_key.csv",header=T)
 col.pal.v <- as.vector(col.pal[,3]) ; names(col.pal.v) <- col.pal[,2]
 col.pal.names <- as.vector(col.pal[,2]) ; names(col.pal.names) <- col.pal[,6]
 col.pal.colors <- as.vector(col.pal[,3]) ; names(col.pal.colors) <- col.pal[,6]
@@ -67,8 +67,8 @@ combined.df <- rbind(SGS.dist,A.dist,BT.dist,BG.dist,CP.dist,CIB.dist,CO.dist,DM
 
 ggplot(combined.df, aes(x=reorder(group, value, FUN=median, color=group), y=value, fill=group) ) +
   geom_boxplot() + coord_flip() + guides(fill=FALSE) + labs(x="",y="Pairwise distance within site (SNPs)") + scale_fill_manual(values=col.pal.v) + theme_classic()
-ggsave(file = "Analysis/genomics_output/figures/Pairwise_distances.jpg",height = 6,width=7.5)
+ggsave(file = "genomics_output/figures/Pairwise_distances.jpg",height = 6,width=7.5)
 
 summary(aov(value~group, data=combined.df)) ## groups differ in distance
 T.test.results <- pairwise.t.test(combined.df$value, combined.df$group, p.adj = "bonf", pool.sd = F, var.equal = F)
-write.csv(T.test.results$p.value, file="Analysis/genomics_output/Pairwise_distance_results.csv")
+write.csv(T.test.results$p.value, file="genomics_output/Pairwise_distance_results.csv")
