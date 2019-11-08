@@ -11,7 +11,7 @@
 ###########################################################################################
 
 ## set working directory
-wd <- "/Users/avahoffman/Dropbox/Research/Bouteloua_diversity/blue-grama-diversity"
+source("config.R")
 setwd(wd)
 
 ###########################################################################################

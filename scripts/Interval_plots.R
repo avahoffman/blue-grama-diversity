@@ -11,7 +11,7 @@
 ###########################################################################################
 
 ## set working directory
-wd <- "/Users/avahoffman/Dropbox/Research/Bouteloua_diversity/blue-grama-diversity"
+source("config.R")
 setwd(wd)
 
 library(ggplot2)
@@ -34,7 +34,9 @@ do.rank <- function(infile,trait.name){
   full.dat <- cbind(trait.dat,site.dat.traits[,"pop"]) ; names(full.dat)[6] <- "pop" ; full.dat$trait <- rep(trait.name,nrow(full.dat))
   names(full.dat)[6] <- "abbv"
   full.dat <- merge(full.dat,col.pal)
-  gg <- ggplot(data=full.dat, aes(x=rank(mean),y=mean)) +
+  ## originally wanted ranked by mean, e.g., aes(x=rank(mean),y=mean))
+  ## have switched to by rough aridity (aka, order determined in legend)
+  gg <- ggplot(data=full.dat, aes(x=rank(legend.order),y=mean)) +
     facet_wrap(~trait, scale = "free_y") +
     geom_errorbar(aes(ymin=`X2.5.`,ymax=`X97.5.`,col=legend.order), width=0) + 
     scale_color_manual(values = col.pal.colors, labels = col.pal.names) +  
@@ -53,7 +55,9 @@ do.rank.wlegend <- function(infile,trait.name){
   full.dat <- cbind(trait.dat,site.dat.traits[,"pop"]) ; names(full.dat)[6] <- "pop" ; full.dat$trait <- rep(trait.name,nrow(full.dat))
   names(full.dat)[6] <- "abbv"
   full.dat <- merge(full.dat,col.pal)
-  gg <- ggplot(data=full.dat, aes(x=rank(mean),y=mean)) +
+  ## originally wanted ranked by mean, e.g., aes(x=rank(mean),y=mean))
+  ## have switched to by rough aridity (aka, order determined in legend)
+  gg <- ggplot(data=full.dat, aes(x=rank(legend.order),y=mean)) +
     facet_wrap(~trait, scale = "free_y") +
     geom_errorbar(aes(ymin=`X2.5.`,ymax=`X97.5.`,col=legend.order), width=0) + 
     scale_color_manual(values = col.pal.colors, labels = col.pal.names) +  
@@ -107,7 +111,9 @@ do.rank <- function(infile,trait.name){
   full.dat <- cbind(trait.dat,site.dat.traits[,"pop"]) ; names(full.dat)[6] <- "pop" ; full.dat$trait <- rep(trait.name,nrow(full.dat))
   names(full.dat)[6] <- "abbv"
   full.dat <- merge(full.dat,col.pal)
-  gg <- ggplot(data=full.dat, aes(x=rank(mean),y=mean)) +
+  ## originally wanted ranked by mean, e.g., aes(x=rank(mean),y=mean))
+  ## have switched to by rough aridity (aka, order determined in legend)
+  gg <- ggplot(data=full.dat, aes(x=rank(legend.order),y=mean)) +
     facet_wrap(~trait, scale = "free_y") +
     geom_errorbar(aes(ymin=`X2.5.`,ymax=`X97.5.`,col=legend.order), width=0) + 
     scale_color_manual(values = col.pal.colors, labels = col.pal.names) +  
@@ -126,7 +132,9 @@ do.rank.wlegend <- function(infile,trait.name){
   full.dat <- cbind(trait.dat,site.dat.traits[,"pop"]) ; names(full.dat)[6] <- "pop" ; full.dat$trait <- rep(trait.name,nrow(full.dat))
   names(full.dat)[6] <- "abbv"
   full.dat <- merge(full.dat,col.pal)
-  gg <- ggplot(data=full.dat, aes(x=rank(mean),y=mean)) +
+  ## originally wanted ranked by mean, e.g., aes(x=rank(mean),y=mean))
+  ## have switched to by rough aridity (aka, order determined in legend)
+  gg <- ggplot(data=full.dat, aes(x=rank(legend.order),y=mean)) +
     facet_wrap(~trait, scale = "free_y") +
     geom_errorbar(aes(ymin=`X2.5.`,ymax=`X97.5.`,col=legend.order), width=0) + 
     scale_color_manual(values = col.pal.colors, labels = col.pal.names) +  
@@ -168,7 +176,9 @@ do.rank <- function(infile,trait.name){
   full.dat <- cbind(trait.dat,site.dat.traits[,"pop"]) ; names(full.dat)[6] <- "pop" ; full.dat$trait <- rep(trait.name,nrow(full.dat))
   names(full.dat)[6] <- "abbv"
   full.dat <- merge(full.dat,col.pal)
-  gg <- ggplot(data=full.dat, aes(x=rank(mean),y=mean)) +
+  ## originally wanted ranked by mean, e.g., aes(x=rank(mean),y=mean))
+  ## have switched to by rough aridity (aka, order determined in legend)
+  gg <- ggplot(data=full.dat, aes(x=rank(legend.order),y=mean)) +
     facet_wrap(~trait, scale = "free_y") +
     geom_errorbar(aes(ymin=`X2.5.`,ymax=`X97.5.`,col=legend.order), width=0) + 
     scale_color_manual(values = col.pal.colors, labels = col.pal.names) +  
@@ -187,7 +197,9 @@ do.rank.wlegend <- function(infile,trait.name){
   full.dat <- cbind(trait.dat,site.dat.traits[,"pop"]) ; names(full.dat)[6] <- "pop" ; full.dat$trait <- rep(trait.name,nrow(full.dat))
   names(full.dat)[6] <- "abbv"
   full.dat <- merge(full.dat,col.pal)
-  gg <- ggplot(data=full.dat, aes(x=rank(mean),y=mean)) +
+  ## originally wanted ranked by mean, e.g., aes(x=rank(mean),y=mean))
+  ## have switched to by rough aridity (aka, order determined in legend)
+  gg <- ggplot(data=full.dat, aes(x=rank(legend.order),y=mean)) +
     facet_wrap(~trait, scale = "free_y") +
     geom_errorbar(aes(ymin=`X2.5.`,ymax=`X97.5.`,col=legend.order), width=0) + 
     scale_color_manual(values = col.pal.colors, labels = col.pal.names) +  
@@ -229,7 +241,9 @@ do.rank <- function(infile,trait.name){
   full.dat <- cbind(trait.dat,site.dat.traits[,"pop"]) ; names(full.dat)[6] <- "pop" ; full.dat$trait <- rep(trait.name,nrow(full.dat))
   names(full.dat)[6] <- "abbv"
   full.dat <- merge(full.dat,col.pal)
-  gg <- ggplot(data=full.dat, aes(x=rank(mean),y=mean)) +
+  ## originally wanted ranked by mean, e.g., aes(x=rank(mean),y=mean))
+  ## have switched to by rough aridity (aka, order determined in legend)
+  gg <- ggplot(data=full.dat, aes(x=rank(legend.order),y=mean)) +
     facet_wrap(~trait, scale = "free_y") +
     geom_errorbar(aes(ymin=`X2.5.`,ymax=`X97.5.`,col=legend.order), width=0) + 
     scale_color_manual(values = col.pal.colors, labels = col.pal.names) +  
@@ -248,7 +262,9 @@ do.rank.wlegend <- function(infile,trait.name){
   full.dat <- cbind(trait.dat,site.dat.traits[,"pop"]) ; names(full.dat)[6] <- "pop" ; full.dat$trait <- rep(trait.name,nrow(full.dat))
   names(full.dat)[6] <- "abbv"
   full.dat <- merge(full.dat,col.pal)
-  gg <- ggplot(data=full.dat, aes(x=rank(mean),y=mean)) +
+  ## originally wanted ranked by mean, e.g., aes(x=rank(mean),y=mean))
+  ## have switched to by rough aridity (aka, order determined in legend)
+  gg <- ggplot(data=full.dat, aes(x=rank(legend.order),y=mean)) +
     facet_wrap(~trait, scale = "free_y") +
     geom_errorbar(aes(ymin=`X2.5.`,ymax=`X97.5.`,col=legend.order), width=0) + 
     scale_color_manual(values = col.pal.colors, labels = col.pal.names) +  

@@ -11,7 +11,7 @@
 ###########################################################################################
 
 ## set working directory
-wd <- "/Users/avahoffman/Dropbox/Research/Bouteloua_diversity/blue-grama-diversity"
+source("config.R")
 setwd(wd)
 
 ## PCA / LDA
@@ -103,7 +103,7 @@ makeLDA <- function(restrictions = bogr.data[(bogr.data$region != 'Boulder'),],
   plot_1 <- ggplot(plotdat, aes(LD1, LD2)) + 
     geom_point(aes(color=legend.order), size = 2.5) + 
     #geom_point(aes(color=pop),size=2.5) +
-    facet_wrap(~regionlab, scale = "free_y") +
+    #facet_wrap(~regionlab, scale = "free_y") +
     scale_color_manual(values = col.pal.colors, labels = col.pal.names) + 
     theme_classic() +
     labs(x = paste("LD1 (", percent(prop.lda[1]), ")", sep=""),
@@ -193,7 +193,7 @@ makeLDA <- function(restrictions = bogr.data[(bogr.data$region != 'Boulder'),],
   plot_1 <- ggplot(plotdat, aes(LD1, LD2)) + 
     geom_point(aes(color=legend.order), size = 2.5) + 
     #geom_point(aes(color=pop),size=2.5) +
-    facet_wrap(~regionlab, scale = "free_y") +
+    #facet_wrap(~regionlab, scale = "free_y") +
     scale_color_manual(values = col.pal.colors, labels = col.pal.names) + 
     theme_classic() +
     labs(x = paste("LD1 (", percent(prop.lda[1]), ")", sep=""),
@@ -228,21 +228,28 @@ do.rank.wlegend <- function(infile,trait.name,restrictions){
   names(full.dat)[6] <- "abbv"
   full.dat <- merge(full.dat,col.pal)
   full.dat <- full.dat[(restrictions),]
-  gg <- ggplot(data=full.dat, aes(x=rank(mean),y=mean)) +
-    facet_wrap(~trait, scale = "free_y") +
+  ## originally wanted ranked by mean, e.g., aes(x=rank(mean),y=mean))
+  ## have switched to by rough aridity (aka, order determined in legend)
+  gg <- ggplot(data=full.dat, aes(x=rank(legend.order),y=mean)) +
     geom_errorbar(aes(ymin=`X2.5.`,ymax=`X97.5.`,col=legend.order), width=0) + 
     scale_color_manual(values = col.pal.colors, labels = col.pal.names) +  
     theme_classic() + xlab(NULL) + 
     theme(axis.text.x = element_blank(), axis.ticks.x = element_blank()) +
-    geom_point(aes(col=legend.order), size=3) + ylab(NULL) + 
+    geom_point(aes(col=legend.order), size=3) + ylab(trait.name) + 
     labs(colour = "Site")
   return(gg)
 }
 
-regionaltrait <- do.rank.wlegend(infile = "posterior_output/\ Total\ Biomass\ .csv", trait.name = "Total Biomass (g)" ,
+regionaltrait_1 <- do.rank.wlegend(infile = "posterior_output/\ biomass_aboveground\ .csv", trait.name = "Aboveground biomass (g)" ,
+                                 restrictions = c(2,4,5,11,12))
+regionaltrait_2 <- do.rank.wlegend(infile = "posterior_output/\ biomass_belowground\ .csv", trait.name = "Belowground biomass (g)" ,
+                                 restrictions = c(2,4,5,11,12))
+regionaltrait_3 <- do.rank.wlegend(infile = "posterior_output/\ Total\ Biomass\ .csv", trait.name = "Total biomass (g)" ,
                                  restrictions = c(2,4,5,11,12))
 
-localtrait <- do.rank.wlegend(infile = "posterior_output/\ Total\ Biomass\ .csv", trait.name = "Total Biomass (g)" ,
+localtrait_1 <- do.rank.wlegend(infile = "posterior_output/\ biomass_aboveground\ .csv", trait.name = "Aboveground biomass (g)" ,
+                              restrictions = -c(2,4,5,11,12))
+localtrait_2 <- do.rank.wlegend(infile = "posterior_output/\ Total\ Biomass\ .csv", trait.name = "Total biomass (g)" ,
                               restrictions = -c(2,4,5,11,12))
 
 
@@ -256,22 +263,34 @@ do.rank.wlegend <- function(infile,trait.name,restrictions){
   names(full.dat)[6] <- "abbv"
   full.dat <- merge(full.dat,col.pal)
   full.dat <- full.dat[(restrictions),]
-  gg <- ggplot(data=full.dat, aes(x=rank(mean),y=mean)) +
-    facet_wrap(~trait, scale = "free_y") +
+  ## originally wanted ranked by mean, e.g., aes(x=rank(mean),y=mean))
+  ## have switched to by rough aridity (aka, order determined in legend)
+  gg <- ggplot(data=full.dat, aes(x=rank(legend.order),y=mean)) +
     geom_errorbar(aes(ymin=`X2.5.`,ymax=`X97.5.`,col=legend.order), width=0) + 
     scale_color_manual(values = col.pal.colors, labels = col.pal.names) +  
     theme_classic() + xlab(NULL) + geom_hline(yintercept=0, lty=3) +
     theme(axis.text.x = element_blank(), axis.ticks.x = element_blank()) +
-    geom_point(aes(col=legend.order), size=3) + ylab(NULL) + 
+    geom_point(aes(col=legend.order), size=3) + ylab(trait.name) + 
     labs(colour = "Site")
   return(gg)
 }
-regionalplast <- do.rank.wlegend(infile = "posterior_output_plasticity/\ biomass_aboveground\ .csv", 
-                                 trait.name = "Aboveground biomass plasticity",
+regionalplast_1 <- do.rank.wlegend(infile = "posterior_output_plasticity/\ biomass_aboveground\ .csv", 
+                                 trait.name = "Aboveground biomass plasticity (g)",
                                  restrictions = c(2,4,5,11,12) )
-localplast <- do.rank.wlegend(infile = "posterior_output_plasticity/\ biomass_aboveground\ .csv", 
-                              trait.name = "Aboveground biomass plasticity",
+regionalplast_2 <- do.rank.wlegend(infile = "posterior_output_plasticity/\ biomass_belowground\ .csv", 
+                                 trait.name = "Belowground biomass plasticity (g)",
+                                 restrictions = c(2,4,5,11,12) )
+regionalplast_3 <- do.rank.wlegend(infile = "posterior_output_plasticity/\ max_height\ .csv", 
+                                 trait.name = "Maximum height (cm)",
+                                 restrictions = c(2,4,5,11,12) )
+
+localplast_1 <- do.rank.wlegend(infile = "posterior_output_plasticity/\ biomass_aboveground\ .csv", 
+                              trait.name = "Aboveground biomass plasticity (g)",
                               restrictions = -c(2,4,5,11,12) )
+localplast_2 <- do.rank.wlegend(infile = "posterior_output_plasticity/\ flwr_count_1.2\ .csv", 
+                              trait.name = "Flower count",
+                              restrictions = -c(2,4,5,11,12) )
+
 
 ###########################################################################################
 # combine all plots
@@ -282,17 +301,43 @@ g_legend<-function(a.gplot){
   legend <- tmp$grobs[[leg]]
   return(legend)}
 
-mylegend1<-g_legend(regionalplast)
-mylegend2<-g_legend(localplast) 
+mylegend1<-g_legend(regionalplast_1)
+mylegend2<-g_legend(localplast_1) 
 
-fig1 <- plot_grid(ldaregional + theme(legend.position = "none"), regionaltrait  + theme(legend.position = "none"),
-                  ldaregionalplast + theme(legend.position = "none"), regionalplast + theme(legend.position = "none"), 
-                  align='vh',nrow=2,labels = c("(a)", "(b)", "(c)", "(d)"))
-fig1plot <- grid.arrange(fig1, mylegend1, nrow=1,widths=c(10, 2))
-fig2 <- plot_grid(ldalocal + theme(legend.position = "none"), localtrait + theme(legend.position = "none"),
-                  ldalocalplast + theme(legend.position = "none"), localplast + theme(legend.position = "none"), 
-                  align='vh',nrow=2,labels = c("(a)", "(b)", "(c)", "(d)"))
+fig1 <- plot_grid(ldaregional + theme(legend.position = "none"), 
+                  regionaltrait_1  + theme(legend.position = "none"),
+                  regionaltrait_2  + theme(legend.position = "none"),
+                  regionaltrait_3  + theme(legend.position = "none"),
+                  ldaregionalplast + theme(legend.position = "none"), 
+                  regionalplast_1 + theme(legend.position = "none"),
+                  regionalplast_2 + theme(legend.position = "none"), 
+                  regionalplast_3 + theme(legend.position = "none"), 
+                  align='vh',nrow=2,labels = c(
+                    "      (a)", 
+                    "      (b)", 
+                    "      (c)", 
+                    "      (d)",
+                    "      (e)", 
+                    "      (f)", 
+                    "      (g)", 
+                    "      (h)"
+                    ))
+fig1plot <- grid.arrange(fig1, mylegend1, nrow=1,widths=c(10, 1))
+fig2 <- plot_grid(ldalocal + theme(legend.position = "none"), 
+                  localtrait_1 + theme(legend.position = "none"),
+                  localtrait_2 + theme(legend.position = "none"),
+                  ldalocalplast + theme(legend.position = "none"), 
+                  localplast_1 + theme(legend.position = "none"), 
+                  localplast_2 + theme(legend.position = "none"), 
+                  align='vh',nrow=2,labels = c(
+                    "      (a)", 
+                    "      (b)", 
+                    "      (c)", 
+                    "      (d)",
+                    "      (e)", 
+                    "      (f)"
+                    ))
 fig2plot <- grid.arrange(fig2, mylegend2, nrow=1,widths=c(10, 2))
 
-ggsave(fig1plot, file="LDA/LDA_regional.jpg",height=6,width=8)
-ggsave(fig2plot, file="LDA/LDA_local.jpg",height=6,width=8)
+ggsave(fig1plot, file="LDA/LDA_regional.jpg",height=7,width=15)
+ggsave(fig2plot, file="LDA/LDA_local.jpg",height=7,width=13)
