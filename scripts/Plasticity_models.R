@@ -4,13 +4,13 @@
 ##
 ## see http://mc-stan.org/users/documentation/case-studies/radon.html for tips on model
 ## https://datascienceplus.com/bayesian-regression-with-stan-beyond-normality/
-## These models report (a) mean trait value DIFFERENCE (ie, plasticity) while correcting
-## for small variation in %VWC betwen treatments
+## These models report (a) mean phenotypic value DIFFERENCE (ie, plasticity) while 
+## correcting for small variation in %VWC betwen treatments
 ## (trait) then provides (a) at the mean %VWC DIFFERENCE
 ## (sigma_pop) population variance
 ## (b) a slope parameter correcting for VWC
 ## (mu_a) is a hyperparameter, could be considered mean overall plasticity for all blue
-## grama we sampled
+## grama we sampled - but has been taken out as of most current analysis
 ##
 ##########################################################################################
 ## set working directory
@@ -20,6 +20,8 @@ setwd(wd)
 library(rstan) ## Bayesian model compiler and sampler
 options(mc.cores = parallel::detectCores()) ## option to make Stan parallelize
 library(bayesplot)
+## load some functions that make figures
+source("utils/mcmc_output.R")
 
 ##########################################################################################
 ## open plasticity data
@@ -66,7 +68,8 @@ transformed parameters{
 }
 model {
   //priors
-  //mu_a ~ normal(0, 10 ); //removed these hyperparameters.. the sites don't seem to come fromthe same distribution
+  //mu_a ~ normal(0, 10 ); //removed these hyperparameters.. 
+  // the sites don't seem to come from the same distribution
   //mu_b ~ normal(0, 10);
   sigma_pop ~ cauchy(0,10);
   //model
@@ -77,7 +80,7 @@ model {
   y ~ normal(mu, sigma_pop[county]);
 }
 generated quantities{
-  vector[N] draws1;,
+  vector[N] draws1;
   vector[J] trait;
   for(n in 1:N)
   for(j in 1:J){
@@ -97,7 +100,7 @@ if(write.phenotype.models == TRUE){
 }
 
 ###########################################################################################
-## MCMC function
+## MCMC posterior generation and checks
 
 Run.vism.plasticity <-
   function(responsevar,
@@ -105,160 +108,64 @@ Run.vism.plasticity <-
            adapt_delta = 0.8,
            max_treedepth = 10,
            iter = 10000) {
-    #, Docstrings
+    #, Purpose of this function is to:
+    #, 1) Generate the posterior distribution of a specific response variable given 
+    #, specified params
+    #, 2) Plot the posterior distribution of same response variable
+    #, 3) plot the predictive checks of the posterior draws to ensure a good fit
     temp.data <-
       as.data.frame(cbind(plas.clim.data$pop, responsevar, plas.clim.data$vwc_adj))
     temp.data <- na.omit(temp.data)
-    ## setup data
-    varying_intercept_slope_data = list(
-      'N' = nrow(temp.data),
-      'J' = 15,
-      ## 15 populations for traits
-      'y' = temp.data$responsevar,
-      'county' = temp.data$V1,
-      'x' = temp.data$V3,
-      'm_x' = mean(temp.data$V3)
-    )
-    iter = iter
-    ## sampling
-    fit1 = sampling(
-      comp.plasticity.normal,
-      data = varying_intercept_slope_data,
+    
+    ## run the MCMC sampler to generate the posterior distribution
+    fit1 <- run_mcmc(
+      temp_data = temp.data,
+      responsevar = responsevar,
+      compiled_model = comp.plasticity.normal,
       iter = iter,
-      warmup = iter / 2,
-      thin = 1,
-      chains = 2,
-      control = list(adapt_delta = adapt_delta, max_treedepth = max_treedepth)
+      adapt_delta = adapt_delta,
+      max_treedepth = max_treedepth,
+      outfile = paste("posterior_output_plasticity/", outputname, ".csv")
     )
-    summary_fit <- summary(fit1)
-    #save(fit1,file=paste("MCMC_posterior_output.plasticity.",outputname,".R"))
     
-    ## gather 95% CIs
-    print("Writing 95% CIs")
-    model_stats1 <-
-      cbind(
-        summary_fit$summary[, 4, drop = F],
-        summary_fit$summary[, 8, drop = F],
-        summary_fit$summary[, 1, drop = F],
-        summary_fit$summary[, 10, drop = F]
-      )
-    print(fit1, probs = c(.025, .975))
-    write.csv(model_stats1,
-              file = paste("posterior_output_plasticity/", outputname, ".csv"))
-    
-    ## plot posteriors of key vars
+    ## plot posterior distributions
     draws <- as.array(fit1)
-    bogr.pops <- unique(bogr.clim.data$pop)
-    post.1 <-
-      mcmc_intervals(
-        draws,
-        prob = 0.90,
-        prob_outer = 0.95,
-        point_est = "mean",
-        pars = rev(
-          c(
-            "trait[1]",
-            "trait[2]",
-            "trait[3]",
-            "trait[4]",
-            "trait[5]",
-            "trait[6]",
-            "trait[7]",
-            "trait[8]",
-            "trait[9]",
-            "trait[10]",
-            "trait[11]",
-            "trait[12]",
-            "trait[13]",
-            "trait[14]",
-            "trait[15]"
-          )
-        )
-      ) +
-      xlab(paste(outputname, "plasticity 95% CI")) +
-      scale_y_discrete(labels = rev(bogr.pops))
-    ggsave(
-      post.1,
-      file = paste(
+    bogr.pops <- unique(plas.clim.data$pop)
+    get_posterior_intervals_plasticity(
+      bogr_pops = bogr.pops,
+      draws_data = draws,
+      mean_xlab = xlab(paste(outputname,
+                             "plasticity 95% CI")),
+      mean_file = paste(
         "posterior_output_plasticity/figures/",
         outputname,
         "mean_plasticity.pdf"
       ),
-      height = 4,
-      width = 4
-    )
-    post.2 <-
-      mcmc_intervals(
-        draws,
-        prob = 0.90,
-        prob_outer = 0.95,
-        point_est = "mean",
-        pars = rev(
-          c(
-            "sigma_pop[1]",
-            "sigma_pop[2]",
-            "sigma_pop[3]",
-            "sigma_pop[4]",
-            "sigma_pop[5]",
-            "sigma_pop[6]",
-            "sigma_pop[7]",
-            "sigma_pop[8]",
-            "sigma_pop[9]",
-            "sigma_pop[10]",
-            "sigma_pop[11]",
-            "sigma_pop[12]",
-            "sigma_pop[13]",
-            "sigma_pop[14]",
-            "sigma_pop[15]"
-          )
-        )
-      ) +
-      xlab(paste(outputname, "plasticity variance 95% CI")) +
-      scale_y_discrete(labels = rev(bogr.pops))
-    ggsave(
-      post.2,
-      file = paste(
+      sigma_xlab = xlab(paste(outputname,
+                              "plasticity variance 95% CI")),
+      sigma_file = paste(
         "posterior_output_plasticity/figures/",
         outputname,
         "variance_plasticity.pdf"
-      ),
-      height = 4,
-      width = 4
+      )
     )
-    
-    ## posterior pred. checks
-    print("Plotting posterior predictive checks")
-    list_of_draws <- extract(fit1)
-    yrep <- list_of_draws$draws1
-    np1 <- ppc_dens_overlay(temp.data$responsevar, yrep[1:500,]) +
-      theme_minimal(base_size = 20) +
-      xlab(outputname)
-    ggsave(
-      np1,
-      file = paste(
+    ## plot posterior predictive checks
+    plot_posterior_predictive_checks(
+      temp_data = temp.data,
+      responsevar = responsevar,
+      outputname = outputname,
+      fit_data = fit1,
+      file1_name = paste(
         "posterior_output_plasticity/predictive_checks/",
         outputname,
         "plasticity_normalityplot1.pdf"
       ),
-      height = 8,
-      width = 8
-    )
-    pdf(
-      file = paste(
+      file2_name = paste(
         "posterior_output_plasticity/predictive_checks/",
         outputname,
         "plasticity_normalityplot2.pdf"
       )
     )
-    hist(
-      temp.data$responsevar,
-      prob = T,
-      breaks = 20,
-      main = outputname
-    )
-    lines(density(list_of_draws$draws1), col = "red")
-    dev.off()
-    print(np1)
   }
 
 ###########################################################################################
