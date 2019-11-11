@@ -8,7 +8,7 @@ library(reshape2)
 
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
 ## several options depending on what samples desired..
-load("genomics_prep/genind_all.R")
+load("src/genomics_prep/genind_all.R")
 
 ## color palette for plots
 col.pal <- read.csv("utils/color_key.csv", header = T)
