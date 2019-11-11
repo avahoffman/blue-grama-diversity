@@ -105,6 +105,7 @@ Run.vism.plasticity <-
            adapt_delta = 0.8,
            max_treedepth = 10,
            iter = 10000) {
+    #, Docstrings
     temp.data <-
       as.data.frame(cbind(plas.clim.data$pop, responsevar, plas.clim.data$vwc_adj))
     temp.data <- na.omit(temp.data)
