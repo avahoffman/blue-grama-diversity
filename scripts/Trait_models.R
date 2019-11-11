@@ -7,7 +7,7 @@
 ## These models report (a) mean phenotype value while correcting for %VWC
 ## (trait) then provides (a) at the mean value for %VWC
 ## (sigma_pop) population variance in the phenotypic value correcting for %VWC
-## (b) a slope parameter indicating how susceptible a phenotype was to %VWC, which can be 
+## (b) a slope parameter indicating how susceptible a phenotype was to %VWC, which can be
 ## considered a covariate.
 ##
 ##########################################################################################
@@ -18,6 +18,8 @@ setwd(wd)
 library(rstan) ## Bayesian model compiler and sampler
 options(mc.cores = parallel::detectCores()) ## option to make Stan parallelize
 library(bayesplot)
+## load some functions that make figures
+source("utils/mcmc_output.R")
 
 ##########################################################################################
 ## open data
@@ -101,13 +103,11 @@ generated quantities{
 }
 "
 comp.gamma <-
-  stan_model(model_code = varying_intercept_slope_model_gamma, 
-             model_name = 'varing.int.slope.model.gamma'
-             )
-if(write.phenotype.models == TRUE){
-  save(comp.gamma, 
-       file="varying_intercept_slope_model_gamma.R"
-       )
+  stan_model(model_code = varying_intercept_slope_model_gamma,
+             model_name = 'varing.int.slope.model.gamma')
+if (write.phenotype.models == TRUE) {
+  save(comp.gamma,
+       file = "varying_intercept_slope_model_gamma.R")
 }
 
 varying_intercept_slope_model_gamma_zero_adjust <- "
@@ -160,13 +160,11 @@ generated quantities{
 }
 "
 comp.gamma.zero.adjust <-
-  stan_model(model_code = varying_intercept_slope_model_gamma_zero_adjust, 
-             model_name = 'varing.int.slope.model.gamma.zero.adjust'
-             )
-if(write.phenotype.models == TRUE){
-  save(comp.gamma.zero.adjust, 
-       file = "varying_intercept_slope_model_gamma_zero_adjust.R"
-       )
+  stan_model(model_code = varying_intercept_slope_model_gamma_zero_adjust,
+             model_name = 'varing.int.slope.model.gamma.zero.adjust')
+if (write.phenotype.models == TRUE) {
+  save(comp.gamma.zero.adjust,
+       file = "varying_intercept_slope_model_gamma_zero_adjust.R")
 }
 
 varying_intercept_slope_model_gamma_mpas <- "
@@ -219,633 +217,159 @@ generated quantities{
 }
 "
 comp.gamma.mpas <-
-  stan_model(model_code = varying_intercept_slope_model_gamma_mpas, 
-             model_name = 'varing.int.slope.model.gamma.mpas'
-             )
-if(write.phenotype.models == TRUE){
-  save(comp.gamma.mpas, 
-       file = "varying_intercept_slope_model_gamma_mpas.R"
-       )
+  stan_model(model_code = varying_intercept_slope_model_gamma_mpas,
+             model_name = 'varing.int.slope.model.gamma.mpas')
+if (write.phenotype.models == TRUE) {
+  save(comp.gamma.mpas,
+       file = "varying_intercept_slope_model_gamma_mpas.R")
 }
 
 ###########################################################################################
-## MCMC functions
+## MCMC posterior generation and checks
 
-Run.vism.gamma <-
+Run.vism <-
   function(responsevar,
            outputname,
+           compiled_model,
            adapt_delta = 0.8,
            max_treedepth = 10,
            iter = 50000) {
+    #, Purpose of this function is to:
+    #, 1) Generate the posterior distribution of a specific response variable given
+    #, specified params
+    #, 2) Plot the posterior distribution of same response variable
+    #, 3) plot the predictive checks of the posterior draws to ensure a good fit
     temp.data <-
       as.data.frame(cbind(bogr.clim.data$pop, responsevar, bogr.clim.data$vwc_adj))
     temp.data <- na.omit(temp.data)
-    ## setup data
-    varying_intercept_slope_data = list(
-      'N' = nrow(temp.data),
-      'J' = 15,
-      ## 15 populations for traits
-      'y' = temp.data$responsevar,
-      'county' = temp.data$V1,
-      'x' = temp.data$V3,
-      'm_x' = mean(temp.data$V3)
-    )
-    iter = iter
-    ## sampling
-    fit1 = sampling(
-      comp.gamma,
-      data = varying_intercept_slope_data,
+    
+    ## run the MCMC sampler to generate the posterior distribution
+    fit1 <- run_mcmc(
+      temp_data = temp.data,
+      responsevar = responsevar,
+      compiled_model = compiled_model,
       iter = iter,
-      warmup = iter / 2,
-      thin = 1,
-      chains = 2,
-      control = list(adapt_delta = adapt_delta, max_treedepth = max_treedepth)
+      adapt_delta = adapt_delta,
+      max_treedepth = max_treedepth,
+      outfile = paste("posterior_output/", outputname, ".csv")
     )
-    summary_fit <- summary(fit1)
-    #save(fit1,file=paste("MCMC_posterior_output.",outputname,".R"))
     
-    ## gather 95% CIs
-    print("Writing 95% CIs")
-    model_stats1 <-
-      cbind(
-        summary_fit$summary[, 4, drop = F],
-        summary_fit$summary[, 8, drop = F],
-        summary_fit$summary[, 1, drop = F],
-        summary_fit$summary[, 10, drop = F]
-      )
-    print(fit1, probs = c(.025, .975))
-    write.csv(model_stats1,
-              file = paste("posterior_output/", outputname, ".csv"))
-    
-    ## plot posteriors of key vars
+    ## plot posterior distributions
     draws <- as.array(fit1)
     bogr.pops <- unique(bogr.clim.data$pop)
-    post.1 <-
-      mcmc_intervals(
-        draws,
-        prob = 0.90,
-        prob_outer = 0.95,
-        point_est = "mean",
-        pars = rev(
-          c(
-            "trait[1]",
-            "trait[2]",
-            "trait[3]",
-            "trait[4]",
-            "trait[5]",
-            "trait[6]",
-            "trait[7]",
-            "trait[8]",
-            "trait[9]",
-            "trait[10]",
-            "trait[11]",
-            "trait[12]",
-            "trait[13]",
-            "trait[14]",
-            "trait[15]"
-          )
-        )
-      ) +
-      xlab(paste(outputname, "mean 95% CI")) +
-      scale_y_discrete(labels = rev(bogr.pops))
-    ggsave(
-      post.1,
-      file = paste("posterior_output/figures/", outputname, "means.pdf"),
-      height = 4,
-      width = 4
-    )
-    post.2 <-
-      mcmc_intervals(
-        draws,
-        prob = 0.90,
-        prob_outer = 0.95,
-        point_est = "mean",
-        pars = rev(
-          c(
-            "sigma_pop[1]",
-            "sigma_pop[2]",
-            "sigma_pop[3]",
-            "sigma_pop[4]",
-            "sigma_pop[5]",
-            "sigma_pop[6]",
-            "sigma_pop[7]",
-            "sigma_pop[8]",
-            "sigma_pop[9]",
-            "sigma_pop[10]",
-            "sigma_pop[11]",
-            "sigma_pop[12]",
-            "sigma_pop[13]",
-            "sigma_pop[14]",
-            "sigma_pop[15]"
-          )
-        )
-      ) +
-      xlab(paste(outputname, "variance 95% CI")) +
-      scale_y_discrete(labels = rev(bogr.pops))
-    ggsave(
-      post.2,
-      file = paste("posterior_output/figures/", outputname, "variances.pdf"),
-      height = 4,
-      width = 4
-    )
-    post.3 <-
-      mcmc_intervals(
-        draws,
-        prob = 0.90,
-        prob_outer = 0.95,
-        point_est = "mean",
-        pars = rev(
-          c(
-            "b[1]",
-            "b[2]",
-            "b[3]",
-            "b[4]",
-            "b[5]",
-            "b[6]",
-            "b[7]",
-            "b[8]",
-            "b[9]",
-            "b[10]",
-            "b[11]",
-            "b[12]",
-            "b[13]",
-            "b[14]",
-            "b[15]"
-          )
-        )
-      ) +
-      xlab(paste(outputname, "plasticity 95% CI")) +
-      scale_y_discrete(labels = rev(bogr.pops))
-    ggsave(
-      post.3,
-      file = paste("posterior_output/figures/", outputname, "plasticity.pdf"),
-      height = 4,
-      width = 4
+    get_posterior_intervals(
+      bogr_pops = bogr.pops,
+      draws_data = draws,
+      mean_xlab = xlab(paste(outputname, "mean 95% CI")),
+      mean_file = paste("posterior_output/figures/", outputname, "means.pdf"),
+      sigma_xlab = xlab(paste(outputname, "variance 95% CI")),
+      sigma_file = paste("posterior_output/figures/", outputname, "variances.pdf"),
+      b_xlab = xlab(paste(outputname, "plasticity 95% CI")),
+      b_file = paste("posterior_output/figures/", outputname, "plasticity.pdf")
     )
     
-    ## posterior pred. checks
-    print("Plotting posterior predictive checks")
-    list_of_draws <- extract(fit1)
-    yrep <- list_of_draws$draws1
-    np1 <- ppc_dens_overlay(temp.data$responsevar, yrep[1:500,]) +
-      theme_minimal(base_size = 20) +
-      xlab(outputname)
-    ggsave(
-      np1,
-      file = paste(
+    ## plot posterior predictive checks
+    plot_posterior_predictive_checks(
+      temp_data = temp.data,
+      responsevar = responsevar,
+      outputname = outputname,
+      fit_data = fit1,
+      file1_name = paste(
         "posterior_output/predictive_checks/",
         outputname,
         "normalityplot1.pdf"
       ),
-      height = 8,
-      width = 8
-    )
-    pdf(file = paste(
-      "posterior_output/predictive_checks/",
-      outputname,
-      "normalityplot2.pdf"
-    ))
-    hist(
-      temp.data$responsevar,
-      prob = T,
-      breaks = 20,
-      main = outputname
-    )
-    lines(density(list_of_draws$draws1), col = "red")
-    dev.off()
-    print(np1)
-  }
-
-Run.vism.gamma.zero.adjust <-
-  function(responsevar,
-           outputname,
-           adapt_delta = 0.8,
-           max_treedepth = 10,
-           iter = 50000) {
-    temp.data <-
-      as.data.frame(cbind(bogr.clim.data$pop, responsevar, bogr.clim.data$vwc_adj))
-    temp.data <- na.omit(temp.data)
-    ## setup data
-    varying_intercept_slope_data = list(
-      'N' = nrow(temp.data),
-      'J' = 15,
-      ## 15 populations for traits
-      'y' = temp.data$responsevar,
-      'county' = temp.data$V1,
-      'x' = temp.data$V3,
-      'm_x' = mean(temp.data$V3)
-    )
-    iter = iter
-    ## sampling
-    fit1 = sampling(
-      comp.gamma.zero.adjust,
-      data = varying_intercept_slope_data,
-      iter = iter,
-      warmup = iter / 2,
-      thin = 1,
-      chains = 2,
-      control = list(adapt_delta = adapt_delta, max_treedepth = max_treedepth)
-    )
-    summary_fit <- summary(fit1)
-    #save(fit1,file=paste("MCMC_posterior_output.",outputname,".R"))
-    
-    ## gather 95% CIs
-    print("Writing 95% CIs")
-    model_stats1 <-
-      cbind(
-        summary_fit$summary[, 4, drop = F],
-        summary_fit$summary[, 8, drop = F],
-        summary_fit$summary[, 1, drop = F],
-        summary_fit$summary[, 10, drop = F]
-      )
-    print(fit1, probs = c(.025, .975))
-    write.csv(model_stats1,
-              file = paste("posterior_output/", outputname, ".csv"))
-    
-    ## plot posteriors of key vars
-    draws <- as.array(fit1)
-    bogr.pops <- unique(bogr.clim.data$pop)
-    post.1 <-
-      mcmc_intervals(
-        draws,
-        prob = 0.90,
-        prob_outer = 0.95,
-        point_est = "mean",
-        pars = rev(
-          c(
-            "trait[1]",
-            "trait[2]",
-            "trait[3]",
-            "trait[4]",
-            "trait[5]",
-            "trait[6]",
-            "trait[7]",
-            "trait[8]",
-            "trait[9]",
-            "trait[10]",
-            "trait[11]",
-            "trait[12]",
-            "trait[13]",
-            "trait[14]",
-            "trait[15]"
-          )
-        )
-      ) +
-      xlab(paste(outputname, "mean 95% CI")) +
-      scale_y_discrete(labels = rev(bogr.pops))
-    ggsave(
-      post.1,
-      file = paste("posterior_output/figures/", outputname, "means.pdf"),
-      height = 4,
-      width = 4
-    )
-    post.2 <-
-      mcmc_intervals(
-        draws,
-        prob = 0.90,
-        prob_outer = 0.95,
-        point_est = "mean",
-        pars = rev(
-          c(
-            "sigma_pop[1]",
-            "sigma_pop[2]",
-            "sigma_pop[3]",
-            "sigma_pop[4]",
-            "sigma_pop[5]",
-            "sigma_pop[6]",
-            "sigma_pop[7]",
-            "sigma_pop[8]",
-            "sigma_pop[9]",
-            "sigma_pop[10]",
-            "sigma_pop[11]",
-            "sigma_pop[12]",
-            "sigma_pop[13]",
-            "sigma_pop[14]",
-            "sigma_pop[15]"
-          )
-        )
-      ) +
-      xlab(paste(outputname, "variance 95% CI")) +
-      scale_y_discrete(labels = rev(bogr.pops))
-    ggsave(
-      post.2,
-      file = paste("posterior_output/figures/", outputname, "variances.pdf"),
-      height = 4,
-      width = 4
-    )
-    post.3 <-
-      mcmc_intervals(
-        draws,
-        prob = 0.90,
-        prob_outer = 0.95,
-        point_est = "mean",
-        pars = rev(
-          c(
-            "b[1]",
-            "b[2]",
-            "b[3]",
-            "b[4]",
-            "b[5]",
-            "b[6]",
-            "b[7]",
-            "b[8]",
-            "b[9]",
-            "b[10]",
-            "b[11]",
-            "b[12]",
-            "b[13]",
-            "b[14]",
-            "b[15]"
-          )
-        )
-      ) +
-      xlab(paste(outputname, "plasticity 95% CI")) +
-      scale_y_discrete(labels = rev(bogr.pops))
-    ggsave(
-      post.3,
-      file = paste("posterior_output/figures/", outputname, "plasticity.pdf"),
-      height = 4,
-      width = 4
-    )
-    
-    ## posterior pred. checks
-    print("Plotting posterior predictive checks")
-    list_of_draws <- extract(fit1)
-    yrep <- list_of_draws$draws1
-    np1 <- ppc_dens_overlay(temp.data$responsevar, yrep[1:500,]) +
-      theme_minimal(base_size = 20) +
-      xlab(outputname)
-    ggsave(
-      np1,
-      file = paste(
+      file2_name = paste(
         "posterior_output/predictive_checks/",
         outputname,
-        "normalityplot1.pdf"
-      ),
-      height = 8,
-      width = 8
-    )
-    pdf(file = paste(
-      "posterior_output/predictive_checks/",
-      outputname,
-      "normalityplot2.pdf"
-    ))
-    hist(
-      temp.data$responsevar,
-      prob = T,
-      breaks = 20,
-      main = outputname
-    )
-    lines(density(list_of_draws$draws1), col = "red")
-    dev.off()
-    print(np1)
-  }
-
-Run.vism.gamma.mpas <-
-  function(responsevar,
-           outputname,
-           adapt_delta = 0.8,
-           max_treedepth = 10,
-           iter = 50000) {
-    temp.data <-
-      as.data.frame(cbind(bogr.clim.data$pop, responsevar, bogr.clim.data$vwc_adj))
-    temp.data <- na.omit(temp.data)
-    ## setup data
-    varying_intercept_slope_data = list(
-      'N' = nrow(temp.data),
-      'J' = 15,
-      ## 15 populations for traits
-      'y' = temp.data$responsevar,
-      'county' = temp.data$V1,
-      'x' = temp.data$V3,
-      'm_x' = mean(temp.data$V3)
-    )
-    iter = iter
-    ## sampling
-    fit1 = sampling(
-      comp.gamma.mpas,
-      data = varying_intercept_slope_data,
-      iter = iter,
-      warmup = iter / 2,
-      thin = 1,
-      chains = 2,
-      control = list(adapt_delta = adapt_delta, max_treedepth = max_treedepth)
-    )
-    summary_fit <- summary(fit1)
-    #save(fit1,file=paste("MCMC_posterior_output.",outputname,".R"))
-    
-    ## gather 95% CIs
-    print("Writing 95% CIs")
-    model_stats1 <-
-      cbind(
-        summary_fit$summary[, 4, drop = F],
-        summary_fit$summary[, 8, drop = F],
-        summary_fit$summary[, 1, drop = F],
-        summary_fit$summary[, 10, drop = F]
+        "normalityplot2.pdf"
       )
-    print(fit1, probs = c(.025, .975))
-    write.csv(model_stats1,
-              file = paste("posterior_output/", outputname, ".csv"))
-    
-    ## plot posteriors of key vars
-    draws <- as.array(fit1)
-    bogr.pops <- unique(bogr.clim.data$pop)
-    post.1 <-
-      mcmc_intervals(
-        draws,
-        prob = 0.90,
-        prob_outer = 0.95,
-        point_est = "mean",
-        pars = rev(
-          c(
-            "trait[1]",
-            "trait[2]",
-            "trait[3]",
-            "trait[4]",
-            "trait[5]",
-            "trait[6]",
-            "trait[7]",
-            "trait[8]",
-            "trait[9]",
-            "trait[10]",
-            "trait[11]",
-            "trait[12]",
-            "trait[13]",
-            "trait[14]",
-            "trait[15]"
-          )
-        )
-      ) +
-      xlab(paste(outputname, "mean 95% CI")) +
-      scale_y_discrete(labels = rev(bogr.pops))
-    ggsave(
-      post.1,
-      file = paste("posterior_output/figures/", outputname, "means.pdf"),
-      height = 4,
-      width = 4
     )
-    post.2 <-
-      mcmc_intervals(
-        draws,
-        prob = 0.90,
-        prob_outer = 0.95,
-        point_est = "mean",
-        pars = rev(
-          c(
-            "sigma_pop[1]",
-            "sigma_pop[2]",
-            "sigma_pop[3]",
-            "sigma_pop[4]",
-            "sigma_pop[5]",
-            "sigma_pop[6]",
-            "sigma_pop[7]",
-            "sigma_pop[8]",
-            "sigma_pop[9]",
-            "sigma_pop[10]",
-            "sigma_pop[11]",
-            "sigma_pop[12]",
-            "sigma_pop[13]",
-            "sigma_pop[14]",
-            "sigma_pop[15]"
-          )
-        )
-      ) +
-      xlab(paste(outputname, "variance 95% CI")) +
-      scale_y_discrete(labels = rev(bogr.pops))
-    ggsave(
-      post.2,
-      file = paste("posterior_output/figures/", outputname, "variances.pdf"),
-      height = 4,
-      width = 4
-    )
-    post.3 <-
-      mcmc_intervals(
-        draws,
-        prob = 0.90,
-        prob_outer = 0.95,
-        point_est = "mean",
-        pars = rev(
-          c(
-            "b[1]",
-            "b[2]",
-            "b[3]",
-            "b[4]",
-            "b[5]",
-            "b[6]",
-            "b[7]",
-            "b[8]",
-            "b[9]",
-            "b[10]",
-            "b[11]",
-            "b[12]",
-            "b[13]",
-            "b[14]",
-            "b[15]"
-          )
-        )
-      ) +
-      xlab(paste(outputname, "plasticity 95% CI")) +
-      scale_y_discrete(labels = rev(bogr.pops))
-    ggsave(
-      post.3,
-      file = paste("posterior_output/figures/", outputname, "plasticity.pdf"),
-      height = 4,
-      width = 4
-    )
-    
-    ## posterior pred. checks
-    print("Plotting posterior predictive checks")
-    list_of_draws <- extract(fit1)
-    yrep <- list_of_draws$draws1
-    np1 <- ppc_dens_overlay(temp.data$responsevar, yrep[1:500,]) +
-      theme_minimal(base_size = 20) +
-      xlab(outputname)
-    ggsave(
-      np1,
-      file = paste(
-        "posterior_output/predictive_checks/",
-        outputname,
-        "normalityplot1.pdf"
-      ),
-      height = 8,
-      width = 8
-    )
-    pdf(file = paste(
-      "posterior_output/predictive_checks/",
-      outputname,
-      "normalityplot2.pdf"
-    ))
-    hist(
-      temp.data$responsevar,
-      prob = T,
-      breaks = 20,
-      main = outputname
-    )
-    lines(density(list_of_draws$draws1), col = "red")
-    dev.off()
-    print(np1)
   }
 
 
 ###########################################################################################
 ## run for all relevant traits
 
-Run.vism.gamma(responsevar = bogr.clim.data$biomass_aboveground,
-               outputname = "biomass_aboveground")
-Run.vism.gamma(responsevar = bogr.clim.data$biomass_belowground,
-               outputname = "biomass_belowground")
-Run.vism.gamma(
+Run.vism(
+  responsevar = bogr.clim.data$biomass_aboveground,
+  outputname = "biomass_aboveground",
+  compiled_model = comp.gamma
+)
+Run.vism(
+  responsevar = bogr.clim.data$biomass_belowground,
+  outputname = "biomass_belowground",
+  compiled_model = comp.gamma
+)
+Run.vism(
   responsevar = bogr.clim.data$biomass_rhizome,
   outputname = "biomass_rhizome",
+  compiled_model = comp.gamma,
   adapt_delta = 0.9
 )
 
 ## flower mass won't converge due to lots of zeros
-Run.vism.gamma.zero.adjust(
+Run.vism(
   responsevar = bogr.clim.data$flwr_mass_lifetime + 1,
   outputname = "flwr_mass_lifetime",
+  compiled_model = comp.gamma.zero.adjust,
   adapt_delta = 0.90
 )
 
-Run.vism.gamma(
+Run.vism(
   responsevar = bogr.clim.data$flwr_count_1.2,
   outputname = "flwr_count_1.2",
+  compiled_model = comp.gamma,
   adapt_delta = 0.90
 )
-Run.vism.gamma(
+Run.vism(
   responsevar = bogr.clim.data$flwr_avg_ind_len,
   outputname = "flwr_avg_ind_len",
+  compiled_model = comp.gamma,
   adapt_delta = 0.90
 )
-Run.vism.gamma(
+Run.vism(
   responsevar = bogr.clim.data$flwr_avg_ind_mass,
   outputname = "flwr_avg_ind_mass",
+  compiled_model = comp.gamma,
   adapt_delta = 0.90
 )
 
 ## had some zero height plants / never grew
 bogr.clim.data$max_height[bogr.clim.data$max_height < 20] <-
   NA # any unknown or unid'd loci have a 'NA'
-Run.vism.gamma(
+Run.vism(
   responsevar = bogr.clim.data$max_height,
   outputname = "max_height",
+  compiled_model = comp.gamma,
   adapt_delta = 0.9
 )
 
 ## water potentials (mpas) are all negative but gamma distributed
-Run.vism.gamma.mpas(responsevar = bogr.clim.data$avg_predawn_mpa_expt * -1,
-                    outputname = "avg_predawn_mpa_expt")
-Run.vism.gamma.mpas(responsevar = bogr.clim.data$avg_midday_mpa_expt * -1,
-                    outputname = "avg_midday_mpa_expt")
+Run.vism(
+  responsevar = bogr.clim.data$avg_predawn_mpa_expt * -1,
+  outputname = "avg_predawn_mpa_expt",
+  compiled_model = comp.gamma.mpas
+)
+Run.vism(
+  responsevar = bogr.clim.data$avg_midday_mpa_expt * -1,
+  outputname = "avg_midday_mpa_expt",
+  compiled_model = comp.gamma.mpas
+)
 
-Run.vism.gamma(
+Run.vism(
   responsevar = (
     bogr.clim.data$biomass_belowground + bogr.clim.data$biomass_rhizome
   ) / bogr.clim.data$biomass_aboveground,
+  compiled_model = comp.gamma,
   outputname = "Root:shoot biomass ratio"
 )
-Run.vism.gamma(
-  responsevar = bogr.clim.data$biomass_belowground + bogr.clim.data$biomass_rhizome + bogr.clim.data$biomass_aboveground + bogr.clim.data$flwr_mass_lifetime,
+Run.vism(
+  responsevar = bogr.clim.data$biomass_belowground + 
+    bogr.clim.data$biomass_rhizome + 
+    bogr.clim.data$biomass_aboveground + 
+    bogr.clim.data$flwr_mass_lifetime,
   outputname = "Total Biomass",
+  compiled_model = comp.gamma,
   adapt_delta = 0.9
 )

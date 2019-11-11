@@ -126,6 +126,118 @@ get_posterior_intervals_plasticity <-
   }
 
 
+get_posterior_intervals <-
+  function(bogr_pops,
+           draws_data,
+           mean_xlab,
+           mean_file,
+           sigma_xlab,
+           sigma_file,
+           b_xlab,
+           b_file) {
+    post.1 <-
+      mcmc_intervals(
+        draws_data,
+        prob = 0.90,
+        prob_outer = 0.95,
+        point_est = "mean",
+        pars = rev(
+          c(
+            "trait[1]",
+            "trait[2]",
+            "trait[3]",
+            "trait[4]",
+            "trait[5]",
+            "trait[6]",
+            "trait[7]",
+            "trait[8]",
+            "trait[9]",
+            "trait[10]",
+            "trait[11]",
+            "trait[12]",
+            "trait[13]",
+            "trait[14]",
+            "trait[15]"
+          )
+        )
+      ) +
+      mean_xlab +
+      scale_y_discrete(labels = rev(bogr_pops))
+    ggsave(post.1,
+           file = mean_file,
+           height = 4,
+           width = 4)
+    
+    post.2 <-
+      mcmc_intervals(
+        draws_data,
+        prob = 0.90,
+        prob_outer = 0.95,
+        point_est = "mean",
+        pars = rev(
+          c(
+            "sigma_pop[1]",
+            "sigma_pop[2]",
+            "sigma_pop[3]",
+            "sigma_pop[4]",
+            "sigma_pop[5]",
+            "sigma_pop[6]",
+            "sigma_pop[7]",
+            "sigma_pop[8]",
+            "sigma_pop[9]",
+            "sigma_pop[10]",
+            "sigma_pop[11]",
+            "sigma_pop[12]",
+            "sigma_pop[13]",
+            "sigma_pop[14]",
+            "sigma_pop[15]"
+          )
+        )
+      ) +
+      sigma_xlab +
+      scale_y_discrete(labels = rev(bogr_pops))
+    ggsave(post.2,
+           file = sigma_file,
+           height = 4,
+           width = 4)
+    
+    post.3 <-
+      mcmc_intervals(
+        draws_data,
+        prob = 0.90,
+        prob_outer = 0.95,
+        point_est = "mean",
+        pars = rev(
+          c(
+            "b[1]",
+            "b[2]",
+            "b[3]",
+            "b[4]",
+            "b[5]",
+            "b[6]",
+            "b[7]",
+            "b[8]",
+            "b[9]",
+            "b[10]",
+            "b[11]",
+            "b[12]",
+            "b[13]",
+            "b[14]",
+            "b[15]"
+          )
+        )
+      ) +
+      b_xlab +
+      scale_y_discrete(labels = rev(bogr_pops))
+    ggsave(
+      post.3,
+      file = b_file,
+      height = 4,
+      width = 4
+    )
+  }
+
+
 plot_posterior_predictive_checks <-
   function(temp_data,
            responsevar,
