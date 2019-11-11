@@ -1,30 +1,23 @@
 ###########################################################################################
 ##
-## R source code to accompany Hoffman et al. (2019), last updated 2 Feb 2019.
-## Please contact Ava Hoffman (avamariehoffman@gmail.com) with questions.
-##
-## If you found this code useful, please use the citation below:
-## 
-## 
-## 
+## This code plots the posterior intervals of all phenotypes by site
 ##
 ###########################################################################################
-
 ## set working directory
 source("config.R")
 setwd(wd)
-
 library(ggplot2)
 library(gridExtra)
 
 ###########################################################################################
-
 
 col.pal <- read.csv("utils/color_key.csv",header=T)
 col.pal.names <- as.vector(col.pal[,2]) ; names(col.pal.names) <- col.pal[,6]
 col.pal.colors <- as.vector(col.pal[,3]) ; names(col.pal.colors) <- col.pal[,6]
 col.pal.v <- as.vector(col.pal[,3]) ; names(col.pal.v) <- col.pal[,2]
 
+###########################################################################################
+## Phenotype means
 do.rank <- function(infile,trait.name){
   setwd(wd)
   dat <- read.csv(infile)
@@ -99,8 +92,8 @@ plot.1 <- grid.arrange(bigplot, mylegend, nrow=1,widths=c(10, 1))
 plot.1
 ggsave(plot.1,file="posterior_output/Trait_means.jpg",height=8,width=13)
 
-
-
+###########################################################################################
+## Phenotype variance
 ## now with variance accounting for water treatment
 do.rank <- function(infile,trait.name){
   setwd(wd)
@@ -165,8 +158,8 @@ plot.2 <- grid.arrange(bigplot, mylegend, nrow=1,widths=c(10, 1))
 ggsave(plot.2, file="posterior_output/Trait_variance.jpg",height=8,width=13)
 
 
-
-## With plasticity
+###########################################################################################
+## Phenotypic plasticity
 do.rank <- function(infile,trait.name){
   setwd(wd)
   dat <- read.csv(infile)
@@ -230,8 +223,8 @@ plot.3 <- grid.arrange(bigplot, mylegend, nrow=1,widths=c(10, 1))
 ggsave(plot.3, file="posterior_output_plasticity/Trait_plasticity.jpg",height=8,width=13)
 
 
-
-## With plasticity variance
+###########################################################################################
+## Phenotypic plasticity variance
 do.rank <- function(infile,trait.name){
   setwd(wd)
   dat <- read.csv(infile)

@@ -1,19 +1,6 @@
-###########################################################################################
-##
-## R source code to accompany Hoffman et al. (2019), last updated 2 Feb 2019.
-## Please contact Ava Hoffman (avamariehoffman@gmail.com) with questions.
-##
-## If you found this code useful, please use the citation below:
-## 
-## 
-## 
-##
-###########################################################################################
-
 ## set working directory
 source("config.R")
 setwd(wd)
-
 library(ppcor)
 
 # Partial correlation is the correlation of two variables while controlling for a third variable. 
