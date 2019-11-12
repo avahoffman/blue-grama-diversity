@@ -7,12 +7,12 @@ library(plyr)
 
 ###########################################################################################
 load(
-  "/Users/hoffman ava/bogr_side/blue-grama-diversity/src/genomics_prep/genind_all.R"
+  "src/genomics_prep/genind_all.R"
 )
 
 ## color palette (standard)
 col.pal <-
-  read.csv("/Users/hoffman ava/bogr_side/blue-grama-diversity/utils/color_key.csv",
+  read.csv("utils/color_key.csv",
            header = T)
 col.pal.v <-
   as.vector(col.pal[, 3])
@@ -27,7 +27,7 @@ names(col.pal.colors) <- col.pal[, 6]
 ## color palette (for groupings)
 col.pal.alt <-
   read.csv(
-    "/Users/hoffman ava/bogr_side/blue-grama-diversity/utils/color_key_alt.csv",
+    "utils/color_key_alt.csv",
     header = T
   )
 col.pal.alt.v <-
