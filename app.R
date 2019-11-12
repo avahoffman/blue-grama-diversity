@@ -6,9 +6,7 @@ library(reshape2)
 library(plyr)
 
 ###########################################################################################
-load(
-  "src/genomics_prep/genind_all.R"
-)
+load("src/genomics_prep/genind_all.R")
 
 ## color palette (standard)
 col.pal <-
@@ -26,10 +24,8 @@ names(col.pal.colors) <- col.pal[, 6]
 
 ## color palette (for groupings)
 col.pal.alt <-
-  read.csv(
-    "utils/color_key_alt.csv",
-    header = T
-  )
+  read.csv("utils/color_key_alt.csv",
+           header = T)
 col.pal.alt.v <-
   as.vector(col.pal.alt[, 3])
 names(col.pal.alt.v) <- col.pal.alt[, 2]
@@ -66,39 +62,50 @@ ui <- fluidPage(
   sidebarLayout(
     # Sidebar panel for inputs ----
     sidebarPanel(
-      # Input: number of PCs ----
+      # Input: grouping schema ----
       
-      sliderInput(
-        inputId = "n_pca",
-        label = h4("Number of PCs:"),
-        min = 10,
-        max = 100,
-        value = 60
+      radioButtons(
+        inputId = "grouping",
+        label = h4("Grouping resolution"),
+        choices = list(
+          "Site" = 1,
+          "Region" = 2,
+          "State" = 3
+        ),
+        selected = 2
       ),
       
       # Input: sites included ----
       
       checkboxGroupInput(
-        inputId = "sites",
-        label = h4("Sites to include:"),
+        inputId = "bouldersites",
+        label = h5("Boulder, CO sites"),
         choices = list(
           'Andrus' = 'Andrus',
           'Beech Trail' = 'Beech Trail',
-          'Buffalo Gap' = 'Buffalo Gap',
-          'Cedar Point' = 'Cedar Point',
-          'Cibola' = 'Cibola',
-          'Comanche' = 'Comanche',
           'Davidson Mesa' = 'Davidson Mesa',
           'Heil Valley' = 'Heil Valley',
           'Kelsall' = 'Kelsall',
-          'Konza' = 'Konza',
           'Rabbit Mountain' = 'Rabbit Mountain',
           'Rock Creek' = 'Rock Creek',
-          'Sevilleta' = 'Sevilleta',
-          'SGS' = 'SGS',
           'Steele' = 'Steele',
           'Walker Ranch' = 'Walker Ranch',
           'Wonderland' = 'Wonderland'
+        ),
+        selected = c()
+      ),
+      
+      checkboxGroupInput(
+        inputId = "regsites",
+        label = h5("Regional sites"),
+        choices = list(
+          'Buffalo Gap, SD' = 'Buffalo Gap',
+          'Cedar Point, NB' = 'Cedar Point',
+          'Cibola, NM' = 'Cibola',
+          'Comanche, CO' = 'Comanche',
+          'Konza, KS' = 'Konza',
+          'Sevilleta, NM' = 'Sevilleta',
+          'SGS, CO' = 'SGS'
         ),
         selected = c('Sevilleta',
                      'SGS',
@@ -106,17 +113,22 @@ ui <- fluidPage(
                      'Cibola')
       ),
       
-      # Input: grouping schema ----
+      # Input: select ALL sites ----
       
-      radioButtons(
-        inputId = "grouping",
-        label = h4("Grouping resolution: "),
-        choices = list(
-          "Site" = 1,
-          "Region" = 2,
-          "State" = 3
-        ),
-        selected = 2
+      actionButton("allsites", label = "Select all sites"),
+      
+      # Input: number of PCs ----
+      
+      hr(),
+      sliderInput(
+        inputId = "n_pca",
+        label = h4("Number of PCs"),
+        min = 10,
+        max = 100,
+        value = 60
+      ),
+      helpText(
+        "Selecting the number of PCs ajusts model fit. It is important to avoid overfitting with too many principal components. Around 60 is typically the optimal number for Regional or State level groupings. Any results should be taken as preliminary; cross validation should be performed to determine the exact optimal number for final analysis."
       )
       
     ),
@@ -129,10 +141,74 @@ ui <- fluidPage(
 
 
 # Define server logic required to draw the DAPC plot of sites/groupings ----
-server <- function(input, output) {
+server <- function(input, output, session) {
+  observe({
+    if (input$allsites == 0)
+      return(NULL)
+    else if (input$allsites == 1)
+    {
+      updateCheckboxGroupInput(
+        session,
+        inputId = "bouldersites",
+        choices = list(
+          'Andrus' = 'Andrus',
+          'Beech Trail' = 'Beech Trail',
+          'Davidson Mesa' = 'Davidson Mesa',
+          'Heil Valley' = 'Heil Valley',
+          'Kelsall' = 'Kelsall',
+          'Rabbit Mountain' = 'Rabbit Mountain',
+          'Rock Creek' = 'Rock Creek',
+          'Steele' = 'Steele',
+          'Walker Ranch' = 'Walker Ranch',
+          'Wonderland' = 'Wonderland'
+        ),
+        selected = c(
+          'Andrus',
+          'Beech Trail',
+          'Davidson Mesa',
+          'Heil Valley',
+          'Kelsall',
+          'Rabbit Mountain',
+          'Rock Creek',
+          'Steele',
+          'Walker Ranch',
+          'Wonderland'
+        )
+      )
+      updateCheckboxGroupInput(
+        session,
+        inputId = "regsites",
+        choices = list(
+          'Buffalo Gap, SD' = 'Buffalo Gap',
+          'Cedar Point, NB' = 'Cedar Point',
+          'Cibola, NM' = 'Cibola',
+          'Comanche, CO' = 'Comanche',
+          'Konza, KS' = 'Konza',
+          'Sevilleta, NM' = 'Sevilleta',
+          'SGS, CO' = 'SGS'
+        ),
+        selected = c(
+          'Buffalo Gap',
+          'Cedar Point',
+          'Cibola',
+          'Comanche',
+          'Konza',
+          'Sevilleta',
+          'SGS'
+        )
+      )
+    }
+  })
+  
+  
+  
   output$distPlot <- renderPlot({
     ## Filter out any that are deselected from the DAPC
-    genind.1clone.only <- genind.1clone.only[(genind.1clone.only@pop %in% input$sites),]
+    genind.1clone.only <-
+      genind.1clone.only[(
+        genind.1clone.only@pop %in% input$bouldersites |
+          genind.1clone.only@pop %in% input$regsites
+      ), ]
     
     if (input$grouping == 1) {
       grp <- pop(genind.1clone.only)
@@ -299,7 +375,7 @@ server <- function(input, output) {
           ) +
           geom_vline(xintercept = 0) + geom_hline(yintercept = 0) +
           geom_point(aes(color = legend.order),
-                     size =2) +
+                     size = 2) +
           labs(colour = "Site")
       )
     }
