@@ -5,11 +5,13 @@
 ## Contents
 
 ```
-├── LDA
-│   ├── LDA_local.jpg
-│   └── LDA_regional.jpg
-├── README.md
 ├── app.R
+```
+This code produces the Shiny app dashboard for visualizing genetic diversity in blue grama grass. Several options can be set, including:
+1. Number of principal components - this is a parameter for DAPC fitting. One must avoid overfitting with too many principal components. Around 60 is typically the optimal number for Regional or State level groupings. However, it is important to cross validate to determine the exact optimal number for final analysis.
+2. Populations to include
+3. Level of grouping across which to detect variance (i.e., Site level, Regional level, or State level)
+```
 ├── data
 │   ├── BOGR_DATA_master.csv
 │   ├── BOGR_DATA_master_metadata.docx
