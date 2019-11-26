@@ -11,6 +11,13 @@ This code produces the Shiny app dashboard for visualizing genetic diversity in 
 1. Number of principal components - this is a parameter for DAPC fitting. One must avoid overfitting with too many principal components. Around 60 is typically the optimal number for Regional or State level groupings. However, it is important to cross validate to determine the exact optimal number for final analysis.
 2. Populations to include
 3. Level of grouping across which to detect variance (i.e., Site level, Regional level, or State level)
+
+Current terminal usage should be as such on any machine:
+```
+>>> R
+>>> library(shiny)
+>>> runGitHub("blue-grama-diversity","avahoffman")
+```
 ```
 ├── data
 │   ├── BOGR_DATA_master.csv
@@ -22,12 +29,15 @@ This code produces the Shiny app dashboard for visualizing genetic diversity in 
 │   ├── SITE_DATA.csv
 │   └── hydroscape
 ```
+These are the raw data for the analyses. `BOGR_DATA_master_metadata.docx` contains details about what fields in the `..master.csv` data files mean and how they were calculated. `..PCA_LDA.csv` files are very similar to `..master.csv` but have missing data removed. `Bouteloua_genome_reference.fasta` is the de-novo assembled reference genome to which all SNP fragments in *Bouteloua gracilis* are aligned. `SITE_DATA.csv` contains site-level characteristics, such as climate variables. Finally, `hydroscape/` contains raw and processed data for hydroscape area and includes plots of the hydroscape area (details of calculation of area can be found in Meinzer et al. 2016).
 ```
 ├── genomics_output
 ```
+This directory contains intermediate and outputs from genomic diversity analyses, including structure plots, site heirarchy, DAPC, etc.
 ```
 ├── genomics_variance
 ```
+This directory contains final outputs for measures of within-site genetic diversity, allowing assessment of genetic variance within site.
 ```
 ├── partial_climate_correlation
 ```
@@ -68,3 +78,4 @@ This directory contains several useful references for packages and theory used i
     ├── mcmc_output.R
     └── partial_corr.R
 ```
+This directory contains code for preprocessing and analyzing all the data. Because genomics preprocessing is complex with multiple steps, separate bash scripts can be found in `genomics_prep/`.
