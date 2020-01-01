@@ -15,6 +15,7 @@ This code produces the Shiny app dashboard for visualizing genetic diversity in 
 Current terminal usage should be as such on any machine:
 ```
 >>> R
+>>> ## Depends on packages:shiny, ggplot2, adegenet, ade4, reshape2, plyr
 >>> library(shiny)
 >>> runGitHub("blue-grama-diversity","avahoffman")
 ```
