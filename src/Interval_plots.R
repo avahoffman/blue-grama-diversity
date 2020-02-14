@@ -59,15 +59,12 @@ do.rank <- function(infile, trait.name, mcmc_ref = "trait"){
     scale_color_manual(
       values = col.pal.colors,
       labels = col.pal.names
-    ) +  
-    theme_sigmaplot() +
-    xlab("") + # Could technically do NULL here, but wanted spacing between plots
-    ylab(trait.name) + 
-    theme(
-      axis.text.x = element_blank(),
-      axis.ticks.x = element_blank()
-    ) +
-    labs(colour = "Site")
+    ) + 
+    ylab(trait.name) +
+    xlab(NULL) +
+    labs(colour = "Site") +
+    scale_y_continuous(sec.axis = dup_axis()) +
+    theme_interval()
   
   return(gg)
 }
@@ -86,166 +83,210 @@ g_legend <- function(a.gplot) {
   return(legend)
 }
 
+
+render_interval_plot <-
+  function(data_sources,
+           trait_names,
+           plot_title,
+           filename,
+           mcmc_ref = "trait",
+           zero_line = F) {
+    
+    # Initiate blank list to store plots
+    plots <- list()
+    
+    for (i in 1:length(data_sources)) {
+      p <- do.rank(
+        infile = as.character(data_sources[i]),
+        trait.name = as.character(trait.names[i]),
+        mcmc_ref = as.character(mcmc_ref)
+      )
+      # Save legend
+      if (i == 1) {
+        overall_legend <- g_legend(p)
+        p <-
+          p +
+          theme(legend.position = "none")
+      } else {
+        p <-
+          p +
+          theme(legend.position = "none")
+      }
+      if (i >= 9) {
+        p <- p + xlab("Site")
+      }
+      if (zero_line){
+        p <- p + geom_hline(yintercept=0, lty=3) 
+      }
+      plots[[i]] <- p
+    }
+    
+    bigplot <-
+      plot_grid(
+        plots[[1]],
+        plots[[2]],
+        plots[[3]],
+        plots[[4]],
+        plots[[5]],
+        plots[[6]],
+        plots[[7]],
+        plots[[8]],
+        plots[[9]],
+        plots[[10]],
+        plots[[11]],
+        plots[[12]],
+        align = "vh",
+        axis = "bl",
+        nrow = 3
+      )
+    
+    title <-
+      textGrob(plot_title, gp = gpar(fontsize = 20))
+    
+    plot.1 <-
+      grid.arrange(bigplot,
+                   overall_legend,
+                   nrow = 1,
+                   widths = c(10, 1))
+    
+    plot.1.with.title <-
+      grid.arrange(title,
+                   plot.1,
+                   ncol = 1,
+                   heights = c(1, 18))
+    
+    ggsave(plot.1.with.title,
+           file = filename,
+           height = 8.5,
+           width = 14)
+}
+
+
 ###########################################################################################
 # Phenotype means
 
-d1 <-
-  do.rank(
-    infile = "posterior_output/\ Total\ Biomass\ .csv",
-    trait.name = "Total Biomass (g)"
-  )
+render_interval_plot(
+  data_sources =
+    list(
+      "posterior_output/\ biomass_aboveground\ .csv",
+      "posterior_output/\ biomass_belowground\ .csv",
+      "posterior_output/\ biomass_rhizome\ .csv",
+      "posterior_output/\ Total\ Biomass\ .csv",
+      "posterior_output/\ Root\ to\ shoot\ biomass\ ratio\ .csv",
+      "posterior_output/\ max_height\ .csv",
+      "posterior_output/\ avg_midday_mpa_expt\ .csv",
+      "posterior_output/\ avg_predawn_mpa_expt\ .csv",
+      "posterior_output/\ flwr_mass_lifetime\ .csv",
+      "posterior_output/\ flwr_count_1.2\ .csv",
+      "posterior_output/\ flwr_avg_ind_mass\ .csv",
+      "posterior_output/\ flwr_avg_ind_len\ .csv"
+    ),
+  trait_names =
+    list(
+      "Aboveground biomass (g)",
+      "Belowground biomass (g)",
+      "Rhizome biomass (g)",
+      "Total Biomass (g)",
+      "Root:Shoot ratio",
+      "Maximum height (cm)",
+      "Midday leaf water potential (MPa)",
+      "Predawn leaf water potential (MPa)",
+      "Lifetime flowering mass (g)",
+      "Flower count",
+      "Average flower mass (mg)",
+      "Average flower length (mm)"
+    ),
+  plot_title = "Phenotype means",
+  filename = "posterior_output/Trait_means.jpg",
+  mcmc_ref = "trait"
+)
 
-mylegend <- g_legend(d1)
+###########################################################################################
+# Phenotype variance
 
-d1 <- 
-  d1 + 
-  theme(legend.position = "none")
+render_interval_plot(
+  data_sources =
+    list(
+      "posterior_output/\ biomass_aboveground\ .csv",
+      "posterior_output/\ biomass_belowground\ .csv",
+      "posterior_output/\ biomass_rhizome\ .csv",
+      "posterior_output/\ Total\ Biomass\ .csv",
+      "posterior_output/\ Root\ to\ shoot\ biomass\ ratio\ .csv",
+      "posterior_output/\ max_height\ .csv",
+      "posterior_output/\ avg_midday_mpa_expt\ .csv",
+      "posterior_output/\ avg_predawn_mpa_expt\ .csv",
+      "posterior_output/\ flwr_mass_lifetime\ .csv",
+      "posterior_output/\ flwr_count_1.2\ .csv",
+      "posterior_output/\ flwr_avg_ind_mass\ .csv",
+      "posterior_output/\ flwr_avg_ind_len\ .csv"
+    ),
+  trait_names =
+    list(
+      "Aboveground biomass (g)",
+      "Belowground biomass (g)",
+      "Rhizome biomass (g)",
+      "Total Biomass (g)",
+      "Root:Shoot ratio",
+      "Maximum height (cm)",
+      "Midday leaf water potential (MPa)",
+      "Predawn leaf water potential (MPa)",
+      "Lifetime flowering mass (g)",
+      "Flower count",
+      "Average flower mass (mg)",
+      "Average flower length (mm)"
+    ),
+  plot_title = "Phenotype variances",
+  filename = "posterior_output/Trait_variance.jpg",
+  mcmc_ref = "sigma_pop"
+)
 
-d2 <-
-  do.rank(
-    infile = "posterior_output/\ Root\ to\ shoot\ biomass\ ratio\ .csv",
-    trait.name = "Root:Shoot ratio"
-  ) + 
-  theme(legend.position = "none")
-d3 <-
-  do.rank(
-    infile = "posterior_output/\ avg_midday_mpa_expt\ .csv",
-    trait.name = "Midday leaf water potential (MPa)"
-  ) + 
-  theme(legend.position = "none") + 
-  geom_hline(yintercept=0, lty=3)
-d4 <-
-  do.rank(
-    infile = "posterior_output/\ avg_predawn_mpa_expt\ .csv",
-    trait.name = "Predawn leaf water potential (MPa)"
-  ) + 
-  theme(legend.position = "none") + 
-  geom_hline(yintercept=0, lty=3) 
-d5 <-
-  do.rank(
-    infile = "posterior_output/\ max_height\ .csv", 
-    trait.name = "Maximum height (cm)"
-  ) + 
-  theme(legend.position = "none")
-d6 <-
-  do.rank(
-    infile = "posterior_output/\ flwr_avg_ind_mass\ .csv", 
-    trait.name = "Average flower mass (mg)"
-  ) + 
-  theme(legend.position = "none")
-d7 <-
-  do.rank(
-    infile = "posterior_output/\ flwr_avg_ind_len\ .csv", 
-    trait.name = "Average flower length (mm)"
-  ) + 
-  theme(legend.position = "none")
-d8 <-
-  do.rank(
-    infile = "posterior_output/\ flwr_count_1.2\ .csv", 
-    trait.name = "Flower count"
-  ) + 
-  theme(legend.position = "none")
-d9 <-
-  do.rank(
-    infile = "posterior_output/\ flwr_mass_lifetime\ .csv", 
-    trait.name = "Lifetime flowering mass (g)"
-  ) + 
-  theme(legend.position = "none")
-d10 <-
-  do.rank(
-    infile = "posterior_output/\ biomass_rhizome\ .csv", 
-    trait.name = "Rhizome biomass (g)"
-  ) + 
-  theme(legend.position = "none")
-d11 <-
-  do.rank(
-    infile = "posterior_output/\ biomass_belowground\ .csv", 
-    trait.name = "Belowground biomass (g)"
-  ) + 
-  theme(legend.position = "none")
-d12 <-
-  do.rank(
-    infile = "posterior_output/\ biomass_aboveground\ .csv", 
-    trait.name = "Aboveground biomass (g)"
-  ) + 
-  theme(legend.position = "none")
 
-bigplot <- plot_grid(
-  d12,
-  d11,
-  d10,
-  d1,
-  d2,
-  d5,
-  d4,
-  d3,
-  d9 + xlab("Site"),
-  d8 + xlab("Site"),
-  d6 + xlab("Site"),
-  d7 + xlab("Site"),
-  align = "vh",
-  axis = "bl",
-  nrow = 3
-) + ggtitle("Phenotypic means")
-
-plot.1 <- 
-  grid.arrange(
-    bigplot,
-    mylegend,
-    nrow = 1,
-    widths = c(10, 1),
-    top = textGrob("Phenotype means", gp=gpar(fontsize=20)) # Want larger overall title
-   ) 
-
-plot.1
-
-ggsave(plot.1,file="posterior_output/Trait_means.jpg",height=8.5,width=14)
 
 ###########################################################################################
 ## Phenotype variance
 ## now with variance accounting for water treatment
-# do.rank <- function(infile,trait.name){
-#   setwd(wd)
-#   dat <- read.csv(infile)
-#   trait.dat <- dat[grep("sigma_pop", dat$X),]; rownames(trait.dat) <- seq(1,15,1)
-#   site.dat <- read.csv("data/SITE_DATA.csv")
-#   site.dat.traits <- site.dat[-c(6,10),]; rownames(site.dat.traits) <- seq(1,15,1)
-#   full.dat <- cbind(trait.dat,site.dat.traits[,"pop"]) ; names(full.dat)[6] <- "pop" ; full.dat$trait <- rep(trait.name,nrow(full.dat))
-#   names(full.dat)[6] <- "abbv"
-#   full.dat <- merge(full.dat,col.pal)
-#   ## originally wanted ranked by mean, e.g., aes(x=rank(mean),y=mean))
-#   ## have switched to by rough aridity (aka, order determined in legend)
-#   gg <- ggplot(data=full.dat, aes(x=rank(legend.order),y=mean)) +
-#     facet_wrap(~trait, scale = "free_y") +
-#     geom_errorbar(aes(ymin=`X2.5.`,ymax=`X97.5.`,col=legend.order), width=0) + 
-#     scale_color_manual(values = col.pal.colors, labels = col.pal.names) +  
-#     theme_classic() + xlab(NULL) + 
-#     theme(axis.text.x = element_blank(), axis.ticks.x = element_blank()) +
-#     geom_point(aes(col=legend.order), size=3) + ylab(NULL) + 
-#     labs(colour = "Site") + theme( legend.position = "none"  )
-#   return(gg)
-# }
-# do.rank.wlegend <- function(infile,trait.name){
-#   setwd(wd)
-#   dat <- read.csv(infile)
-#   trait.dat <- dat[grep("sigma_pop", dat$X),]; rownames(trait.dat) <- seq(1,15,1)
-#   site.dat <- read.csv("data/SITE_DATA.csv")
-#   site.dat.traits <- site.dat[-c(6,10),]; rownames(site.dat.traits) <- seq(1,15,1)
-#   full.dat <- cbind(trait.dat,site.dat.traits[,"pop"]) ; names(full.dat)[6] <- "pop" ; full.dat$trait <- rep(trait.name,nrow(full.dat))
-#   names(full.dat)[6] <- "abbv"
-#   full.dat <- merge(full.dat,col.pal)
-#   ## originally wanted ranked by mean, e.g., aes(x=rank(mean),y=mean))
-#   ## have switched to by rough aridity (aka, order determined in legend)
-#   gg <- ggplot(data=full.dat, aes(x=rank(legend.order),y=mean)) +
-#     facet_wrap(~trait, scale = "free_y") +
-#     geom_errorbar(aes(ymin=`X2.5.`,ymax=`X97.5.`,col=legend.order), width=0) + 
-#     scale_color_manual(values = col.pal.colors, labels = col.pal.names) +  
-#     theme_classic() + xlab(NULL) + 
-#     theme(axis.text.x = element_blank(), axis.ticks.x = element_blank()) +
-#     geom_point(aes(col=legend.order), size=3) + ylab(NULL) + 
-#     labs(colour = "Site")
-#   return(gg)
-# }
+do.rank <- function(infile,trait.name){
+  setwd(wd)
+  dat <- read.csv(infile)
+  trait.dat <- dat[grep("sigma_pop", dat$X),]; rownames(trait.dat) <- seq(1,15,1)
+  site.dat <- read.csv("data/SITE_DATA.csv")
+  site.dat.traits <- site.dat[-c(6,10),]; rownames(site.dat.traits) <- seq(1,15,1)
+  full.dat <- cbind(trait.dat,site.dat.traits[,"pop"]) ; names(full.dat)[6] <- "pop" ; full.dat$trait <- rep(trait.name,nrow(full.dat))
+  names(full.dat)[6] <- "abbv"
+  full.dat <- merge(full.dat,col.pal)
+  ## originally wanted ranked by mean, e.g., aes(x=rank(mean),y=mean))
+  ## have switched to by rough aridity (aka, order determined in legend)
+  gg <- ggplot(data=full.dat, aes(x=rank(legend.order),y=mean)) +
+    facet_wrap(~trait, scale = "free_y") +
+    geom_errorbar(aes(ymin=`X2.5.`,ymax=`X97.5.`,col=legend.order), width=0) +
+    scale_color_manual(values = col.pal.colors, labels = col.pal.names) +
+    theme_classic() + xlab(NULL) +
+    theme(axis.text.x = element_blank(), axis.ticks.x = element_blank()) +
+    geom_point(aes(col=legend.order), size=3) + ylab(NULL) +
+    labs(colour = "Site") + theme( legend.position = "none"  )
+  return(gg)
+}
+do.rank.wlegend <- function(infile,trait.name){
+  setwd(wd)
+  dat <- read.csv(infile)
+  trait.dat <- dat[grep("sigma_pop", dat$X),]; rownames(trait.dat) <- seq(1,15,1)
+  site.dat <- read.csv("data/SITE_DATA.csv")
+  site.dat.traits <- site.dat[-c(6,10),]; rownames(site.dat.traits) <- seq(1,15,1)
+  full.dat <- cbind(trait.dat,site.dat.traits[,"pop"]) ; names(full.dat)[6] <- "pop" ; full.dat$trait <- rep(trait.name,nrow(full.dat))
+  names(full.dat)[6] <- "abbv"
+  full.dat <- merge(full.dat,col.pal)
+  ## originally wanted ranked by mean, e.g., aes(x=rank(mean),y=mean))
+  ## have switched to by rough aridity (aka, order determined in legend)
+  gg <- ggplot(data=full.dat, aes(x=rank(legend.order),y=mean)) +
+    facet_wrap(~trait, scale = "free_y") +
+    geom_errorbar(aes(ymin=`X2.5.`,ymax=`X97.5.`,col=legend.order), width=0) +
+    scale_color_manual(values = col.pal.colors, labels = col.pal.names) +
+    theme_classic() + xlab(NULL) +
+    theme(axis.text.x = element_blank(), axis.ticks.x = element_blank()) +
+    geom_point(aes(col=legend.order), size=3) + ylab(NULL) +
+    labs(colour = "Site")
+  return(gg)
+}
 d1 <-
   do.rank(
     infile = "posterior_output/\ Total\ Biomass\ .csv",
