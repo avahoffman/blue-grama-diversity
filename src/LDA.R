@@ -130,7 +130,7 @@ makeLDA <-
     plotdat$regionlab <- regionlab
     
     plot_1 <- ggplot(plotdat, aes(LD1, LD2)) +
-      theme_lda() +
+      theme_cowplot() +
       geom_point(aes(color = legend.order), size = 2.5) +
       #geom_point(aes(color=pop),size=2.5) +
       #facet_wrap(~regionlab, scale = "free_y") +
@@ -275,7 +275,7 @@ makeLDA <-
     plotdat$regionlab <- regionlab
     
     plot_1 <- ggplot(plotdat, aes(LD1, LD2)) +
-      theme_lda() +
+      theme_cowplot() +
       geom_point(aes(color = legend.order), size = 2.5) +
       #geom_point(aes(color=pop),size=2.5) +
       #facet_wrap(~regionlab, scale = "free_y") +
@@ -349,7 +349,9 @@ do.rank.wlegend <- function(infile, trait.name, restrictions) {
     ggplot(data = full.dat, 
            aes(x = rank(legend.order), 
                y = mean)) +
-    theme_interval() +
+    theme_cowplot() +
+    theme(
+      axis.text.x = element_blank()) +
     geom_errorbar(aes(ymin = `X2.5.`, 
                       ymax = `X97.5.`, 
                       col = legend.order), 
@@ -421,7 +423,9 @@ do.rank.wlegend <- function(infile, trait.name, restrictions) {
     ggplot(data = full.dat, 
            aes(x = rank(legend.order), 
                y = mean)) +
-    theme_interval() +
+    theme_cowplot() +
+    theme(
+      axis.text.x = element_blank()) +
     geom_hline(yintercept = 0, lty = 3) +
     geom_errorbar(aes(ymin = `X2.5.`, 
                       ymax = `X97.5.`, 
@@ -502,7 +506,7 @@ fig1 <- plot_grid(
              " (f)",
              "(g)",
              "(h)"),
-  hjust = -2,
+  hjust = -3,
   vjust = 2
 )
 fig1plot <-
@@ -522,7 +526,7 @@ fig2 <- plot_grid(
              "(d)",
              "(e)",
              " (f)"),
-  hjust = -2,
+  hjust = -3.2,
   vjust = 2
 )
 fig2plot <-

@@ -99,7 +99,6 @@ theme_lda <-
         axis.text.x.top = element_blank(),
         
         # Panel details
-        panel.border = element_rect(size = 1, fill = NA),
         panel.background = element_blank(),
         plot.margin = margin(0, 0.5, 0, 0, "cm"), # provide some buffer space on the right
         
