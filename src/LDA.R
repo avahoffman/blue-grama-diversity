@@ -6,6 +6,7 @@
 ## set working directory
 source("config.R")
 setwd(wd)
+source("utils/utils.R")
 library(ggplot2)
 library(gridExtra)
 library(missMDA)
@@ -53,11 +54,11 @@ bogr.data$biomass_total <-
 # LDA on trait means
 
 makeLDA <-
-  function(restrictions = bogr.data[(bogr.data$region != 'Boulder'), ],
+  function(restrictions = bogr.data[(bogr.data$region != 'Boulder'),],
            radlength = 2,
            regionlab) {
     # REMOVE ANY ROWS WITH TONS OF NA
-    bogr.data <- bogr.data[rowSums(is.na(bogr.data)) < 7,]
+    bogr.data <- bogr.data[rowSums(is.na(bogr.data)) < 7, ]
     # replace flower NA with zero
     bogr.data[, 16:17][is.na(bogr.data[, 16:17])] <- 0
     bogr.data.small <- restrictions
@@ -118,7 +119,7 @@ makeLDA <-
     # save only top loadings in LD1 and LD2
     load_dat <-
       load_dat[(abs(load_dat$LD1) %in% tail(sort(abs(load_dat$LD1)), 2) |
-                  abs(load_dat$LD2) %in% tail(sort(abs(load_dat$LD2)), 1)), ]
+                  abs(load_dat$LD2) %in% tail(sort(abs(load_dat$LD2)), 1)),]
     
     plotdat <-
       data.frame(pop = bogr.data.small[, "pop"], plda$x)
@@ -129,16 +130,18 @@ makeLDA <-
     plotdat$regionlab <- regionlab
     
     plot_1 <- ggplot(plotdat, aes(LD1, LD2)) +
+      theme_lda() +
       geom_point(aes(color = legend.order), size = 2.5) +
       #geom_point(aes(color=pop),size=2.5) +
       #facet_wrap(~regionlab, scale = "free_y") +
       scale_color_manual(values = col.pal.colors, labels = col.pal.names) +
-      theme_classic() +
       labs(
         x = paste("LD1 (", percent(prop.lda[1]), ")", sep = ""),
         y = paste("LD2 (", percent(prop.lda[2]), ")", sep = "")
       ) +
       labs(colour = "Site") +
+      scale_y_continuous(sec.axis = dup_axis()) +
+      scale_x_continuous(sec.axis = dup_axis()) +
       geom_spoke(
         aes(x_start, y_start, angle = angle),
         load_dat,
@@ -166,11 +169,11 @@ makeLDA <-
   }
 
 ldaregional <-
-  makeLDA(restrictions = bogr.data[(bogr.data$region != 'Boulder'), ],
+  makeLDA(restrictions = bogr.data[(bogr.data$region != 'Boulder'),],
           radlength = 2,
           regionlab = 'Regional: trait means')
 ldalocal <-
-  makeLDA(restrictions = bogr.data[(bogr.data$region == 'Boulder'), ],
+  makeLDA(restrictions = bogr.data[(bogr.data$region == 'Boulder'),],
           radlength = 2,
           regionlab = 'Local: trait means')
 
@@ -198,11 +201,11 @@ bogr.data$biomass_total <-
   as.numeric(as.character(bogr.data$biomass_total))
 
 makeLDA <-
-  function(restrictions = bogr.data[(bogr.data$region != 'Boulder'), ],
+  function(restrictions = bogr.data[(bogr.data$region != 'Boulder'),],
            radlength = 2,
            regionlab) {
     # REMOVE ANY ROWS WITH TONS OF NA
-    bogr.data <- bogr.data[rowSums(is.na(bogr.data)) < 7,]
+    bogr.data <- bogr.data[rowSums(is.na(bogr.data)) < 7, ]
     # replace flower NA with zero
     bogr.data[, 12:13][is.na(bogr.data[, 12:13])] <- 0
     bogr.data.small <- restrictions
@@ -263,7 +266,7 @@ makeLDA <-
     # save only top loadings in LD1 and LD2
     load_dat <-
       load_dat[(abs(load_dat$LD1) %in% tail(sort(abs(load_dat$LD1)), 2) |
-                  abs(load_dat$LD2) %in% tail(sort(abs(load_dat$LD2)), 1)), ]
+                  abs(load_dat$LD2) %in% tail(sort(abs(load_dat$LD2)), 1)),]
     
     plotdat <-
       data.frame(pop = bogr.data.small[, "pop"], plda$x)
@@ -274,15 +277,17 @@ makeLDA <-
     plotdat$regionlab <- regionlab
     
     plot_1 <- ggplot(plotdat, aes(LD1, LD2)) +
+      theme_lda() +
       geom_point(aes(color = legend.order), size = 2.5) +
       #geom_point(aes(color=pop),size=2.5) +
       #facet_wrap(~regionlab, scale = "free_y") +
       scale_color_manual(values = col.pal.colors, labels = col.pal.names) +
-      theme_classic() +
       labs(
         x = paste("LD1 (", percent(prop.lda[1]), ")", sep = ""),
         y = paste("LD2 (", percent(prop.lda[2]), ")", sep = "")
       ) +
+      scale_y_continuous(sec.axis = dup_axis()) +
+      scale_x_continuous(sec.axis = dup_axis()) +
       labs(colour = "Site") +
       geom_spoke(
         aes(x_start, y_start, angle = angle),
@@ -313,11 +318,11 @@ makeLDA <-
 # LDA for plasticity
 
 ldaregionalplast <-
-  makeLDA(restrictions = bogr.data[(bogr.data$region != 'Boulder'), ],
+  makeLDA(restrictions = bogr.data[(bogr.data$region != 'Boulder'),],
           radlength = 1.5,
           regionlab = 'Regional: trait plasticity')
 ldalocalplast <-
-  makeLDA(restrictions = bogr.data[(bogr.data$region == 'Boulder'), ],
+  makeLDA(restrictions = bogr.data[(bogr.data$region == 'Boulder'),],
           radlength = 2,
           regionlab = 'Local: trait plasticity')
 
@@ -328,11 +333,11 @@ do.rank.wlegend <- function(infile, trait.name, restrictions) {
   setwd(wd)
   dat <- read.csv(infile)
   trait.dat <-
-    dat[grep("trait", dat$X), ]
+    dat[grep("trait", dat$X),]
   rownames(trait.dat) <- seq(1, 15, 1)
   site.dat <- read.csv("data/SITE_DATA.csv")
   site.dat.traits <-
-    site.dat[-c(6, 10), ]
+    site.dat[-c(6, 10),]
   rownames(site.dat.traits) <- seq(1, 15, 1)
   full.dat <-
     cbind(trait.dat, site.dat.traits[, "pop"])
@@ -341,16 +346,26 @@ do.rank.wlegend <- function(infile, trait.name, restrictions) {
   full.dat$trait <- rep(trait.name, nrow(full.dat))
   names(full.dat)[6] <- "abbv"
   full.dat <- merge(full.dat, col.pal)
-  full.dat <- full.dat[(restrictions), ]
+  full.dat <- full.dat[(restrictions),]
   ## originally wanted ranked by mean, e.g., aes(x=rank(mean),y=mean))
   ## have switched to by rough aridity (aka, order determined in legend)
-  gg <- ggplot(data = full.dat, aes(x = rank(legend.order), y = mean)) +
-    geom_errorbar(aes(ymin = `X2.5.`, ymax = `X97.5.`, col = legend.order), width =
-                    0) +
-    scale_color_manual(values = col.pal.colors, labels = col.pal.names) +
-    theme_classic() + xlab(NULL) +
-    theme(axis.text.x = element_blank(), axis.ticks.x = element_blank()) +
-    geom_point(aes(col = legend.order), size = 3) + ylab(trait.name) +
+  gg <-
+    ggplot(data = full.dat, 
+           aes(x = rank(legend.order), 
+               y = mean)) +
+    theme_interval() +
+    geom_errorbar(aes(ymin = `X2.5.`, 
+                      ymax = `X97.5.`, 
+                      col = legend.order), 
+                  width = 0) +
+    scale_color_manual(values = col.pal.colors, 
+                       labels = col.pal.names) +
+    xlab(NULL) +
+    scale_y_continuous(sec.axis = dup_axis()) +
+    scale_x_continuous(sec.axis = dup_axis()) +
+    geom_point(aes(col = legend.order), 
+               size = 3) + 
+    ylab(trait.name) +
     labs(colour = "Site")
   return(gg)
 }
@@ -392,11 +407,11 @@ do.rank.wlegend <- function(infile, trait.name, restrictions) {
   setwd(wd)
   dat <- read.csv(infile)
   trait.dat <-
-    dat[grep("trait", dat$X), ]
+    dat[grep("trait", dat$X),]
   rownames(trait.dat) <- seq(1, 15, 1)
   site.dat <- read.csv("data/SITE_DATA.csv")
   site.dat.traits <-
-    site.dat[-c(6, 10), ]
+    site.dat[-c(6, 10),]
   rownames(site.dat.traits) <- seq(1, 15, 1)
   full.dat <-
     cbind(trait.dat, site.dat.traits[, "pop"])
@@ -405,16 +420,27 @@ do.rank.wlegend <- function(infile, trait.name, restrictions) {
   full.dat$trait <- rep(trait.name, nrow(full.dat))
   names(full.dat)[6] <- "abbv"
   full.dat <- merge(full.dat, col.pal)
-  full.dat <- full.dat[(restrictions), ]
+  full.dat <- full.dat[(restrictions),]
   ## originally wanted ranked by mean, e.g., aes(x=rank(mean),y=mean))
   ## have switched to by rough aridity (aka, order determined in legend)
-  gg <- ggplot(data = full.dat, aes(x = rank(legend.order), y = mean)) +
-    geom_errorbar(aes(ymin = `X2.5.`, ymax = `X97.5.`, col = legend.order), width =
-                    0) +
-    scale_color_manual(values = col.pal.colors, labels = col.pal.names) +
-    theme_classic() + xlab(NULL) + geom_hline(yintercept = 0, lty = 3) +
-    theme(axis.text.x = element_blank(), axis.ticks.x = element_blank()) +
-    geom_point(aes(col = legend.order), size = 3) + ylab(trait.name) +
+  gg <-
+    ggplot(data = full.dat, 
+           aes(x = rank(legend.order), 
+               y = mean)) +
+    theme_interval() +
+    geom_hline(yintercept = 0, lty = 3) +
+    geom_errorbar(aes(ymin = `X2.5.`, 
+                      ymax = `X97.5.`, 
+                      col = legend.order), 
+                  width = 0) +
+    scale_color_manual(values = col.pal.colors, 
+                       labels = col.pal.names) +
+    xlab(NULL) + 
+    scale_y_continuous(sec.axis = dup_axis()) +
+    scale_x_continuous(sec.axis = dup_axis()) +
+    geom_point(aes(col = legend.order), 
+               size = 3) + 
+    ylab(trait.name) +
     labs(colour = "Site")
   return(gg)
 }
@@ -471,38 +497,44 @@ fig1 <- plot_grid(
   regionaltrait_2  + theme(legend.position = "none"),
   regionaltrait_3  + theme(legend.position = "none"),
   ldaregionalplast + theme(legend.position = "none"),
-  regionalplast_1 + theme(legend.position = "none"),
-  regionalplast_2 + theme(legend.position = "none"),
-  regionalplast_3 + theme(legend.position = "none"),
+  regionalplast_1 + theme(legend.position = "none") + xlab("Site"),
+  regionalplast_2 + theme(legend.position = "none") + xlab("Site"),
+  regionalplast_3 + theme(legend.position = "none") + xlab("Site"),
   align = 'vh',
   nrow = 2,
-  labels = c("      (a)",
-             "      (b)",
-             "      (c)",
-             "      (d)",
-             "      (e)",
-             "      (f)",
-             "      (g)",
-             "      (h)")
+  labels = c("(a)",
+             " (b)",
+             "(c)",
+             " (d)",
+             "(e)",
+             " (f)",
+             "(g)",
+             "(h)"),
+  hjust = -2,
+  vjust = 2
 )
-fig1plot <- grid.arrange(fig1, mylegend1, nrow = 1, widths = c(10, 1))
+fig1plot <-
+  grid.arrange(fig1, mylegend1, nrow = 1, widths = c(10, 1))
 fig2 <- plot_grid(
   ldalocal + theme(legend.position = "none"),
   localtrait_1 + theme(legend.position = "none"),
   localtrait_2 + theme(legend.position = "none"),
   ldalocalplast + theme(legend.position = "none"),
-  localplast_1 + theme(legend.position = "none"),
-  localplast_2 + theme(legend.position = "none"),
+  localplast_1 + theme(legend.position = "none") + xlab("Site"),
+  localplast_2 + theme(legend.position = "none") + xlab("Site"),
   align = 'vh',
   nrow = 2,
-  labels = c("      (a)",
-             "      (b)",
-             "      (c)",
-             "      (d)",
-             "      (e)",
-             "      (f)")
+  labels = c("(a)",
+             "(b)",
+             "(c)",
+             "(d)",
+             "(e)",
+             " (f)"),
+  hjust = -2,
+  vjust = 2
 )
-fig2plot <- grid.arrange(fig2, mylegend2, nrow = 1, widths = c(10, 2))
+fig2plot <-
+  grid.arrange(fig2, mylegend2, nrow = 1, widths = c(10, 2))
 
 ggsave(fig1plot,
        file = "LDA/LDA_regional.jpg",
