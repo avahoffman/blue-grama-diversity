@@ -140,8 +140,6 @@ makeLDA <-
         y = paste("LD2 (", percent(prop.lda[2]), ")", sep = "")
       ) +
       labs(colour = "Site") +
-      scale_y_continuous(sec.axis = dup_axis()) +
-      scale_x_continuous(sec.axis = dup_axis()) +
       geom_spoke(
         aes(x_start, y_start, angle = angle),
         load_dat,
@@ -286,8 +284,6 @@ makeLDA <-
         x = paste("LD1 (", percent(prop.lda[1]), ")", sep = ""),
         y = paste("LD2 (", percent(prop.lda[2]), ")", sep = "")
       ) +
-      scale_y_continuous(sec.axis = dup_axis()) +
-      scale_x_continuous(sec.axis = dup_axis()) +
       labs(colour = "Site") +
       geom_spoke(
         aes(x_start, y_start, angle = angle),
@@ -361,8 +357,6 @@ do.rank.wlegend <- function(infile, trait.name, restrictions) {
     scale_color_manual(values = col.pal.colors, 
                        labels = col.pal.names) +
     xlab(NULL) +
-    scale_y_continuous(sec.axis = dup_axis()) +
-    scale_x_continuous(sec.axis = dup_axis()) +
     geom_point(aes(col = legend.order), 
                size = 3) + 
     ylab(trait.name) +
@@ -436,8 +430,6 @@ do.rank.wlegend <- function(infile, trait.name, restrictions) {
     scale_color_manual(values = col.pal.colors, 
                        labels = col.pal.names) +
     xlab(NULL) + 
-    scale_y_continuous(sec.axis = dup_axis()) +
-    scale_x_continuous(sec.axis = dup_axis()) +
     geom_point(aes(col = legend.order), 
                size = 3) + 
     ylab(trait.name) +
