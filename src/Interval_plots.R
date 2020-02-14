@@ -9,6 +9,7 @@ setwd(wd)
 source("utils/utils.R")
 library(cowplot)
 library(ggplot2)
+library(grid)
 library(gridExtra)
 
 ###########################################################################################
@@ -91,7 +92,7 @@ g_legend <- function(a.gplot) {
 d1 <-
   do.rank(
     infile = "posterior_output/\ Total\ Biomass\ .csv",
-    trait.name = "Total Biomass mean (g)"
+    trait.name = "Total Biomass (g)"
   )
 
 mylegend <- g_legend(d1)
@@ -103,67 +104,69 @@ d1 <-
 d2 <-
   do.rank(
     infile = "posterior_output/\ Root\ to\ shoot\ biomass\ ratio\ .csv",
-    trait.name = "Root:Shoot mean"
+    trait.name = "Root:Shoot ratio"
   ) + 
   theme(legend.position = "none")
 d3 <-
   do.rank(
     infile = "posterior_output/\ avg_midday_mpa_expt\ .csv",
-    trait.name = "Midday leaf water potential mean (MPa)"
+    trait.name = "Midday leaf water potential (MPa)"
   ) + 
-  theme(legend.position = "none")
+  theme(legend.position = "none") + 
+  geom_hline(yintercept=0, lty=3)
 d4 <-
   do.rank(
     infile = "posterior_output/\ avg_predawn_mpa_expt\ .csv",
-    trait.name = "Predawn leaf water potential mean (MPa)"
+    trait.name = "Predawn leaf water potential (MPa)"
   ) + 
-  theme(legend.position = "none")
+  theme(legend.position = "none") + 
+  geom_hline(yintercept=0, lty=3) 
 d5 <-
   do.rank(
     infile = "posterior_output/\ max_height\ .csv", 
-    trait.name = "Maximum height mean (cm)"
+    trait.name = "Maximum height (cm)"
   ) + 
   theme(legend.position = "none")
 d6 <-
   do.rank(
     infile = "posterior_output/\ flwr_avg_ind_mass\ .csv", 
-    trait.name = "Average flower mass mean (mg)"
+    trait.name = "Average flower mass (mg)"
   ) + 
   theme(legend.position = "none")
 d7 <-
   do.rank(
     infile = "posterior_output/\ flwr_avg_ind_len\ .csv", 
-    trait.name = "Average flower length mean (mm)"
+    trait.name = "Average flower length (mm)"
   ) + 
   theme(legend.position = "none")
 d8 <-
   do.rank(
     infile = "posterior_output/\ flwr_count_1.2\ .csv", 
-    trait.name = "Flower count mean"
+    trait.name = "Flower count"
   ) + 
   theme(legend.position = "none")
 d9 <-
   do.rank(
     infile = "posterior_output/\ flwr_mass_lifetime\ .csv", 
-    trait.name = "Lifetime flowering mass mean (g)"
+    trait.name = "Lifetime flowering mass (g)"
   ) + 
   theme(legend.position = "none")
 d10 <-
   do.rank(
     infile = "posterior_output/\ biomass_rhizome\ .csv", 
-    trait.name = "Rhizome biomass mean (g)"
+    trait.name = "Rhizome biomass (g)"
   ) + 
   theme(legend.position = "none")
 d11 <-
   do.rank(
     infile = "posterior_output/\ biomass_belowground\ .csv", 
-    trait.name = "Belowground biomass mean (g)"
+    trait.name = "Belowground biomass (g)"
   ) + 
   theme(legend.position = "none")
 d12 <-
   do.rank(
     infile = "posterior_output/\ biomass_aboveground\ .csv", 
-    trait.name = "Aboveground biomass mean (g)"
+    trait.name = "Aboveground biomass (g)"
   ) + 
   theme(legend.position = "none")
 
@@ -191,12 +194,12 @@ plot.1 <-
     mylegend,
     nrow = 1,
     widths = c(10, 1),
-    top = textGrob("Daily QC: Blue",gp=gpar(fontsize=20,font=3))
-  ) 
+    top = textGrob("Phenotype means", gp=gpar(fontsize=20)) # Want larger overall title
+   ) 
 
 plot.1
 
-ggsave(plot.1,file="posterior_output/Trait_means.jpg",height=8.5,width=13.5)
+ggsave(plot.1,file="posterior_output/Trait_means.jpg",height=8.5,width=14)
 
 ###########################################################################################
 ## Phenotype variance
