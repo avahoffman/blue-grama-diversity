@@ -454,7 +454,7 @@ regionalplast_2 <-
 regionalplast_3 <-
   do.rank.wlegend(
     infile = "posterior_output_plasticity/\ max_height\ .csv",
-    trait.name = "Maximum height (cm)",
+    trait.name = "Maximum height plasticity (cm)",
     restrictions = c(2, 4, 5, 11, 12)
   )
 
@@ -467,7 +467,7 @@ localplast_1 <-
 localplast_2 <-
   do.rank.wlegend(
     infile = "posterior_output_plasticity/\ flwr_count_1.2\ .csv",
-    trait.name = "Flower count",
+    trait.name = "Flower count plasticity",
     restrictions = -c(2, 4, 5, 11, 12)
   )
 
