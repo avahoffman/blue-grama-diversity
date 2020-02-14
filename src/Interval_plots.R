@@ -6,7 +6,6 @@
 # Set working directory
 source("config.R")
 setwd(wd)
-source("utils/utils.R")
 library(cowplot)
 library(ggplot2)
 library(grid)
@@ -46,6 +45,7 @@ do.rank <- function(infile, trait.name, mcmc_ref = "trait"){
       aes(x = rank(legend.order),
           y = mean)
     ) +
+    theme_cowplot() +
     geom_errorbar(
       aes(ymin = `X2.5.`,
           ymax = `X97.5.`,
@@ -62,9 +62,7 @@ do.rank <- function(infile, trait.name, mcmc_ref = "trait"){
     ) + 
     ylab(trait.name) +
     xlab(NULL) +
-    labs(colour = "Site") +
-    scale_y_continuous(sec.axis = dup_axis()) +
-    theme_interval()
+    labs(colour = "Site")
   
   return(gg)
 }
@@ -147,7 +145,7 @@ render_interval_plot <-
       grid.arrange(bigplot,
                    overall_legend,
                    nrow = 1,
-                   widths = c(9, 1))
+                   widths = c(8, 1))
     
     plot.1.with.title <-
       grid.arrange(title,
@@ -158,7 +156,7 @@ render_interval_plot <-
     ggsave(plot.1.with.title,
            file = filename,
            height = 9,
-           width = 14.5)
+           width = 15)
 }
 
 

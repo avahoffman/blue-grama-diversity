@@ -6,7 +6,6 @@
 ## set working directory
 source("config.R")
 setwd(wd)
-source("utils/utils.R")
 library(ggplot2)
 library(gridExtra)
 library(missMDA)
