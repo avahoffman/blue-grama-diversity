@@ -40,7 +40,7 @@ theme_interval <-
         # Panel details
         panel.border = element_rect(size = 1, fill = NA),
         panel.background = element_blank(),
-        plot.margin = margin(0, 0.75, 0, 0, "cm"), # provide some buffer space on the right
+        plot.margin = margin(0, 0.5, 0, 0, "cm"), # provide some buffer space on the right
         
         # Legend symbol background
         legend.key = element_rect(fill = NA)
