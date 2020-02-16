@@ -3,7 +3,6 @@ source("config.R")
 setwd(wd)
 
 library(maps)
-library(mapdata)
 library(scatterpie)
 library(ggplot2)
 library(ggsn)
@@ -27,7 +26,7 @@ names(col.pal.colors) <- col.pal[, 2]
 
 states <- map_data("state")
 county <- map_data("county")
-co_county <- county[(county$subregion == "boulder"), ]
+co_county <- county[(county$subregion == "boulder"),]
 
 struct.data <-
   read.csv("genomics_output/Structure_plot_data_regional_wide.csv")
@@ -74,12 +73,10 @@ ggplot(data = states) +
     color = "gray80",
     fill = "gray90"
   ) +
-  coord_fixed(1.1) +
-  coord_fixed(xlim = c(-110, -94),
+  coord_fixed(xlim = c(-110,-94),
               ylim = c(30, 46),
               ratio = 1.1) + ## set limits on map size
-  #theme_void()+
-  #geom_point(data=clim.data, aes(x=long,y=lat),color="darkgrey",size=0.01) +
+  theme_cowplot() +
   guides(fill = FALSE) + # do this to leave off the color legend
   geom_scatterpie(
     aes(x = long, y = lat, r = 0.88),
@@ -93,7 +90,8 @@ ggplot(data = states) +
   ylab(NULL) +
   ggsn::scalebar(
     dist = 300,
-    dd2km = TRUE,
+    dist_unit = "km",
+    transform = TRUE,
     model = "WGS84",
     st.size = 3,
     st.dist = 0.04,
@@ -149,25 +147,25 @@ pie.data <-
     W.pie,
     WR.pie
   ))
-pie.data$pop <- c("A", "BT", "DM", "HV", "K", "RC", "RM", "ST", "W", "WR")
+pie.data$pop <-
+  c("A", "BT", "DM", "HV", "K", "RC", "RM", "ST", "W", "WR")
 pie.data <- merge(pie.data, clim.data)
 pie.data <- pie.data[, 1:13]
 
 ## have to go a bit out of order because of alphabetical order of abbrevs. versus full names
-col.pies <- as.vector(col.pal[, 3])[c(1, 3, 7, 8, 9, 12, 11, 15, 17, 16)]
+col.pies <-
+  as.vector(col.pal[, 3])[c(1, 3, 7, 8, 9, 12, 11, 15, 17, 16)]
 
 ggplot(data = county) +
   geom_polygon(aes(x = long, y = lat, group = group),
                color = "gray80",
                fill = "gray90") +
-  coord_fixed(1.1) +
   coord_fixed(
-    xlim = c(-105.7, -105),
+    xlim = c(-105.7,-105),
     ylim = c(39.85, 40.3),
     ratio = 1.1
   ) + ## set limits on map size
-  #geom_point(data=clim.data, aes(x=long,y=lat),color="darkgrey",size=0.1) +
-  #theme_void()+
+  theme_cowplot() +
   guides(fill = FALSE) +  # do this to leave off the color legend
   geom_scatterpie(
     aes(x = long, y = lat, r = 0.03),
@@ -181,7 +179,8 @@ ggplot(data = county) +
   ylab(NULL) +
   ggsn::scalebar(
     dist = 10,
-    dd2km = TRUE,
+    dist_unit = "km",
+    transform = TRUE,
     model = "WGS84",
     st.size = 3,
     location = "bottomleft",
