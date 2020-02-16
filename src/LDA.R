@@ -534,7 +534,7 @@ fig2plot <-
 ggsave(fig1plot,
        file = "LDA/LDA_regional.jpg",
        height = 7,
-       width = 15)
+       width = 16)
 ggsave(fig2plot,
        file = "LDA/LDA_local.jpg",
        height = 7,
