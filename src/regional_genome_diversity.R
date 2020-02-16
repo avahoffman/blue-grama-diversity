@@ -4,6 +4,7 @@ setwd(wd)
 library(adegenet) ## deal with genind objects
 library(ade4)
 library(ggplot2)
+library(cowplot)
 library(reshape2)
 
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
@@ -81,7 +82,7 @@ plot.dat <- merge(plot.dat, col.pal)
 write.csv(plot.dat, file = "genomics_output/DAPC_regional.csv")
 ggplot(data = plot.dat, aes(x = LD1, y = LD2)) +
   scale_color_manual(values = col.pal.colors, labels = col.pal.names) +
-  theme_classic() +
+  theme_cowplot() +
   ## ellipses for visual aide
   stat_ellipse(data = subset(plot.dat, `abbv` == "CIB"), color = "#F88A89") +
   stat_ellipse(data = subset(plot.dat, `abbv` == "SEV"), color = "#E73233") +

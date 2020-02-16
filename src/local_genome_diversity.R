@@ -5,6 +5,7 @@ setwd(wd)
 library(adegenet) ## deal with genind objects
 library(ade4)
 library(ggplot2)
+library(cowplot)
 library(reshape2)
 
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
