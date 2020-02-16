@@ -83,7 +83,7 @@ plot.dat <- merge(plot.dat, col.pal)
 write.csv(plot.dat, file = "genomics_output/DAPC_local.csv")
 ggplot(data = plot.dat, aes(x = LD1, y = LD2)) +
   scale_color_manual(values = col.pal.colors, labels = col.pal.names) +
-  theme_classic() +
+  theme_cowplot() +
   ## ellipses for visual aide
   stat_ellipse(data = subset(plot.dat, `abbv` == "A"), color = "#859D59") +
   stat_ellipse(data = subset(plot.dat, `abbv` == "BT"), color = "#6BAD9E") +
