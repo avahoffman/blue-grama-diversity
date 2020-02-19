@@ -398,7 +398,9 @@ localtrait_2 <-
   )
 
 
-do.rank.wlegend <- function(infile, trait.name, restrictions) {
+do.rank.wlegend <- function(infile, trait.name, restrictions, xlabs) {
+  
+  breaks <- seq(1, length(xlabs), 1)
   setwd(wd)
   dat <- read.csv(infile)
   trait.dat <-
@@ -423,8 +425,7 @@ do.rank.wlegend <- function(infile, trait.name, restrictions) {
            aes(x = rank(legend.order), 
                y = mean)) +
     theme_cowplot() +
-    theme(
-      axis.text.x = element_blank()) +
+    theme(axis.text.x = element_text(angle=45, hjust = 1)) +
     geom_hline(yintercept = 0, lty = 3) +
     geom_errorbar(aes(ymin = `X2.5.`, 
                       ymax = `X97.5.`, 
@@ -432,6 +433,8 @@ do.rank.wlegend <- function(infile, trait.name, restrictions) {
                   width = 0) +
     scale_color_manual(values = col.pal.colors, 
                        labels = col.pal.names) +
+    scale_x_continuous(labels = xlabs,
+                       breaks = breaks) +
     xlab(NULL) + 
     geom_point(aes(col = legend.order), 
                size = 3) + 
@@ -443,48 +446,60 @@ regionalplast_1 <-
   do.rank.wlegend(
     infile = "posterior_output_plasticity/\ biomass_aboveground\ .csv",
     trait.name = "Aboveground biomass plasticity (g)",
-    restrictions = c(2, 4, 5, 11, 12)
+    restrictions = c(2, 4, 5, 11, 12),
+    xlabs = c("Sevilleta", "Cibola", "Comanche", "SGS", "Buffalo Gap")
   )
 regionalplast_2 <-
   do.rank.wlegend(
     infile = "posterior_output_plasticity/\ biomass_belowground\ .csv",
     trait.name = "Belowground biomass plasticity (g)",
-    restrictions = c(2, 4, 5, 11, 12)
+    restrictions = c(2, 4, 5, 11, 12),
+    xlabs = c("Sevilleta", "Cibola", "Comanche", "SGS", "Buffalo Gap")
   )
 regionalplast_3 <-
   do.rank.wlegend(
     infile = "posterior_output_plasticity/\ max_height\ .csv",
     trait.name = "Maximum height plasticity (cm)",
-    restrictions = c(2, 4, 5, 11, 12)
+    restrictions = c(2, 4, 5, 11, 12),
+    xlabs = c("Sevilleta", "Cibola", "Comanche", "SGS", "Buffalo Gap")
   )
 
 localplast_1 <-
   do.rank.wlegend(
     infile = "posterior_output_plasticity/\ biomass_aboveground\ .csv",
     trait.name = "Aboveground biomass plasticity (g)",
-    restrictions = -c(2, 4, 5, 11, 12)
+    restrictions = -c(2, 4, 5, 11, 12),
+    xlabs = c("Andrus",
+              "Rock Creek",
+              "Steele",
+              "Rabbit Mountain",
+              "Beech Trail",
+              "Davidson Mesa",
+              "Wonderland",
+              "Heil Valley",
+              "Kelsall",
+              "Walker Ranch")
   )
 localplast_2 <-
   do.rank.wlegend(
     infile = "posterior_output_plasticity/\ flwr_count_1.2\ .csv",
     trait.name = "Flower count plasticity",
-    restrictions = -c(2, 4, 5, 11, 12)
+    restrictions = -c(2, 4, 5, 11, 12),
+    xlabs = c("Andrus",
+              "Rock Creek",
+              "Steele",
+              "Rabbit Mountain",
+              "Beech Trail",
+              "Davidson Mesa",
+              "Wonderland",
+              "Heil Valley",
+              "Kelsall",
+              "Walker Ranch")
   )
 
 
 ###########################################################################################
 # combine all plots
-
-g_legend <- function(a.gplot) {
-  tmp <- ggplot_gtable(ggplot_build(a.gplot))
-  leg <- which(sapply(tmp$grobs, function(x)
-    x$name) == "guide-box")
-  legend <- tmp$grobs[[leg]]
-  return(legend)
-}
-
-mylegend1 <- g_legend(regionalplast_1)
-mylegend2 <- g_legend(localplast_1)
 
 fig1 <- plot_grid(
   ldaregional + theme(legend.position = "none"),
@@ -492,10 +507,10 @@ fig1 <- plot_grid(
   regionaltrait_2  + theme(legend.position = "none"),
   regionaltrait_3  + theme(legend.position = "none"),
   ldaregionalplast + theme(legend.position = "none"),
-  regionalplast_1 + theme(legend.position = "none") + xlab("Site"),
-  regionalplast_2 + theme(legend.position = "none") + xlab("Site"),
-  regionalplast_3 + theme(legend.position = "none") + xlab("Site"),
-  align = 'vh',
+  regionalplast_1 + theme(legend.position = "none"),
+  regionalplast_2 + theme(legend.position = "none"),
+  regionalplast_3 + theme(legend.position = "none"),
+  align = 'v',
   nrow = 2,
   labels = c("(a)",
              " (b)",
@@ -508,16 +523,15 @@ fig1 <- plot_grid(
   hjust = -3,
   vjust = 2
 )
-fig1plot <-
-  grid.arrange(fig1, mylegend1, nrow = 1, widths = c(10, 1))
+
 fig2 <- plot_grid(
   ldalocal + theme(legend.position = "none"),
-  localtrait_1 + theme(legend.position = "none"),
+  localtrait_1 + theme(legend.position = "none", ),
   localtrait_2 + theme(legend.position = "none"),
   ldalocalplast + theme(legend.position = "none"),
-  localplast_1 + theme(legend.position = "none") + xlab("Site"),
-  localplast_2 + theme(legend.position = "none") + xlab("Site"),
-  align = 'vh',
+  localplast_1 + theme(legend.position = "none"),
+  localplast_2 + theme(legend.position = "none"),
+  align = 'v',
   nrow = 2,
   labels = c("(a)",
              "(b)",
@@ -528,14 +542,12 @@ fig2 <- plot_grid(
   hjust = -3.2,
   vjust = 2
 )
-fig2plot <-
-  grid.arrange(fig2, mylegend2, nrow = 1, widths = c(10, 2))
 
-ggsave(fig1plot,
+ggsave(fig1,
        file = "LDA/LDA_regional.jpg",
        height = 7,
-       width = 16)
-ggsave(fig2plot,
+       width = 14)
+ggsave(fig2,
        file = "LDA/LDA_local.jpg",
        height = 7,
-       width = 13)
+       width = 14)
