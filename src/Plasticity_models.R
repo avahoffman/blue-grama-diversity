@@ -13,35 +13,13 @@
 ## grama we sampled - but has been taken out as of most current analysis
 ##
 ##########################################################################################
-## set working directory
-source("config.R")
-setwd(wd)
 ## load libs
 library(rstan) ## Bayesian model compiler and sampler
 options(mc.cores = parallel::detectCores()) ## option to make Stan parallelize
 library(bayesplot)
-## load some functions that make figures
-source("utils/mcmc_output.R")
 
 ##########################################################################################
-## open plasticity data
-plas.data <- read.csv("data/BOGR_DATA_plasticity_master.csv")
-names(plas.data)
-clim.data <- read.csv("data/SITE_DATA.csv")
-names(clim.data)
 
-## stan won't be able to handle these NAs. replace them w/ NA so that they can be removed
-plas.data[plas.data == "no pot"] <-
-  NA # any unknown or unid'd loci have a 'NA'
-plas.data[plas.data == "met"] <-
-  NA # any unknown or unid'd loci have a 'NA'
-plas.data[plas.data == "tr"] <-
-  NA # any unknown or unid'd loci have a 'NA'
-## merge with climate data
-plas.clim.data <- merge(plas.data, clim.data)
-names(plas.clim.data)
-
-##########################################################################################
 ## models
 
 plasticity_model_normal <- "
@@ -113,6 +91,7 @@ Run.vism.plasticity <-
     #, specified params
     #, 2) Plot the posterior distribution of same response variable
     #, 3) plot the predictive checks of the posterior draws to ensure a good fit
+    plas.clim.data <- get_bogr_data(plasticity = T)
     temp.data <-
       as.data.frame(cbind(plas.clim.data$pop, responsevar, plas.clim.data$vwc_adj))
     temp.data <- na.omit(temp.data)
@@ -170,6 +149,8 @@ Run.vism.plasticity <-
 
 ###########################################################################################
 ## run for all traits
+
+plas.clim.data <- get_bogr_data(plasticity = T)
 
 Run.vism.plasticity(
   responsevar = plas.clim.data$biomass_aboveground,

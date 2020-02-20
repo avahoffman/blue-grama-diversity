@@ -11,6 +11,7 @@ setwd(wd)
 
 # General functions and configuration
 source("src/config.R")
+source("utils/data_utils.R")
 
 # Specific functions
 source("utils/mcmc_output.R")
