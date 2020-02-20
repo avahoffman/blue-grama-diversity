@@ -22,36 +22,101 @@ library(bayesplot)
 source("utils/mcmc_output.R")
 
 ##########################################################################################
-## open data
-bogr.data <- read.csv("data/BOGR_DATA_master.csv")
-names(bogr.data)
-clim.data <- read.csv("data/SITE_DATA.csv")
-names(clim.data)
 
-## stan won't be able to handle these NAs. replace them w/ NA so that they can be removed
-bogr.data[bogr.data == "no pot"] <-
-  NA # any unknown or unid'd loci have a 'NA'
-bogr.data[bogr.data == "met"] <-
-  NA # any unknown or unid'd loci have a 'NA'
-bogr.data[bogr.data == "tr"] <-
-  NA # any unknown or unid'd loci have a 'NA'
-## the following variables need to be numeric
-bogr.data$biomass_aboveground <-
-  as.numeric(as.character(bogr.data$biomass_aboveground))
-bogr.data$biomass_belowground <-
-  as.numeric(as.character(bogr.data$biomass_belowground))
-bogr.data$biomass_rhizome <-
-  as.numeric(as.character(bogr.data$biomass_rhizome))
-bogr.data$flwr_mass_4 <-
-  as.numeric(as.character(bogr.data$flwr_mass_4))
-bogr.data$flwr_mass_final <-
-  as.numeric(as.character(bogr.data$flwr_mass_final))
-## merge with climate data
-bogr.clim.data <- merge(bogr.data, clim.data)
-names(bogr.clim.data)
+get_bogr_data <- 
+  function(){
+    ## open data
+    bogr_data <- read.csv("data/BOGR_DATA_master.csv")
+    clim_data <- read.csv("data/SITE_DATA.csv")
+    
+    ## stan won't be able to handle these NAs. replace them w/ NA so that they can be removed
+    bogr_data[bogr_data == "no pot"] <-
+      NA # any unknown or unid'd loci have a 'NA'
+    bogr_data[bogr_data == "met"] <-
+      NA # any unknown or unid'd loci have a 'NA'
+    bogr_data[bogr_data == "tr"] <-
+      NA # any unknown or unid'd loci have a 'NA'
+    
+    ## the following variables need to be numeric
+    bogr_data$biomass_aboveground <-
+      as.numeric(as.character(bogr_data$biomass_aboveground))
+    bogr_data$biomass_belowground <-
+      as.numeric(as.character(bogr_data$biomass_belowground))
+    bogr_data$biomass_rhizome <-
+      as.numeric(as.character(bogr_data$biomass_rhizome))
+    bogr_data$flwr_mass_4 <-
+      as.numeric(as.character(bogr_data$flwr_mass_4))
+    bogr_data$flwr_mass_final <-
+      as.numeric(as.character(bogr_data$flwr_mass_final))
+    
+    ## merge with climate data
+    bogr_clim_data <- merge(bogr_data, clim_data)
+    return(bogr_clim_data)
+  }
 
-##########################################################################################
 ## models
+
+comp_gamma <-
+  function() {
+    varying_intercept_slope_model_gamma <- "
+      data {
+      int<lower=0> N;
+      int<lower=0> J;
+      vector[N] y;
+      vector[N] x;
+      int county[N];
+      real m_x;
+      }
+      parameters {
+      //real<lower=0> sigma_a;
+      //real<lower=0> sigma_b;
+      vector[J] a;
+      vector[J] b;
+      vector<lower=0>[J] sigma_pop;
+      //real mu_a;
+      //real mu_b;
+      }
+      transformed parameters{
+      vector[N] mu;
+      vector[N] alpha;
+      vector[N] beta;
+      mu = exp(a[county] + b[county].*x); //log link
+      alpha = mu .* mu ./ sigma_pop[county];
+      beta = mu ./ sigma_pop[county];
+      }
+      model {
+      //priors
+      //mu_a ~ normal(0, 100);
+      //mu_b ~ normal(0, 100);
+      sigma_pop ~ cauchy(0,10);
+      //model
+      //a ~ normal(mu_a, sigma_a);
+      //b ~ normal(mu_b, sigma_b);
+      a ~ normal(0,100);
+      b ~ normal(0,100);
+      y ~ gamma(alpha, beta);
+      }
+      generated quantities{
+      vector[N] draws1;
+      vector[J] trait;
+      for(n in 1:N){
+      draws1[n] = gamma_rng(alpha[n], beta[n]); //posterior draws
+      }
+      for(j in 1:J){
+      trait[j] = exp(a[j] + b[j]*m_x);
+      }
+      }
+    "
+    comp.gamma <-
+      stan_model(model_code = varying_intercept_slope_model_gamma,
+                 model_name = 'varing.int.slope.model.gamma')
+    if (write.phenotype.models == TRUE) {
+      save(comp.gamma,
+           file = "varying_intercept_slope_model_gamma.R")
+    }
+    
+    return(comp_gamma)
+}
 
 varying_intercept_slope_model_gamma <- "
 data {
