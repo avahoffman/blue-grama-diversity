@@ -306,7 +306,7 @@ Run.vism <-
     #, 3) plot the predictive checks of the posterior draws to ensure a good fit
     temp.data <-
       as.data.frame(cbind(bogr.clim.data$pop, responsevar, bogr.clim.data$vwc_adj))
-    temp.data <- na.omit(temp.data)
+    `temp.data <- na.omit(temp.data)`
     
     ## run the MCMC sampler to generate the posterior distribution
     fit1 <- run_mcmc(
