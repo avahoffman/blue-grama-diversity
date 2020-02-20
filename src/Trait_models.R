@@ -11,15 +11,10 @@
 ## considered a covariate.
 ##
 ##########################################################################################
-## set working directory
-source("config.R")
-setwd(wd)
 ## load libs
 library(rstan) ## Bayesian model compiler and sampler
 options(mc.cores = parallel::detectCores()) ## option to make Stan parallelize
 library(bayesplot)
-## load some functions that make figures
-source("utils/mcmc_output.R")
 
 ##########################################################################################
 
@@ -53,6 +48,7 @@ get_bogr_data <-
     bogr_clim_data <- merge(bogr_data, clim_data)
     return(bogr_clim_data)
   }
+
 
 ## models
 
@@ -107,192 +103,148 @@ comp_gamma <-
       }
       }
     "
-    comp.gamma <-
+    comp_gamma <-
       stan_model(model_code = varying_intercept_slope_model_gamma,
                  model_name = 'varing.int.slope.model.gamma')
     if (write.phenotype.models == TRUE) {
-      save(comp.gamma,
+      save(comp_gamma,
            file = "varying_intercept_slope_model_gamma.R")
     }
     
     return(comp_gamma)
 }
 
-varying_intercept_slope_model_gamma <- "
-data {
-  int<lower=0> N;
-  int<lower=0> J;
-  vector[N] y;
-  vector[N] x;
-  int county[N];
-  real m_x;
-}
-parameters {
-  //real<lower=0> sigma_a;
-  //real<lower=0> sigma_b;
-  vector[J] a;
-  vector[J] b;
-  vector<lower=0>[J] sigma_pop;
-  //real mu_a;
-  //real mu_b;
-}
-transformed parameters{
-  vector[N] mu;
-  vector[N] alpha;
-  vector[N] beta;
-  mu = exp(a[county] + b[county].*x); //log link
-  alpha = mu .* mu ./ sigma_pop[county];
-  beta = mu ./ sigma_pop[county];
-}
-model {
-  //priors
-  //mu_a ~ normal(0, 100);
-  //mu_b ~ normal(0, 100);
-  sigma_pop ~ cauchy(0,10);
-  //model
-  //a ~ normal(mu_a, sigma_a);
-  //b ~ normal(mu_b, sigma_b);
-  a ~ normal(0,100);
-  b ~ normal(0,100);
-  y ~ gamma(alpha, beta);
-}
-generated quantities{
-  vector[N] draws1;
-  vector[J] trait;
-  for(n in 1:N){
-    draws1[n] = gamma_rng(alpha[n], beta[n]); //posterior draws
-  }
-  for(j in 1:J){
-    trait[j] = exp(a[j] + b[j]*m_x);
-  }
-}
-"
-comp.gamma <-
-  stan_model(model_code = varying_intercept_slope_model_gamma,
-             model_name = 'varing.int.slope.model.gamma')
-if (write.phenotype.models == TRUE) {
-  save(comp.gamma,
-       file = "varying_intercept_slope_model_gamma.R")
-}
 
-varying_intercept_slope_model_gamma_zero_adjust <- "
-data {
-  int<lower=0> N;
-  int<lower=0> J;
-  vector[N] y;
-  vector[N] x;
-  int county[N];
-  real m_x;
-}
-parameters {
-  //real<lower=0> sigma_a;
-  //real<lower=0> sigma_b;
-  vector[J] a;
-  vector[J] b;
-  vector<lower=0>[J] sigma_pop;
-  //real mu_a;
-  //real mu_b;
+comp_gamma_zero_adjust <- 
+  function(){
+    varying_intercept_slope_model_gamma_zero_adjust <- "
+      data {
+        int<lower=0> N;
+        int<lower=0> J;
+        vector[N] y;
+        vector[N] x;
+        int county[N];
+        real m_x;
+      }
+      parameters {
+        //real<lower=0> sigma_a;
+        //real<lower=0> sigma_b;
+        vector[J] a;
+        vector[J] b;
+        vector<lower=0>[J] sigma_pop;
+        //real mu_a;
+        //real mu_b;
+        }
+      transformed parameters{
+        vector[N] mu;
+        vector[N] alpha;
+        vector[N] beta;
+        mu = exp(a[county] + b[county].*x); //log link
+        alpha = mu .* mu ./ sigma_pop[county];
+        beta = mu ./ sigma_pop[county];
+      }
+      model {
+        //priors
+        //mu_a ~ normal(0, 100);
+        //mu_b ~ normal(0, 100);
+        sigma_pop ~ cauchy(0,10);
+        //model
+        //a ~ normal(mu_a, sigma_a);
+        //b ~ normal(mu_b, sigma_b);
+        a ~ normal(0,100);
+        b ~ normal(0,100);
+        y ~ gamma(alpha, beta);
+      }
+      generated quantities{
+        vector[N] draws1;
+        vector[J] trait;
+        for(n in 1:N){
+          draws1[n] = gamma_rng(alpha[n], beta[n]); //posterior draws
+        }
+        for(j in 1:J){
+          trait[j] = exp(a[j] + b[j]*m_x) - 1;
+        }
+      }
+    "
+    comp_gamma_zero_adjust <-
+      stan_model(model_code = varying_intercept_slope_model_gamma_zero_adjust,
+                 model_name = 'varing.int.slope.model.gamma.zero.adjust')
+    if (write.phenotype.models == TRUE) {
+      save(comp_gamma_zero_adjust,
+           file = "varying_intercept_slope_model_gamma_zero_adjust.R")
+    }
+    
+    return(comp_gamma_zero_adjust)
   }
-transformed parameters{
-  vector[N] mu;
-  vector[N] alpha;
-  vector[N] beta;
-  mu = exp(a[county] + b[county].*x); //log link
-  alpha = mu .* mu ./ sigma_pop[county];
-  beta = mu ./ sigma_pop[county];
-}
-model {
-  //priors
-  //mu_a ~ normal(0, 100);
-  //mu_b ~ normal(0, 100);
-  sigma_pop ~ cauchy(0,10);
-  //model
-  //a ~ normal(mu_a, sigma_a);
-  //b ~ normal(mu_b, sigma_b);
-  a ~ normal(0,100);
-  b ~ normal(0,100);
-  y ~ gamma(alpha, beta);
-}
-generated quantities{
-  vector[N] draws1;
-  vector[J] trait;
-  for(n in 1:N){
-    draws1[n] = gamma_rng(alpha[n], beta[n]); //posterior draws
-  }
-  for(j in 1:J){
-    trait[j] = exp(a[j] + b[j]*m_x) - 1;
-  }
-}
-"
-comp.gamma.zero.adjust <-
-  stan_model(model_code = varying_intercept_slope_model_gamma_zero_adjust,
-             model_name = 'varing.int.slope.model.gamma.zero.adjust')
-if (write.phenotype.models == TRUE) {
-  save(comp.gamma.zero.adjust,
-       file = "varying_intercept_slope_model_gamma_zero_adjust.R")
-}
 
-varying_intercept_slope_model_gamma_mpas <- "
-data {
-  int<lower=0> N;
-  int<lower=0> J;
-  vector[N] y;
-  vector[N] x;
-  int county[N];
-  real m_x;
-}
-parameters {
-  //real<lower=0> sigma_a;
-  //real<lower=0> sigma_b;
-  vector[J] a;
-  vector[J] b;
-  vector<lower=0>[J] sigma_pop;
-  //real mu_a;
-  //real mu_b;
-}
-transformed parameters{
-  vector[N] mu;
-  vector[N] alpha;
-  vector[N] beta;
-  mu = exp(a[county] + b[county].*x); //log link
-  alpha = mu .* mu ./ sigma_pop[county];
-  beta = mu ./ sigma_pop[county];
-}
-model {
-  //priors
-  //mu_a ~ normal(0, 100);
-  //mu_b ~ normal(0, 100);
-  sigma_pop ~ cauchy(0,10);
-  //model
-  //a ~ normal(mu_a, sigma_a);
-  //b ~ normal(mu_b, sigma_b);
-  a ~ normal(0,100);
-  b ~ normal(0,100);
-  y ~ gamma(alpha, beta);
-}
-generated quantities{
-  vector[N] draws1;
-  vector[J] trait;
-  for(n in 1:N){
-    draws1[n] = gamma_rng(alpha[n], beta[n]); //posterior draws
+
+comp_gamma_mpas <- 
+  function(){
+    varying_intercept_slope_model_gamma_mpas <- "
+      data {
+        int<lower=0> N;
+        int<lower=0> J;
+        vector[N] y;
+        vector[N] x;
+        int county[N];
+        real m_x;
+      }
+      parameters {
+        //real<lower=0> sigma_a;
+        //real<lower=0> sigma_b;
+        vector[J] a;
+        vector[J] b;
+        vector<lower=0>[J] sigma_pop;
+        //real mu_a;
+        //real mu_b;
+      }
+      transformed parameters{
+        vector[N] mu;
+        vector[N] alpha;
+        vector[N] beta;
+        mu = exp(a[county] + b[county].*x); //log link
+        alpha = mu .* mu ./ sigma_pop[county];
+        beta = mu ./ sigma_pop[county];
+      }
+      model {
+        //priors
+        //mu_a ~ normal(0, 100);
+        //mu_b ~ normal(0, 100);
+        sigma_pop ~ cauchy(0,10);
+        //model
+        //a ~ normal(mu_a, sigma_a);
+        //b ~ normal(mu_b, sigma_b);
+        a ~ normal(0,100);
+        b ~ normal(0,100);
+        y ~ gamma(alpha, beta);
+      }
+      generated quantities{
+        vector[N] draws1;
+        vector[J] trait;
+        for(n in 1:N){
+          draws1[n] = gamma_rng(alpha[n], beta[n]); //posterior draws
+        }
+        for(j in 1:J){
+          trait[j] = exp(a[j] + b[j]*m_x) * -1;
+        }
+      }
+    "
+    comp_gamma_mpas <-
+      stan_model(model_code = varying_intercept_slope_model_gamma_mpas,
+                 model_name = 'varing.int.slope.model.gamma.mpas')
+    if (write.phenotype.models == TRUE) {
+      save(comp_gamma_mpas,
+           file = "varying_intercept_slope_model_gamma_mpas.R")
+    }
+    
+    return(comp_gamma_mpas)
   }
-  for(j in 1:J){
-    trait[j] = exp(a[j] + b[j]*m_x) * -1;
-  }
-}
-"
-comp.gamma.mpas <-
-  stan_model(model_code = varying_intercept_slope_model_gamma_mpas,
-             model_name = 'varing.int.slope.model.gamma.mpas')
-if (write.phenotype.models == TRUE) {
-  save(comp.gamma.mpas,
-       file = "varying_intercept_slope_model_gamma_mpas.R")
-}
+
 
 ###########################################################################################
 ## MCMC posterior generation and checks
 
-Run.vism <-
+run_vism <-
   function(responsevar,
            outputname,
            compiled_model,
@@ -305,7 +257,7 @@ Run.vism <-
     #, 2) Plot the posterior distribution of same response variable
     #, 3) plot the predictive checks of the posterior draws to ensure a good fit
     temp.data <-
-      as.data.frame(cbind(bogr.clim.data$pop, responsevar, bogr.clim.data$vwc_adj))
+      as.data.frame(cbind(get_bogr_data()$pop, responsevar, get_bogr_data()$vwc_adj))
     `temp.data <- na.omit(temp.data)`
     
     ## run the MCMC sampler to generate the posterior distribution
@@ -321,7 +273,7 @@ Run.vism <-
     
     ## plot posterior distributions
     draws <- as.array(fit1)
-    bogr.pops <- unique(bogr.clim.data$pop)
+    bogr.pops <- unique(get_bogr_data()$pop)
     get_posterior_intervals(
       bogr_pops = bogr.pops,
       draws_data = draws,
@@ -356,85 +308,89 @@ Run.vism <-
 ###########################################################################################
 ## run for all relevant traits
 
-Run.vism(
-  responsevar = bogr.clim.data$biomass_aboveground,
-  outputname = "biomass_aboveground",
-  compiled_model = comp.gamma
-)
-Run.vism(
-  responsevar = bogr.clim.data$biomass_belowground,
-  outputname = "biomass_belowground",
-  compiled_model = comp.gamma
-)
-Run.vism(
-  responsevar = bogr.clim.data$biomass_rhizome,
-  outputname = "biomass_rhizome",
-  compiled_model = comp.gamma,
-  adapt_delta = 0.9
-)
+run_mcmc_phenotypes <-
+  function() {
+    run_vism(
+      responsevar = get_bogr_data()$biomass_aboveground,
+      outputname = "biomass_aboveground",
+      compiled_model = comp_gamma()
+    )
+    run_vism(
+      responsevar = get_bogr_data()$biomass_belowground,
+      outputname = "biomass_belowground",
+      compiled_model = comp_gamma()
+    )
+    run_vism(
+      responsevar = get_bogr_data()$biomass_rhizome,
+      outputname = "biomass_rhizome",
+      compiled_model = comp_gamma(),
+      adapt_delta = 0.9
+    )
+    
+    ## flower mass won't converge due to lots of zeros
+    run_vism(
+      responsevar = get_bogr_data()$flwr_mass_lifetime + 1,
+      outputname = "flwr_mass_lifetime",
+      compiled_model = comp_gamma_zero_adjust(),
+      adapt_delta = 0.90
+    )
+    
+    run_vism(
+      responsevar = get_bogr_data()$flwr_count_1.2,
+      outputname = "flwr_count_1.2",
+      compiled_model = comp_gamma(),
+      adapt_delta = 0.90
+    )
+    run_vism(
+      responsevar = get_bogr_data()$flwr_avg_ind_len,
+      outputname = "flwr_avg_ind_len",
+      compiled_model = comp_gamma(),
+      adapt_delta = 0.90
+    )
+    run_vism(
+      responsevar = get_bogr_data()$flwr_avg_ind_mass,
+      outputname = "flwr_avg_ind_mass",
+      compiled_model = comp_gamma(),
+      adapt_delta = 0.90
+    )
+    
+    ## had some zero height plants / never grew
+    get_bogr_data()$max_height[get_bogr_data()$max_height < 20] <-
+      NA # any unknown or unid'd loci have a 'NA'
+    run_vism(
+      responsevar = get_bogr_data()$max_height,
+      outputname = "max_height",
+      compiled_model = comp_gamma(),
+      adapt_delta = 0.9
+    )
+    
+    ## water potentials (mpas) are all negative but gamma distributed
+    run_vism(
+      responsevar = get_bogr_data()$avg_predawn_mpa_expt * -1,
+      outputname = "avg_predawn_mpa_expt",
+      compiled_model = comp_gamma_mpas()
+    )
+    run_vism(
+      responsevar = get_bogr_data()$avg_midday_mpa_expt * -1,
+      outputname = "avg_midday_mpa_expt",
+      compiled_model = comp_gamma_mpas()
+    )
+    
+    run_vism(
+      responsevar = (
+        get_bogr_data()$biomass_belowground + get_bogr_data()$biomass_rhizome
+      ) / get_bogr_data()$biomass_aboveground,
+      compiled_model = comp_gamma(),
+      outputname = "Root:shoot biomass ratio"
+    )
+    run_vism(
+      responsevar = get_bogr_data()$biomass_belowground +
+        get_bogr_data()$biomass_rhizome +
+        get_bogr_data()$biomass_aboveground +
+        get_bogr_data()$flwr_mass_lifetime,
+      outputname = "Total Biomass",
+      compiled_model = comp_gamma(),
+      adapt_delta = 0.9
+    )
+  }
 
-## flower mass won't converge due to lots of zeros
-Run.vism(
-  responsevar = bogr.clim.data$flwr_mass_lifetime + 1,
-  outputname = "flwr_mass_lifetime",
-  compiled_model = comp.gamma.zero.adjust,
-  adapt_delta = 0.90
-)
-
-Run.vism(
-  responsevar = bogr.clim.data$flwr_count_1.2,
-  outputname = "flwr_count_1.2",
-  compiled_model = comp.gamma,
-  adapt_delta = 0.90
-)
-Run.vism(
-  responsevar = bogr.clim.data$flwr_avg_ind_len,
-  outputname = "flwr_avg_ind_len",
-  compiled_model = comp.gamma,
-  adapt_delta = 0.90
-)
-Run.vism(
-  responsevar = bogr.clim.data$flwr_avg_ind_mass,
-  outputname = "flwr_avg_ind_mass",
-  compiled_model = comp.gamma,
-  adapt_delta = 0.90
-)
-
-## had some zero height plants / never grew
-bogr.clim.data$max_height[bogr.clim.data$max_height < 20] <-
-  NA # any unknown or unid'd loci have a 'NA'
-Run.vism(
-  responsevar = bogr.clim.data$max_height,
-  outputname = "max_height",
-  compiled_model = comp.gamma,
-  adapt_delta = 0.9
-)
-
-## water potentials (mpas) are all negative but gamma distributed
-Run.vism(
-  responsevar = bogr.clim.data$avg_predawn_mpa_expt * -1,
-  outputname = "avg_predawn_mpa_expt",
-  compiled_model = comp.gamma.mpas
-)
-Run.vism(
-  responsevar = bogr.clim.data$avg_midday_mpa_expt * -1,
-  outputname = "avg_midday_mpa_expt",
-  compiled_model = comp.gamma.mpas
-)
-
-Run.vism(
-  responsevar = (
-    bogr.clim.data$biomass_belowground + bogr.clim.data$biomass_rhizome
-  ) / bogr.clim.data$biomass_aboveground,
-  compiled_model = comp.gamma,
-  outputname = "Root:shoot biomass ratio"
-)
-Run.vism(
-  responsevar = bogr.clim.data$biomass_belowground + 
-    bogr.clim.data$biomass_rhizome + 
-    bogr.clim.data$biomass_aboveground + 
-    bogr.clim.data$flwr_mass_lifetime,
-  outputname = "Total Biomass",
-  compiled_model = comp.gamma,
-  adapt_delta = 0.9
-)

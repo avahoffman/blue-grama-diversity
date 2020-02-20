@@ -13,3 +13,11 @@ setwd(wd)
 source("src/config.R")
 
 # Specific functions
+source("utils/mcmc_output.R")
+source("src/Trait_models.R")
+
+###########################################################################################
+
+# Generate posterior samples for phenotypes
+run_mcmc_phenotypes()
+
