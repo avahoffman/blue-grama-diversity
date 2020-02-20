@@ -22,65 +22,71 @@ library(bayesplot)
 
 ## models
 
-plasticity_model_normal <- "
-data {
-  int<lower=0> N;
-  int<lower=0> J;
-  vector[N] y;
-  vector[N] x;
-  int county[N];
-  real m_x;
-}
-parameters {
-  //real<lower=0> sigma_a;
-  //real<lower=0> sigma_b;
-  vector[J] a;
-  vector[J] b;
-  vector<lower=0>[J] sigma_pop;
-  //real mu_a;
-  //real mu_b;
-}
-transformed parameters{
-  vector[N] mu;
-  mu = a[county] + b[county].*x;
-}
-model {
-  //priors
-  //mu_a ~ normal(0, 10 ); //removed these hyperparameters.. 
-  // the sites don't seem to come from the same distribution
-  //mu_b ~ normal(0, 10);
-  sigma_pop ~ cauchy(0,10);
-  //model
-  //a ~ normal(mu_a, sigma_a);
-  //b ~ normal(mu_b, sigma_b);
-  a ~ normal(0,10);
-  b ~ normal(0,10);
-  y ~ normal(mu, sigma_pop[county]);
-}
-generated quantities{
-  vector[N] draws1;
-  vector[J] trait;
-  for(n in 1:N)
-  for(j in 1:J){
-    draws1[n] = normal_rng(mu[n], sigma_pop[j]); //posterior draws
+comp_plasticity_normal <- 
+  function(){
+    plasticity_model_normal <- "
+      data {
+        int<lower=0> N;
+        int<lower=0> J;
+        vector[N] y;
+        vector[N] x;
+        int county[N];
+        real m_x;
+      }
+      parameters {
+        //real<lower=0> sigma_a;
+        //real<lower=0> sigma_b;
+        vector[J] a;
+        vector[J] b;
+        vector<lower=0>[J] sigma_pop;
+        //real mu_a;
+        //real mu_b;
+      }
+      transformed parameters{
+        vector[N] mu;
+        mu = a[county] + b[county].*x;
+      }
+      model {
+        //priors
+        //mu_a ~ normal(0, 10 ); //removed these hyperparameters.. 
+        // the sites don't seem to come from the same distribution
+        //mu_b ~ normal(0, 10);
+        sigma_pop ~ cauchy(0,10);
+        //model
+        //a ~ normal(mu_a, sigma_a);
+        //b ~ normal(mu_b, sigma_b);
+        a ~ normal(0,10);
+        b ~ normal(0,10);
+        y ~ normal(mu, sigma_pop[county]);
+      }
+      generated quantities{
+        vector[N] draws1;
+        vector[J] trait;
+        for(n in 1:N)
+        for(j in 1:J){
+          draws1[n] = normal_rng(mu[n], sigma_pop[j]); //posterior draws
+        }
+        for(j in 1:J){
+          trait[j] = a[j] + b[j].*m_x;
+        }
+      }
+    "
+    comp_plasticity_normal <-
+      stan_model(model_code = plasticity_model_normal, 
+                 model_name = 'plasticity_model_normal')
+    if(write.phenotype.models == TRUE){
+      save(comp_plasticity_normal, 
+           file="plasticity_model_normal.R"
+      )
+    }
+    
+    return(comp_plasticity_normal)
   }
-  for(j in 1:J){
-    trait[j] = a[j] + b[j].*m_x;
-  }
-}
-"
-comp.plasticity.normal <-
-  stan_model(model_code = plasticity_model_normal, model_name = 'plasticity_model_normal')
-if(write.phenotype.models == TRUE){
-  save(comp.plasticity.normal, 
-       file="plasticity_model_normal.R"
-       )
-}
 
 ###########################################################################################
 ## MCMC posterior generation and checks
 
-Run.vism.plasticity <-
+run_vism_plasticity <-
   function(responsevar,
            outputname,
            adapt_delta = 0.8,
@@ -91,16 +97,16 @@ Run.vism.plasticity <-
     #, specified params
     #, 2) Plot the posterior distribution of same response variable
     #, 3) plot the predictive checks of the posterior draws to ensure a good fit
-    plas.clim.data <- get_bogr_data(plasticity = T)
-    temp.data <-
-      as.data.frame(cbind(plas.clim.data$pop, responsevar, plas.clim.data$vwc_adj))
-    temp.data <- na.omit(temp.data)
+    plas_clim_data <- get_bogr_data(plasticity = T)
+    temp_data <-
+      as.data.frame(cbind(plas_clim_data$pop, responsevar, plas_clim_data$vwc_adj))
+    temp_data <- na.omit(temp_data)
     
     ## run the MCMC sampler to generate the posterior distribution
     fit1 <- run_mcmc(
-      temp_data = temp.data,
+      temp_data = temp_data,
       responsevar = responsevar,
-      compiled_model = comp.plasticity.normal,
+      compiled_model = comp_plasticity_normal(),
       iter = iter,
       adapt_delta = adapt_delta,
       max_treedepth = max_treedepth,
@@ -109,7 +115,7 @@ Run.vism.plasticity <-
     
     ## plot posterior distributions
     draws <- as.array(fit1)
-    bogr.pops <- unique(plas.clim.data$pop)
+    bogr.pops <- unique(plas_clim_data$pop)
     get_posterior_intervals_plasticity(
       bogr_pops = bogr.pops,
       draws_data = draws,
@@ -130,7 +136,7 @@ Run.vism.plasticity <-
     )
     ## plot posterior predictive checks
     plot_posterior_predictive_checks(
-      temp_data = temp.data,
+      temp_data = temp_data,
       responsevar = responsevar,
       outputname = outputname,
       fit_data = fit1,
@@ -150,78 +156,82 @@ Run.vism.plasticity <-
 ###########################################################################################
 ## run for all traits
 
-plas.clim.data <- get_bogr_data(plasticity = T)
+run_mcmc_plasticity <- 
+  function(){
+    plas_clim_data <- get_bogr_data(plasticity = T)
+    
+    run_vism_plasticity(
+      responsevar = plas_clim_data$biomass_aboveground,
+      outputname = "biomass_aboveground",
+      iter = 50000
+    )
+    run_vism_plasticity(
+      responsevar = plas_clim_data$biomass_belowground,
+      outputname = "biomass_belowground",
+      iter = 50000
+    )
+    run_vism_plasticity(
+      responsevar = plas_clim_data$biomass_rhizome,
+      outputname = "biomass_rhizome",
+      iter = 50000
+    )
+    run_vism_plasticity(
+      responsevar = plas_clim_data$flwr_mass_lifetime,
+      outputname = "flwr_mass_lifetime",
+      iter = 50000
+    )
+    
+    ## different dist for discrete data?
+    # plas_clim_data$flwr_count_1.2[plas_clim_data$flwr_count_1.2 > 30] <- NA
+    run_vism_plasticity(
+      responsevar = plas_clim_data$flwr_count_1.2,
+      outputname = "flwr_count_1.2",
+      iter = 50000,
+      adapt_delta = 0.9
+    )
+    
+    run_vism_plasticity(
+      responsevar = plas_clim_data$flwr_avg_ind_len,
+      outputname = "flwr_avg_ind_len",
+      iter = 50000,
+      adapt_delta = 0.99,
+      max_treedepth = 15
+    )
+    run_vism_plasticity(
+      responsevar = plas_clim_data$flwr_avg_ind_mass,
+      outputname = "flwr_avg_ind_mass",
+      iter = 50000,
+      adapt_delta = 0.99,
+      max_treedepth = 15
+    )
+    run_vism_plasticity(
+      responsevar = plas_clim_data$max_height,
+      outputname = "max_height",
+      iter = 50000
+    )
+    run_vism_plasticity(
+      responsevar = plas_clim_data$avg_predawn_mpa_expt,
+      outputname = "avg_predawn_mpa_expt",
+      iter = 50000,
+      adapt_delta = 0.99,
+      max_treedepth = 15
+    )
+    run_vism_plasticity(
+      responsevar = plas_clim_data$avg_midday_mpa_expt,
+      outputname = "avg_midday_mpa_expt",
+      iter = 50000
+    )
+    run_vism_plasticity(
+      responsevar = plas_clim_data$roottoshoot,
+      outputname = "Root to shoot biomass ratio",
+      iter = 50000,
+      adapt_delta = 0.99,
+      max_treedepth = 15
+    )
+    run_vism_plasticity(
+      responsevar = plas_clim_data$biomass_total,
+      outputname = "Total Biomass",
+      iter = 50000
+    )
+}
 
-Run.vism.plasticity(
-  responsevar = plas.clim.data$biomass_aboveground,
-  outputname = "biomass_aboveground",
-  iter = 50000
-)
-Run.vism.plasticity(
-  responsevar = plas.clim.data$biomass_belowground,
-  outputname = "biomass_belowground",
-  iter = 50000
-)
-Run.vism.plasticity(
-  responsevar = plas.clim.data$biomass_rhizome,
-  outputname = "biomass_rhizome",
-  iter = 50000
-)
-Run.vism.plasticity(
-  responsevar = plas.clim.data$flwr_mass_lifetime,
-  outputname = "flwr_mass_lifetime",
-  iter = 50000
-)
-
-## different dist for discrete data?
-# plas.clim.data$flwr_count_1.2[plas.clim.data$flwr_count_1.2 > 30] <- NA
-Run.vism.plasticity(
-  responsevar = plas.clim.data$flwr_count_1.2,
-  outputname = "flwr_count_1.2",
-  iter = 50000,
-  adapt_delta = 0.9
-)
-
-Run.vism.plasticity(
-  responsevar = plas.clim.data$flwr_avg_ind_len,
-  outputname = "flwr_avg_ind_len",
-  iter = 50000,
-  adapt_delta = 0.99,
-  max_treedepth = 15
-)
-Run.vism.plasticity(
-  responsevar = plas.clim.data$flwr_avg_ind_mass,
-  outputname = "flwr_avg_ind_mass",
-  iter = 50000,
-  adapt_delta = 0.99,
-  max_treedepth = 15
-)
-Run.vism.plasticity(
-  responsevar = plas.clim.data$max_height,
-  outputname = "max_height",
-  iter = 50000
-)
-Run.vism.plasticity(
-  responsevar = plas.clim.data$avg_predawn_mpa_expt,
-  outputname = "avg_predawn_mpa_expt",
-  iter = 50000,
-  adapt_delta = 0.99,
-  max_treedepth = 15
-)
-Run.vism.plasticity(
-  responsevar = plas.clim.data$avg_midday_mpa_expt,
-  outputname = "avg_midday_mpa_expt",
-  iter = 50000
-)
-Run.vism.plasticity(
-  responsevar = plas.clim.data$roottoshoot,
-  outputname = "Root to shoot biomass ratio",
-  iter = 50000,
-  adapt_delta = 0.99,
-  max_treedepth = 15
-)
-Run.vism.plasticity(
-  responsevar = plas.clim.data$biomass_total,
-  outputname = "Total Biomass",
-  iter = 50000
-)
