@@ -17,7 +17,7 @@ run_local_genomics <-
   function() {
     ## keep only regional populations
     genind.local <- get_genind_data()[(
-      genind.1clone.only@pop %in%
+      get_genind_data()@pop %in%
         c(
           'Andrus',
           'Rock Creek',

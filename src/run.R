@@ -20,6 +20,7 @@ source("src/Plasticity_models.R")
 source("src/LDA.R")
 source("src/local_genome_diversity.R")
 source("src/regional_genome_diversity.R")
+source("src/Total_genome_diversity.R")
 
 ###########################################################################################
 
@@ -29,10 +30,15 @@ run_mcmc_phenotypes()
 # Generate posterior samples for phenotypic plasticity
 run_mcmc_plasticity()
 
+# Run genomics analysis (posteriors, DAPC, structure) and make plots
+run_regional_genomics()
+run_Local_genomics()
+
 # Create LDAs and posterior plots
 make_regional_lda_trait_plots()
 make_local_lda_trait_plots()
 
-# Run genomics analysis (posteriors, DAPC) and make plots
-run_regional_genomics()
-run_Local_genomics()
+## Supplemental
+# Run genomics analysis for all populations together
+run_total_genomics()
+

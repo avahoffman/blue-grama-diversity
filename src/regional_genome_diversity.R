@@ -17,7 +17,7 @@ run_regional_genomics <-
   function() {
     ## keep only regional populations
     genind.regional <- get_genind_data()[(
-      genind.1clone.only@pop %in%
+      get_genind_data()@pop %in%
         c(
           'Cibola',
           'Sevilleta',
