@@ -12,63 +12,50 @@ library(missMDA)
 library(MASS)
 require(scales)
 library(cowplot)
+library(tidyr)
+library(dplyr)
 
 ## PCA / LDA
 ## https://www.r-bloggers.com/computing-and-visualizing-lda-in-r/
 ## https://gist.github.com/thigm85/8424654
 ###########################################################################################
-## open data
-bogr.data <- read.csv("data/BOGR_DATA_unsupervised_PCA_LDA.csv")
-names(bogr.data)
-col.pal <- read.csv("utils/color_key.csv", header = T)
-col.pal.v <-
-  as.vector(col.pal[, 3])
-names(col.pal.v) <- col.pal[, 2]
-col.pal.names <-
-  as.vector(col.pal[, 2])
-names(col.pal.names) <- col.pal[, 6]
-col.pal.colors <-
-  as.vector(col.pal[, 3])
-names(col.pal.colors) <- col.pal[, 6]
-
-bogr.data[bogr.data == "no pot"] <-
-  NA # any unknown or unid'd loci have a 'NA'
-bogr.data[bogr.data == "met"] <-
-  NA # any unknown or unid'd loci have a 'NA'
-bogr.data[bogr.data == "tr"] <-
-  NA # any unknown or unid'd loci have a 'NA'
-## then these need to be numeric..
-bogr.data$biomass_aboveground <-
-  as.numeric(as.character(bogr.data$biomass_aboveground))
-bogr.data$biomass_belowground <-
-  as.numeric(as.character(bogr.data$biomass_belowground))
-bogr.data$biomass_rhizome <-
-  as.numeric(as.character(bogr.data$biomass_rhizome))
-# derived vars
-bogr.data$root_shoot <-
-  (bogr.data$biomass_belowground + bogr.data$biomass_rhizome) / bogr.data$biomass_aboveground
-bogr.data$biomass_total <-
-  bogr.data$biomass_belowground + bogr.data$biomass_rhizome + bogr.data$biomass_aboveground + bogr.data$flwr_mass_lifetime
 
 # LDA on trait means
 
 makeLDA <-
   function(restrictions = bogr.data[(bogr.data$region != 'Boulder'),],
            radlength = 2,
-           regionlab) {
+           regionlab
+  ) {
     # REMOVE ANY ROWS WITH TONS OF NA
     bogr.data <- bogr.data[rowSums(is.na(bogr.data)) < 7, ]
     # replace flower NA with zero
-    bogr.data[, 16:17][is.na(bogr.data[, 16:17])] <- 0
-    bogr.data.small <- restrictions
-    feats <- bogr.data.small[, 11:22]
+    bogr.data$flwr_avg_ind_len <- 
+      bogr.data$flwr_avg_ind_len %>% replace_na(0)
+    bogr.data$flwr_avg_ind_mass <- 
+      bogr.data$flwr_avg_ind_mass %>% replace_na(0)
+    # Subset data
+    feats <- 
+      restrictions %>% dplyr::select("biomass_belowground",
+                              "biomass_rhizome",
+                              "biomass_aboveground",
+                              "flwr_mass_lifetime", 
+                              "flwr_count_1.2",
+                              "flwr_avg_ind_len",  
+                              "flwr_avg_ind_mass",
+                              "max_height",     
+                              "avg_predawn_mpa_expt",
+                              "avg_midday_mpa_expt",
+                              "biomass_total",
+                              "root_shoot"
+      )
     #Iterativa PCA
     imputed <- imputePCA(feats, ncp = 2, scale = TRUE)
     newfeats <- imputed$completeObs
     newfeats_scaled <- scale(newfeats)
     
     ldadat <-
-      cbind(bogr.data.small[, c('pop')], as.data.frame(newfeats_scaled))
+      cbind(restrictions[, c('pop')], as.data.frame(newfeats_scaled))
     colnames(ldadat)[1] <- "pop"
     lda_res_extended <- lda(pop ~ ., data = ldadat, CV = TRUE)
     lda_res_extended$class
@@ -78,15 +65,6 @@ makeLDA <-
     prop.lda = lda_results$svd ^ 2 / sum(lda_results$svd ^ 2)
     prop.lda
     plda <- predict(object = lda_results, newdata = ldadat)
-    
-    ## PCA
-    # prcomp_analysis <- prcomp(newfeats, center = T)
-    # plot(prcomp_analysis)
-    # summary_PCA <- summary(prcomp_analysis)
-    # summary_PCA
-    # propvariance <- summary_PCA$importance
-    # components <- prcomp_analysis$x
-    # prcomp_analysis$rotation
     
     # want to draw loadings
     load_dat <-
@@ -121,7 +99,7 @@ makeLDA <-
                   abs(load_dat$LD2) %in% tail(sort(abs(load_dat$LD2)), 1)),]
     
     plotdat <-
-      data.frame(pop = bogr.data.small[, "pop"], plda$x)
+      data.frame(pop = restrictions[, "pop"], plda$x)
     colnames(plotdat)[1] <- "pop"
     colnames(col.pal)[2] <- "full"
     colnames(col.pal)[1] <- "pop"
@@ -131,8 +109,6 @@ makeLDA <-
     plot_1 <- ggplot(plotdat, aes(LD1, LD2)) +
       theme_cowplot() +
       geom_point(aes(color = legend.order), size = 2.5) +
-      #geom_point(aes(color=pop),size=2.5) +
-      #facet_wrap(~regionlab, scale = "free_y") +
       scale_color_manual(values = col.pal.colors, labels = col.pal.names) +
       labs(
         x = paste("LD1 (", percent(prop.lda[1]), ")", sep = ""),
@@ -163,7 +139,14 @@ makeLDA <-
              length = FALSE)
     
     return(plot_1)
+    
   }
+
+bogr.data <- get_bogr_data(script = "LDA")
+
+col.pal.colors <- col_pal()[[3]]
+col.pal.names <- col_pal()[[2]]
+col.pal.v  <- col_pal()[[1]]
 
 ldaregional <-
   makeLDA(restrictions = bogr.data[(bogr.data$region != 'Boulder'),],
@@ -174,141 +157,7 @@ ldalocal <-
           radlength = 2,
           regionlab = 'Local: trait means')
 
-
-###########################################################################################
-
-bogr.data <- read.csv("data/BOGR_DATA_plasticity_PCA_LDA.csv")
-names(bogr.data)
-
-bogr.data[bogr.data == "no pot"] <-
-  NA # any unknown or unid'd locihttps://gist.github.com/thigm85/8424654 have a 'NA'
-bogr.data[bogr.data == "met"] <-
-  NA # any unknown or unid'd loci have a 'NA'
-bogr.data[bogr.data == "tr"] <-
-  NA # any unknown or unid'd loci have a 'NA'
-bogr.data$biomass_aboveground <-
-  as.numeric(as.character(bogr.data$biomass_aboveground))
-bogr.data$biomass_belowground <-
-  as.numeric(as.character(bogr.data$biomass_belowground))
-bogr.data$biomass_rhizome <-
-  as.numeric(as.character(bogr.data$biomass_rhizome))
-bogr.data$root_shoot <-
-  as.numeric(as.character(bogr.data$roottoshoot))
-bogr.data$biomass_total <-
-  as.numeric(as.character(bogr.data$biomass_total))
-
-makeLDA <-
-  function(restrictions = bogr.data[(bogr.data$region != 'Boulder'),],
-           radlength = 2,
-           regionlab) {
-    # REMOVE ANY ROWS WITH TONS OF NA
-    bogr.data <- bogr.data[rowSums(is.na(bogr.data)) < 7, ]
-    # replace flower NA with zero
-    bogr.data[, 12:13][is.na(bogr.data[, 12:13])] <- 0
-    bogr.data.small <- restrictions
-    feats <- bogr.data.small[, c(7:16, 18, 19)]
-    #Iterativa PCA
-    imputed <- imputePCA(feats, ncp = 2, scale = TRUE)
-    newfeats <- imputed$completeObs
-    newfeats_scaled <- scale(newfeats)
-    
-    ldadat <-
-      cbind(bogr.data.small[, c('pop')], as.data.frame(newfeats_scaled))
-    colnames(ldadat)[1] <- "pop"
-    lda_res_extended <- lda(pop ~ ., data = ldadat, CV = TRUE)
-    lda_res_extended$class
-    head(lda_res_extended$posterior)
-    
-    lda_results <- lda(pop ~ ., data = ldadat)
-    prop.lda = lda_results$svd ^ 2 / sum(lda_results$svd ^ 2)
-    prop.lda
-    plda <- predict(object = lda_results, newdata = ldadat)
-    
-    ## PCA
-    # prcomp_analysis <- prcomp(newfeats, center = T)
-    # plot(prcomp_analysis)
-    # summary_PCA <- summary(prcomp_analysis)
-    # summary_PCA
-    # propvariance <- summary_PCA$importance
-    # components <- prcomp_analysis$x
-    # prcomp_analysis$rotation
-    
-    # want to draw loadings
-    load_dat <-
-      data.frame(varnames = rownames(coef(lda_results)), coef(lda_results))
-    rad <- radlength # This sets the length of your lines.
-    load_dat$length <- with(load_dat, sqrt(LD1 ^ 2 + LD2 ^ 2))
-    load_dat$angle <- atan2(load_dat$LD1, load_dat$LD2)
-    load_dat$x_start <- load_dat$y_start <- 0
-    load_dat$x_end <- cos(load_dat$angle) * rad
-    load_dat$y_end <- sin(load_dat$angle) * rad
-    
-    #replace some names
-    loads <-
-      c(
-        'belowground\nbiomass',
-        'rhizome\nbiomass',
-        'aboveground\nbiomass',
-        'lifetime\nflower\nmass',
-        'flower\ncount',
-        'flower\nlength',
-        'flower\nmass',
-        'maximum\nheight',
-        'predawn\nMPa',
-        'midday\nMPa',
-        'root:shoot',
-        'total\nbiomass'
-      )
-    load_dat <- cbind(load_dat, loads)
-    # save only top loadings in LD1 and LD2
-    load_dat <-
-      load_dat[(abs(load_dat$LD1) %in% tail(sort(abs(load_dat$LD1)), 2) |
-                  abs(load_dat$LD2) %in% tail(sort(abs(load_dat$LD2)), 1)),]
-    
-    plotdat <-
-      data.frame(pop = bogr.data.small[, "pop"], plda$x)
-    colnames(plotdat)[1] <- "pop"
-    colnames(col.pal)[2] <- "full"
-    colnames(col.pal)[1] <- "pop"
-    plotdat <-  merge(plotdat, col.pal)
-    plotdat$regionlab <- regionlab
-    
-    plot_1 <- ggplot(plotdat, aes(LD1, LD2)) +
-      theme_cowplot() +
-      geom_point(aes(color = legend.order), size = 2.5) +
-      #geom_point(aes(color=pop),size=2.5) +
-      #facet_wrap(~regionlab, scale = "free_y") +
-      scale_color_manual(values = col.pal.colors, labels = col.pal.names) +
-      labs(
-        x = paste("LD1 (", percent(prop.lda[1]), ")", sep = ""),
-        y = paste("LD2 (", percent(prop.lda[2]), ")", sep = "")
-      ) +
-      labs(colour = "Site") +
-      geom_spoke(
-        aes(x_start, y_start, angle = angle),
-        load_dat,
-        color = "black",
-        radius = rad,
-        size = 0.5,
-        show.legend = FALSE
-      ) +
-      geom_label(
-        aes(y = y_end, x = x_end, label = loads),
-        #can change alpha=length within aes
-        load_dat,
-        alpha = 0.6,
-        size = 3,
-        vjust = .5,
-        hjust = 0,
-        colour = "black",
-        show.legend = FALSE
-      ) +
-      guides(text = FALSE,
-             spoke = FALSE,
-             length = FALSE)
-    
-    return(plot_1)
-  }
+bogr.data <- get_bogr_data(script = "LDA_plasticity")
 
 # LDA for plasticity
 
