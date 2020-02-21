@@ -97,3 +97,26 @@ g_legend <- function(a.gplot) {
   return(legend)
 }
 
+
+get_genind_data <- 
+  function(){
+    ## several options depending on what samples desired..
+    load("src/genomics_prep/genind_all.R")
+    
+    ## remove all but one of each clone
+    indNames(genind.data1)
+    genind.1clone.only <-
+      genind.data1[c(5, 12, 18, 21, 27, 33, 41, 44, 48, 50, 55, 58, 65:335)]
+    indNames(genind.1clone.only) <-
+      gsub("Bgedge", "SGS", indNames(genind.1clone.only))
+    indNames(genind.1clone.only) <-
+      gsub("BgHq", "SGS", indNames(genind.1clone.only))
+    indNames(genind.1clone.only)
+    
+    ## impute mean for missing data
+    genind.1clone.only$tab <-
+      tab(genind.1clone.only, NA.method = "mean")
+    
+    return(genind.1clone.only)
+  }
+

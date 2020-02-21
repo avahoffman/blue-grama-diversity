@@ -10,14 +10,16 @@ wd <- "/Users/hoffman ava/blue-grama-diversity/"
 setwd(wd)
 
 # General functions and configuration
-source("src/config.R")
 source("utils/data_utils.R")
+source("src/config.R")
 
 # Specific functions
 source("utils/mcmc_output.R")
 source("src/Trait_models.R")
 source("src/Plasticity_models.R")
 source("src/LDA.R")
+source("src/local_genome_diversity.R")
+source("src/regional_genome_diversity.R")
 
 ###########################################################################################
 
@@ -30,3 +32,7 @@ run_mcmc_plasticity()
 # Create LDAs and posterior plots
 make_regional_lda_trait_plots()
 make_local_lda_trait_plots()
+
+# Run genomics analysis (posteriors, DAPC) and make plots
+run_regional_genomics()
+run_Local_genomics()

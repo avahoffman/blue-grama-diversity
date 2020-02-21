@@ -211,10 +211,6 @@ make_regional_lda_trait_plots <-
     
     bogr.data <- get_bogr_data(script = "LDA")
     
-    col.pal.colors <- col_pal()[[3]]
-    col.pal.names <- col_pal()[[2]]
-    col.pal.v  <- col_pal()[[1]]
-    
     fig1 <-
       plot_grid(
         makeLDA(restrictions = bogr.data[(bogr.data$region != 'Boulder'), ],
@@ -324,10 +320,6 @@ make_local_lda_trait_plots <-
     )
     
     bogr.data <- get_bogr_data(script = "LDA")
-    
-    col.pal.colors <- col_pal()[[3]]
-    col.pal.names <- col_pal()[[2]]
-    col.pal.v  <- col_pal()[[1]]
     
     fig1 <-
       plot_grid(
