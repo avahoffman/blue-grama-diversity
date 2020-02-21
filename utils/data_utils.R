@@ -5,11 +5,11 @@
 ##########################################################################################
 
 get_bogr_data <- 
-  function(plasticity = F){
+  function(script = "phenotype"){
     ## open data
-    if (plasticity == F) {
+    if (script == "phenotype") {
       bogr_data <- read.csv("data/BOGR_DATA_master.csv")
-    } else if (plasticity == T) {
+    } else if (script = "plasticity") {
       bogr_data <- read.csv("data/BOGR_DATA_plasticity_master.csv")
     }
     clim_data <- read.csv("data/SITE_DATA.csv")

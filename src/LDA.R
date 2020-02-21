@@ -32,7 +32,7 @@ col.pal.colors <-
 names(col.pal.colors) <- col.pal[, 6]
 
 bogr.data[bogr.data == "no pot"] <-
-  NA # any unknown or unid'd locihttps://gist.github.com/thigm85/8424654 have a 'NA'
+  NA # any unknown or unid'd loci have a 'NA'
 bogr.data[bogr.data == "met"] <-
   NA # any unknown or unid'd loci have a 'NA'
 bogr.data[bogr.data == "tr"] <-
