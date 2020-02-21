@@ -3,9 +3,6 @@
 ## This code performs LDA and plots results
 ##
 ###########################################################################################
-## set working directory
-source("config.R")
-setwd(wd)
 library(ggplot2)
 library(gridExtra)
 library(missMDA)
@@ -20,13 +17,13 @@ library(dplyr)
 ## https://gist.github.com/thigm85/8424654
 ###########################################################################################
 
-# LDA on trait means
 
 makeLDA <-
   function(restrictions = bogr.data[(bogr.data$region != 'Boulder'),],
            radlength = 2,
            regionlab
   ) {
+    # LDA on trait means
     # REMOVE ANY ROWS WITH TONS OF NA
     bogr.data <- bogr.data[rowSums(is.na(bogr.data)) < 7, ]
     # replace flower NA with zero
@@ -100,6 +97,7 @@ makeLDA <-
     
     plotdat <-
       data.frame(pop = restrictions[, "pop"], plda$x)
+    col.pal <- col_pal()[[4]]
     colnames(plotdat)[1] <- "pop"
     colnames(col.pal)[2] <- "full"
     colnames(col.pal)[1] <- "pop"
@@ -109,7 +107,7 @@ makeLDA <-
     plot_1 <- ggplot(plotdat, aes(LD1, LD2)) +
       theme_cowplot() +
       geom_point(aes(color = legend.order), size = 2.5) +
-      scale_color_manual(values = col.pal.colors, labels = col.pal.names) +
+      scale_color_manual(values = col_pal()[[3]], labels = col_pal()[[2]]) +
       labs(
         x = paste("LD1 (", percent(prop.lda[1]), ")", sep = ""),
         y = paste("LD2 (", percent(prop.lda[2]), ")", sep = "")
@@ -142,39 +140,16 @@ makeLDA <-
     
   }
 
-bogr.data <- get_bogr_data(script = "LDA")
 
-col.pal.colors <- col_pal()[[3]]
-col.pal.names <- col_pal()[[2]]
-col.pal.v  <- col_pal()[[1]]
-
-ldaregional <-
-  makeLDA(restrictions = bogr.data[(bogr.data$region != 'Boulder'),],
-          radlength = 2,
-          regionlab = 'Regional: trait means')
-ldalocal <-
-  makeLDA(restrictions = bogr.data[(bogr.data$region == 'Boulder'),],
-          radlength = 2,
-          regionlab = 'Local: trait means')
-
-bogr.data <- get_bogr_data(script = "LDA_plasticity")
-
-# LDA for plasticity
-
-ldaregionalplast <-
-  makeLDA(restrictions = bogr.data[(bogr.data$region != 'Boulder'),],
-          radlength = 1.5,
-          regionlab = 'Regional: trait plasticity')
-ldalocalplast <-
-  makeLDA(restrictions = bogr.data[(bogr.data$region == 'Boulder'),],
-          radlength = 2,
-          regionlab = 'Local: trait plasticity')
-
-###########################################################################################
-# gather rank intervals
-
-do.rank.wlegend <- function(infile, trait.name, restrictions) {
-  setwd(wd)
+do_rank <- function(infile, 
+                            trait.name, 
+                            restrictions,
+                            plasticity = F,
+                            xlabs = NULL) {
+  ## Interval plots
+  if (plasticity){
+    breaks <- seq(1, length(xlabs), 1)
+  }
   dat <- read.csv(infile)
   trait.dat <-
     dat[grep("trait", dat$X),]
@@ -189,7 +164,7 @@ do.rank.wlegend <- function(infile, trait.name, restrictions) {
     "pop"
   full.dat$trait <- rep(trait.name, nrow(full.dat))
   names(full.dat)[6] <- "abbv"
-  full.dat <- merge(full.dat, col.pal)
+  full.dat <- merge(full.dat, col_pal()[[4]])
   full.dat <- full.dat[(restrictions),]
   ## originally wanted ranked by mean, e.g., aes(x=rank(mean),y=mean))
   ## have switched to by rough aridity (aka, order determined in legend)
@@ -198,8 +173,6 @@ do.rank.wlegend <- function(infile, trait.name, restrictions) {
            aes(x = rank(legend.order), 
                y = mean)) +
     theme_cowplot() +
-    theme(
-      axis.text.x = element_blank()) +
     geom_errorbar(aes(ymin = `X2.5.`, 
                       ymax = `X97.5.`, 
                       col = legend.order), 
@@ -210,193 +183,233 @@ do.rank.wlegend <- function(infile, trait.name, restrictions) {
     geom_point(aes(col = legend.order), 
                size = 3) + 
     ylab(trait.name) +
-    labs(colour = "Site")
-  return(gg)
-}
-
-regionaltrait_1 <-
-  do.rank.wlegend(
-    infile = "posterior_output/\ biomass_aboveground\ .csv",
-    trait.name = "Aboveground biomass (g)" ,
-    restrictions = c(2, 4, 5, 11, 12)
-  )
-regionaltrait_2 <-
-  do.rank.wlegend(
-    infile = "posterior_output/\ biomass_belowground\ .csv",
-    trait.name = "Belowground biomass (g)" ,
-    restrictions = c(2, 4, 5, 11, 12)
-  )
-regionaltrait_3 <-
-  do.rank.wlegend(
-    infile = "posterior_output/\ Total\ Biomass\ .csv",
-    trait.name = "Total biomass (g)" ,
-    restrictions = c(2, 4, 5, 11, 12)
-  )
-
-localtrait_1 <-
-  do.rank.wlegend(
-    infile = "posterior_output/\ biomass_aboveground\ .csv",
-    trait.name = "Aboveground biomass (g)" ,
-    restrictions = -c(2, 4, 5, 11, 12)
-  )
-localtrait_2 <-
-  do.rank.wlegend(
-    infile = "posterior_output/\ Total\ Biomass\ .csv",
-    trait.name = "Total biomass (g)" ,
-    restrictions = -c(2, 4, 5, 11, 12)
-  )
-
-
-do.rank.wlegend <- function(infile, trait.name, restrictions, xlabs) {
+    labs(colour = "Site") + 
+    theme(legend.position = "none")
+  if (plasticity){
+    gg <- 
+      gg +
+      theme(axis.text.x = element_text(angle=45, hjust = 1)) +
+      geom_hline(yintercept = 0, lty = 3) +
+      scale_x_continuous(labels = xlabs,
+                         breaks = breaks)
+  } else {
+    gg <- 
+      gg + theme(axis.text.x = element_blank())
+  }
   
-  breaks <- seq(1, length(xlabs), 1)
-  setwd(wd)
-  dat <- read.csv(infile)
-  trait.dat <-
-    dat[grep("trait", dat$X),]
-  rownames(trait.dat) <- seq(1, 15, 1)
-  site.dat <- read.csv("data/SITE_DATA.csv")
-  site.dat.traits <-
-    site.dat[-c(6, 10),]
-  rownames(site.dat.traits) <- seq(1, 15, 1)
-  full.dat <-
-    cbind(trait.dat, site.dat.traits[, "pop"])
-  names(full.dat)[6] <-
-    "pop"
-  full.dat$trait <- rep(trait.name, nrow(full.dat))
-  names(full.dat)[6] <- "abbv"
-  full.dat <- merge(full.dat, col.pal)
-  full.dat <- full.dat[(restrictions),]
-  ## originally wanted ranked by mean, e.g., aes(x=rank(mean),y=mean))
-  ## have switched to by rough aridity (aka, order determined in legend)
-  gg <-
-    ggplot(data = full.dat, 
-           aes(x = rank(legend.order), 
-               y = mean)) +
-    theme_cowplot() +
-    theme(axis.text.x = element_text(angle=45, hjust = 1)) +
-    geom_hline(yintercept = 0, lty = 3) +
-    geom_errorbar(aes(ymin = `X2.5.`, 
-                      ymax = `X97.5.`, 
-                      col = legend.order), 
-                  width = 0) +
-    scale_color_manual(values = col.pal.colors, 
-                       labels = col.pal.names) +
-    scale_x_continuous(labels = xlabs,
-                       breaks = breaks) +
-    xlab(NULL) + 
-    geom_point(aes(col = legend.order), 
-               size = 3) + 
-    ylab(trait.name) +
-    labs(colour = "Site")
   return(gg)
 }
-regionalplast_1 <-
-  do.rank.wlegend(
-    infile = "posterior_output_plasticity/\ biomass_aboveground\ .csv",
-    trait.name = "Aboveground biomass plasticity (g)",
-    restrictions = c(2, 4, 5, 11, 12),
-    xlabs = c("Sevilleta", "Cibola", "Comanche", "SGS", "Buffalo Gap")
-  )
-regionalplast_2 <-
-  do.rank.wlegend(
-    infile = "posterior_output_plasticity/\ biomass_belowground\ .csv",
-    trait.name = "Belowground biomass plasticity (g)",
-    restrictions = c(2, 4, 5, 11, 12),
-    xlabs = c("Sevilleta", "Cibola", "Comanche", "SGS", "Buffalo Gap")
-  )
-regionalplast_3 <-
-  do.rank.wlegend(
-    infile = "posterior_output_plasticity/\ max_height\ .csv",
-    trait.name = "Maximum height plasticity (cm)",
-    restrictions = c(2, 4, 5, 11, 12),
-    xlabs = c("Sevilleta", "Cibola", "Comanche", "SGS", "Buffalo Gap")
-  )
-
-localplast_1 <-
-  do.rank.wlegend(
-    infile = "posterior_output_plasticity/\ biomass_aboveground\ .csv",
-    trait.name = "Aboveground biomass plasticity (g)",
-    restrictions = -c(2, 4, 5, 11, 12),
-    xlabs = c("Andrus",
-              "Rock Creek",
-              "Steele",
-              "Rabbit Mountain",
-              "Beech Trail",
-              "Davidson Mesa",
-              "Wonderland",
-              "Heil Valley",
-              "Kelsall",
-              "Walker Ranch")
-  )
-localplast_2 <-
-  do.rank.wlegend(
-    infile = "posterior_output_plasticity/\ flwr_count_1.2\ .csv",
-    trait.name = "Flower count plasticity",
-    restrictions = -c(2, 4, 5, 11, 12),
-    xlabs = c("Andrus",
-              "Rock Creek",
-              "Steele",
-              "Rabbit Mountain",
-              "Beech Trail",
-              "Davidson Mesa",
-              "Wonderland",
-              "Heil Valley",
-              "Kelsall",
-              "Walker Ranch")
-  )
 
 
-###########################################################################################
-# combine all plots
+## Combine all plots
 
-fig1 <- plot_grid(
-  ldaregional + theme(legend.position = "none"),
-  regionaltrait_1  + theme(legend.position = "none"),
-  regionaltrait_2  + theme(legend.position = "none"),
-  regionaltrait_3  + theme(legend.position = "none"),
-  ldaregionalplast + theme(legend.position = "none"),
-  regionalplast_1 + theme(legend.position = "none"),
-  regionalplast_2 + theme(legend.position = "none"),
-  regionalplast_3 + theme(legend.position = "none"),
-  align = 'v',
-  nrow = 2,
-  labels = c("(a)",
-             " (b)",
-             "(c)",
-             " (d)",
-             "(e)",
-             " (f)",
-             "(g)",
-             "(h)"),
-  hjust = -3,
-  vjust = 2
-)
+make_regional_lda_trait_plots <- 
+  function(){
+    
+    bogr.data <- get_bogr_data(script = "LDA")
+    
+    col.pal.colors <- col_pal()[[3]]
+    col.pal.names <- col_pal()[[2]]
+    col.pal.v  <- col_pal()[[1]]
+    
+    fig1 <- 
+      plot_grid(
+        makeLDA(restrictions = bogr.data[(bogr.data$region != 'Boulder'),],
+                radlength = 2,
+                regionlab = 'Regional: trait means') + 
+          theme(legend.position = "none") + 
+          theme(plot.margin = unit(c(7, 7, 7, 14), "pt")), # Slight misalignment otherwise
+        do_rank(
+          infile = "posterior_output/\ biomass_aboveground\ .csv",
+          trait.name = "Aboveground biomass (g)" ,
+          restrictions = c(2, 4, 5, 11, 12)
+        ),
+        do_rank(
+          infile = "posterior_output/\ biomass_belowground\ .csv",
+          trait.name = "Belowground biomass (g)" ,
+          restrictions = c(2, 4, 5, 11, 12)
+        ),
+        do_rank(
+          infile = "posterior_output/\ Total\ Biomass\ .csv",
+          trait.name = "Total biomass (g)" ,
+          restrictions = c(2, 4, 5, 11, 12)
+        ),
+        labels = c("(a)",
+                   "(b)",
+                   "(c)",
+                   "(d)"),
+        hjust = -3.2,
+        vjust = 2,
+        nrow = 1,
+        axis = "lb",
+        align = "vh"
+      )
+    
+    bogr.data <- get_bogr_data(script = "LDA_plasticity")
+    
+    fig2 <- 
+      plot_grid(
+        makeLDA(restrictions = bogr.data[(bogr.data$region != 'Boulder'),],
+                radlength = 1.5,
+                regionlab = 'Regional: trait plasticity') + theme(legend.position = "none"),
+        do_rank(
+          infile = "posterior_output_plasticity/\ biomass_aboveground\ .csv",
+          trait.name = "Aboveground biomass plasticity (g)",
+          restrictions = c(2, 4, 5, 11, 12),
+          xlabs = c("Sevilleta", "Cibola", "Comanche", "SGS", "Buffalo Gap"),
+          plasticity = T
+        ),
+        do_rank(
+          infile = "posterior_output_plasticity/\ biomass_belowground\ .csv",
+          trait.name = "Belowground biomass plasticity (g)",
+          restrictions = c(2, 4, 5, 11, 12),
+          xlabs = c("Sevilleta", "Cibola", "Comanche", "SGS", "Buffalo Gap"),
+          plasticity = T
+        ),
+        do_rank(
+          infile = "posterior_output_plasticity/\ max_height\ .csv",
+          trait.name = "Maximum height plasticity (cm)",
+          restrictions = c(2, 4, 5, 11, 12),
+          xlabs = c("Sevilleta", "Cibola", "Comanche", "SGS", "Buffalo Gap"),
+          plasticity = T
+        ),
+      labels = c("(e)",
+                 " (f)",
+                 "(g)",
+                 "(h)"),
+      hjust = -3.2,
+      vjust = 2,
+      nrow = 1,
+      axis = "lb",
+      align = "vh"
+    )
+    
 
-fig2 <- plot_grid(
-  ldalocal + theme(legend.position = "none"),
-  localtrait_1 + theme(legend.position = "none", ),
-  localtrait_2 + theme(legend.position = "none"),
-  ldalocalplast + theme(legend.position = "none"),
-  localplast_1 + theme(legend.position = "none"),
-  localplast_2 + theme(legend.position = "none"),
-  align = 'v',
-  nrow = 2,
-  labels = c("(a)",
-             "(b)",
-             "(c)",
-             "(d)",
-             "(e)",
-             " (f)"),
-  hjust = -3.2,
-  vjust = 2
-)
+    fig <- plot_grid(fig1, fig2, nrow =2, rel_heights = c(0.47, 0.53))
+    
+    leg <-
+      g_legend(
+        makeLDA(
+          restrictions = bogr.data[(bogr.data$region != 'Boulder'), ],
+          radlength = 2,
+          regionlab = 'Regional: trait means'
+        )
+      )
 
-ggsave(fig1,
-       file = "LDA/LDA_regional.jpg",
-       height = 7,
-       width = 14)
-ggsave(fig2,
-       file = "LDA/LDA_local.jpg",
-       height = 7,
-       width = 14)
+    final <- 
+      grid.arrange(
+      leg, fig, ncol = 2, widths = c(0.1,0.9)
+    )
+
+    ggsave(final,
+           file = "LDA/LDA_regional.jpg",
+           height = 7,
+           width = 14.5)
+  }
+
+
+make_local_lda_trait_plots <- 
+  function(){
+    
+    bogr.data <- get_bogr_data(script = "LDA")
+    
+    col.pal.colors <- col_pal()[[3]]
+    col.pal.names <- col_pal()[[2]]
+    col.pal.v  <- col_pal()[[1]]
+    
+    fig1 <- 
+      plot_grid(
+        makeLDA(restrictions = bogr.data[(bogr.data$region == 'Boulder'),],
+                  radlength = 2,
+                  regionlab = 'Local: trait means') + theme(legend.position = "none"),
+        do_rank(
+            infile = "posterior_output/\ biomass_aboveground\ .csv",
+            trait.name = "Aboveground biomass (g)" ,
+            restrictions = -c(2, 4, 5, 11, 12)
+          ),
+        do_rank(
+            infile = "posterior_output/\ Total\ Biomass\ .csv",
+            trait.name = "Total biomass (g)" ,
+            restrictions = -c(2, 4, 5, 11, 12)
+          ),
+        labels = c(
+          "(a)",
+          "(b)",
+          " (c)"),
+        hjust = -3.2,
+        vjust = 2,
+        axis = "lb",
+        align = "vh",
+        nrow = 1
+      )
+    
+    bogr.data <- get_bogr_data(script = "LDA_plasticity")
+    
+    fig2 <- 
+      plot_grid(
+        makeLDA(restrictions = bogr.data[(bogr.data$region == 'Boulder'),],
+                radlength = 2,
+                regionlab = 'Local: trait plasticity') + theme(legend.position = "none"),
+        do_rank(
+          infile = "posterior_output_plasticity/\ biomass_aboveground\ .csv",
+          trait.name = "Aboveground biomass plasticity (g)",
+          restrictions = -c(2, 4, 5, 11, 12),
+          xlabs = c("Andrus",
+                    "Rock Creek",
+                    "Steele",
+                    "Rabbit Mountain",
+                    "Beech Trail",
+                    "Davidson Mesa",
+                    "Wonderland",
+                    "Heil Valley",
+                    "Kelsall",
+                    "Walker Ranch"),
+          plasticity = T
+        ),
+        do_rank(
+            infile = "posterior_output_plasticity/\ flwr_count_1.2\ .csv",
+            trait.name = "Flower count plasticity",
+            restrictions = -c(2, 4, 5, 11, 12),
+            xlabs = c("Andrus",
+                      "Rock Creek",
+                      "Steele",
+                      "Rabbit Mountain",
+                      "Beech Trail",
+                      "Davidson Mesa",
+                      "Wonderland",
+                      "Heil Valley",
+                      "Kelsall",
+                      "Walker Ranch"),
+            plasticity = T
+          ),
+        labels = c(
+                   "(d)",
+                   "(e)",
+                   " (f)"),
+        hjust = -3.2,
+        vjust = 2,
+        nrow = 1,
+        axis = "lb",
+        align = "vh"
+      )
+    
+    fig <- plot_grid(fig1, fig2, nrow =2, rel_heights = c(0.47, 0.53))
+    
+    leg <-
+      g_legend(makeLDA(
+        restrictions = bogr.data[(bogr.data$region == 'Boulder'), ],
+        radlength = 2,
+        regionlab = 'Local: trait means'
+      ))
+    
+    final <- 
+      grid.arrange(
+        leg, fig, ncol = 2, widths = c(0.13,0.87)
+      )
+    
+    ggsave(final,
+           file = "LDA/LDA_local.jpg",
+           height = 7,
+           width = 14)
+  }
+  
