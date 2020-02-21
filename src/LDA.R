@@ -166,6 +166,7 @@ do_rank <- function(infile,
   names(full.dat)[6] <- "abbv"
   full.dat <- merge(full.dat, col_pal()[[4]])
   full.dat <- full.dat[(restrictions),]
+  breaks <- seq(1, nrow(full.dat), 1)
   ## originally wanted ranked by mean, e.g., aes(x=rank(mean),y=mean))
   ## have switched to by rough aridity (aka, order determined in legend)
   gg <-
@@ -194,7 +195,9 @@ do_rank <- function(infile,
                          breaks = breaks)
   } else {
     gg <- 
-      gg + theme(axis.text.x = element_blank())
+      gg + 
+      theme(axis.text.x = element_blank()) +
+      scale_x_continuous(breaks = breaks)
   }
   
   return(gg)
@@ -215,7 +218,6 @@ make_regional_lda_trait_plots <-
     fig1 <- 
       plot_grid(
         makeLDA(restrictions = bogr.data[(bogr.data$region != 'Boulder'),],
-                radlength = 2,
                 regionlab = 'Regional: trait means') + 
           theme(legend.position = "none") + 
           theme(plot.margin = unit(c(7, 7, 7, 14), "pt")), # Slight misalignment otherwise
@@ -291,7 +293,6 @@ make_regional_lda_trait_plots <-
       g_legend(
         makeLDA(
           restrictions = bogr.data[(bogr.data$region != 'Boulder'), ],
-          radlength = 2,
           regionlab = 'Regional: trait means'
         )
       )
@@ -320,7 +321,6 @@ make_local_lda_trait_plots <-
     fig1 <- 
       plot_grid(
         makeLDA(restrictions = bogr.data[(bogr.data$region == 'Boulder'),],
-                  radlength = 2,
                   regionlab = 'Local: trait means') + theme(legend.position = "none"),
         do_rank(
             infile = "posterior_output/\ biomass_aboveground\ .csv",
@@ -335,7 +335,7 @@ make_local_lda_trait_plots <-
         labels = c(
           "(a)",
           "(b)",
-          " (c)"),
+          "(c)"),
         hjust = -3.2,
         vjust = 2,
         axis = "lb",
@@ -348,7 +348,6 @@ make_local_lda_trait_plots <-
     fig2 <- 
       plot_grid(
         makeLDA(restrictions = bogr.data[(bogr.data$region == 'Boulder'),],
-                radlength = 2,
                 regionlab = 'Local: trait plasticity') + theme(legend.position = "none"),
         do_rank(
           infile = "posterior_output_plasticity/\ biomass_aboveground\ .csv",
@@ -398,7 +397,6 @@ make_local_lda_trait_plots <-
     leg <-
       g_legend(makeLDA(
         restrictions = bogr.data[(bogr.data$region == 'Boulder'), ],
-        radlength = 2,
         regionlab = 'Local: trait means'
       ))
     
