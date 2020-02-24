@@ -248,7 +248,8 @@ make_regional_lda_trait_plots <-
     
     fig2 <-
       plot_grid(
-        makeLDA(radlength = 1.5,
+        makeLDA(restrictions = bogr.data[(bogr.data$region != 'Boulder'),],
+                radlength = 1.5,
                 regionlab = 'Regional: trait plasticity') + 
           theme(legend.position = "none"),
         do_rank(
@@ -299,7 +300,7 @@ make_regional_lda_trait_plots <-
     ggsave(final,
            file = "LDA/LDA_regional.jpg",
            height = 7,
-           width = 14.5)
+           width = 15.5)
   }
 
 
