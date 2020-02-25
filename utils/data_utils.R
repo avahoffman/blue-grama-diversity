@@ -3,6 +3,7 @@
 ## Functions used for generating gathering data
 ##
 ##########################################################################################
+library(dplyr)
 
 get_bogr_data <- 
   function(script = "phenotype"){
@@ -56,7 +57,10 @@ get_bogr_data <-
       bogr_data$root_shoot <-
         as.numeric(as.character(bogr_data$roottoshoot))
       bogr_data$biomass_total <-
-        as.numeric(as.character(bogr_data$biomass_total))     
+        as.numeric(as.character(bogr_data$biomass_total)) 
+      bogr_data <- 
+        bogr_data %>%
+        select(-c(roottoshoot))
       
       return(bogr_data)
     }
