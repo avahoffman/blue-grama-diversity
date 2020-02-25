@@ -97,7 +97,7 @@ run_vism_plasticity <-
     #, specified params
     #, 2) Plot the posterior distribution of same response variable
     #, 3) plot the predictive checks of the posterior draws to ensure a good fit
-    plas_clim_data <- get_bogr_data(script == "phenotype")
+    plas_clim_data <- get_bogr_data(script = "plasticity")
     temp_data <-
       as.data.frame(cbind(plas_clim_data$pop, responsevar, plas_clim_data$vwc_adj))
     temp_data <- na.omit(temp_data)
@@ -158,7 +158,6 @@ run_vism_plasticity <-
 
 run_mcmc_plasticity <- 
   function(){
-    plas_clim_data <- get_bogr_data(script == "phenotype")
     
     run_vism_plasticity(
       responsevar = plas_clim_data$biomass_aboveground,
@@ -222,15 +221,15 @@ run_mcmc_plasticity <-
       iter = 50000
     )
     run_vism_plasticity(
-      responsevar = plas_clim_data$roottoshoot,
-      outputname = "Root to shoot biomass ratio",
+      responsevar = plas_clim_data$root_shoot,
+      outputname = "root_shoot",
       iter = 50000,
       adapt_delta = 0.99,
       max_treedepth = 15
     )
     run_vism_plasticity(
       responsevar = plas_clim_data$biomass_total,
-      outputname = "Total Biomass",
+      outputname = "biomass_total",
       iter = 50000
     )
 }
