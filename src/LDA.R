@@ -336,6 +336,13 @@ make_regional_lda_trait_plots <-
         ) +
           theme(legend.position = "none"),
         do_rank(
+          infile = "posterior_output_plasticity/\ max_height\ .csv",
+          trait.name = "Maximum height plasticity (cm)",
+          restrictions = res,
+          xlabs = xlabs,
+          plasticity = T
+        ),
+        do_rank(
           infile = "posterior_output_plasticity/\ biomass_belowground\ .csv",
           trait.name = "Belowground biomass plasticity (g)",
           restrictions = res,
@@ -345,13 +352,6 @@ make_regional_lda_trait_plots <-
         do_rank(
           infile = "posterior_output_plasticity/\ Root\ to\ shoot\ biomass\ ratio\ .csv",
           trait.name = "Root:shoot ratio",
-          restrictions = res,
-          xlabs = xlabs,
-          plasticity = T
-        ),
-        do_rank(
-          infile = "posterior_output_plasticity/\ max_height\ .csv",
-          trait.name = "Maximum height \nplasticity (cm)",
           restrictions = res,
           xlabs = xlabs,
           plasticity = T
