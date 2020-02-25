@@ -96,7 +96,7 @@ render_interval_plot <-
     for (i in 1:length(data_sources)) {
       p <- do.rank(
         infile = as.character(data_sources[i]),
-        trait.name = as.character(trait.names[i]),
+        trait.name = as.character(trait_names[i]),
         mcmc_ref = as.character(mcmc_ref)
       )
       # Save legend
@@ -249,8 +249,8 @@ render_interval_plot(
       "posterior_output_plasticity/\ biomass_aboveground\ .csv",
       "posterior_output_plasticity/\ biomass_belowground\ .csv",
       "posterior_output_plasticity/\ biomass_rhizome\ .csv",
-      "posterior_output_plasticity/\ Total\ Biomass\ .csv",
-      "posterior_output_plasticity/\ Root\ to\ shoot\ biomass\ ratio\ .csv",
+      "posterior_output_plasticity/\ biomass_total\ .csv",
+      "posterior_output_plasticity/\ root_shoot\ .csv",
       "posterior_output_plasticity/\ max_height\ .csv",
       "posterior_output_plasticity/\ avg_midday_mpa_expt\ .csv",
       "posterior_output_plasticity/\ avg_predawn_mpa_expt\ .csv",
@@ -290,8 +290,8 @@ render_interval_plot(
       "posterior_output_plasticity/\ biomass_aboveground\ .csv",
       "posterior_output_plasticity/\ biomass_belowground\ .csv",
       "posterior_output_plasticity/\ biomass_rhizome\ .csv",
-      "posterior_output_plasticity/\ Total\ Biomass\ .csv",
-      "posterior_output_plasticity/\ Root\ to\ shoot\ biomass\ ratio\ .csv",
+      "posterior_output_plasticity/\ biomass_total\ .csv",
+      "posterior_output_plasticity/\ root_shoot\ .csv",
       "posterior_output_plasticity/\ max_height\ .csv",
       "posterior_output_plasticity/\ avg_midday_mpa_expt\ .csv",
       "posterior_output_plasticity/\ avg_predawn_mpa_expt\ .csv",

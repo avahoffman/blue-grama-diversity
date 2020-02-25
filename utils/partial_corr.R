@@ -131,7 +131,7 @@ partial_cor_bogr <- function(resp, resp_, p.value = F) {
         t12[1, 2],
         t13[1, 2]
       ),
-      method = "fdr"
+      method = "BH"
     ))
   } else{
     return(c(
@@ -264,7 +264,7 @@ partial_cor_bogr_plasticity <- function(resp, resp_, p.value = F) {
         t11[1, 2],
         t12[1, 2]
       ),
-      method = "fdr"
+      method = "BH"
     ))
   } else{
     return(c(

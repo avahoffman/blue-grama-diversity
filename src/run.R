@@ -12,6 +12,7 @@ setwd(wd)
 # General functions and configuration
 source("utils/data_utils.R")
 source("src/config.R")
+source("utils/partial_corr.R")
 
 # Specific functions
 source("utils/mcmc_output.R")
@@ -21,6 +22,7 @@ source("src/LDA.R")
 source("src/local_genome_diversity.R")
 source("src/regional_genome_diversity.R")
 source("src/Total_genome_diversity.R")
+source("src/partial_corr_matrices.R")
 
 ###########################################################################################
 
@@ -37,6 +39,10 @@ run_Local_genomics()
 # Create LDAs and posterior plots
 make_regional_lda_trait_plots()
 make_local_lda_trait_plots()
+
+# Run climate correlations
+run_phenotype_corrs()
+run_plasticity_corrs()
 
 ## Supplemental
 # Run genomics analysis for all populations together
