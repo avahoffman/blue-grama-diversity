@@ -21,6 +21,9 @@ library(dplyr)
 makeLDA <-
   function(df,
            scale_factor,
+           drop_threshold = 8,
+           n_pca_impute = 2,
+           median_impute = F,
            radlength = 1.5,
            lda_1_num = 2,
            v_just = 0.5) {
@@ -38,17 +41,20 @@ makeLDA <-
       df$flwr_count_1.2 %>% replace_na(0)
     
     # REMOVE ANY ROWS WITH TONS OF NA
-    df <- df[rowSums(is.na(df)) <= 8, ]
+    df <- df[rowSums(is.na(df)) <= drop_threshold, ]
     
     if (scale_factor == "regional") {
       restrictions <- df %>% filter(region != "Boulder")
-      group_var <- "region"
-      lda_form <- as.formula(paste("region ~ ."))
+      # group_var <- "region"
+      # lda_form <- as.formula(paste("region ~ ."))
     } else if (scale_factor == "local") {
       restrictions <- df %>% filter(region == "Boulder")
-      group_var <- "pop"
-      lda_form <- as.formula(paste("pop ~ ."))
+      # group_var <- "pop"
+      # lda_form <- as.formula(paste("pop ~ ."))
     }
+    
+    group_var <- "pop"
+    lda_form <- as.formula(paste("pop ~ ."))
     
     feats <-
       restrictions %>% dplyr::select(
@@ -67,36 +73,41 @@ makeLDA <-
         "biomass_total"
       )
     
-    for (i in 2:length(feats)){
-
-      temp_median <- 
-        feats %>% 
-        group_by(get(group_var)) %>%
-        summarize(temp_med = median(get(colnames(feats[i])), na.rm=T))
-      colnames(temp_median) <- c(group_var,"temp_median")
+    if (median_impute) {
+      # Impute medians by group on all missing data
+      for (i in 2:length(feats)) {
+        temp_median <-
+          feats %>%
+          group_by(get(group_var)) %>%
+          summarize(temp_med = median(get(colnames(feats[i])), na.rm = T))
+        colnames(temp_median) <- c(group_var, "temp_median")
+        
+        feats <-
+          feats %>%
+          full_join(temp_median, by = group_var) %>%
+          mutate(temp_var = ifelse(is.na(!!as.name(
+            colnames(feats[i])
+          )), temp_median,!!as.name(colnames(feats[i]))))
+        
+        feats[[colnames(feats[i])]] <- feats$temp_var
+        
+        feats <- feats %>% select(-c(temp_median, temp_var))
+        
+      }
       
-      feats <- 
-        feats %>% 
-        full_join(temp_median, by=group_var) %>% 
-        mutate(temp_var = ifelse(is.na(!!as.name(colnames(feats[i]))), temp_median, !!as.name(colnames(feats[i]))))
+      feats <- feats %>% select(-(group_var))
+    } else {
+      # Iterativa PCA to impute for missing values
+      feats <- feats %>% select(-c(group_var))
       
-      feats[[colnames(feats[i])]] <- feats$temp_var 
+      imputed <-
+        # Run estim_ncpPCA(feats, ncp.min=1, ncp.max = 5) to determine number ncp
+        imputePCA(feats, ncp = n_pca_impute, scale = T) 
       
-      feats <- feats %>% select(-c(temp_median, temp_var))
-      
+      feats <- imputed$completeObs
     }
     
-    feats <- feats %>% select(-(group_var))
-    
-    
-    # if (remove_rhizome){
-    #   feats <- feats %>% select(-c("biomass_rhizome"))
-    #   }
-    #Iterativa PCA to impute for missing values
-    # imputed <-
-    #   imputePCA(feats, ncp = 2, scale = T) # Run estim_ncpPCA(feats, ncp.min=1, ncp.max = 5) to determine number ncp
-    # newfeats <- imputed$completeObs
-    
+    # Scale in prep for LDA
     newfeats_scaled <- scale(feats)
     
     ldadat <-
@@ -282,8 +293,9 @@ make_regional_lda_trait_plots <-
       plot_grid(
         makeLDA(get_bogr_data(script = "LDA"),
                 scale_factor = "regional",
-                lda_1_num = 3,
-                v_just = c(1,0,0.5)) +
+                drop_threshold = 7,
+                lda_1_num = 2,
+                v_just = 0.5) +
           theme(legend.position = "none") +
           theme(plot.margin = unit(c(7, 7, 7, 14), "pt")),
         # Slight misalignment otherwise
@@ -318,16 +330,11 @@ make_regional_lda_trait_plots <-
         makeLDA(
           get_bogr_data(script = "LDA_plasticity"),
           scale_factor = "regional",
-          lda_1_num = 2
+          drop_threshold = 7,
+          lda_1_num = 2,
+          n_pca_impute = 6
         ) +
           theme(legend.position = "none"),
-        do_rank(
-          infile = "posterior_output_plasticity/\ biomass_aboveground\ .csv",
-          trait.name = "Aboveground biomass plasticity (g)",
-          restrictions = res,
-          xlabs = xlabs,
-          plasticity = T
-        ),
         do_rank(
           infile = "posterior_output_plasticity/\ biomass_belowground\ .csv",
           trait.name = "Belowground biomass plasticity (g)",
@@ -336,8 +343,15 @@ make_regional_lda_trait_plots <-
           plasticity = T
         ),
         do_rank(
-          infile = "posterior_output_plasticity/\ avg_predawn_mpa_expt\ .csv",
-          trait.name = "Predawn leaf water potential \nplasticity (MPa)",
+          infile = "posterior_output_plasticity/\ Root\ to\ shoot\ biomass\ ratio\ .csv",
+          trait.name = "Root:shoot ratio",
+          restrictions = res,
+          xlabs = xlabs,
+          plasticity = T
+        ),
+        do_rank(
+          infile = "posterior_output_plasticity/\ max_height\ .csv",
+          trait.name = "Maximum height \nplasticity (cm)",
           restrictions = res,
           xlabs = xlabs,
           plasticity = T
@@ -426,6 +440,8 @@ make_local_lda_trait_plots <-
         makeLDA(
           get_bogr_data(script = "LDA_plasticity"),
           scale_factor = "local",
+          drop_threshold = 12,
+          n_pca_impute = 6,
           lda_1_num = 2
         ) +
           theme(legend.position = "none"),
@@ -437,7 +453,7 @@ make_local_lda_trait_plots <-
           plasticity = T
         ),
         do_rank(
-          infile = "posterior_output_plasticity/\ Total\ Biomass\ .csv",
+          infile = "posterior_output_plasticity/\ flwr_count_1.2\ .csv",
           trait.name = "Total biomass plasticity (g)",
           restrictions = res,
           xlabs = xlabs,
