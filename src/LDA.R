@@ -31,10 +31,6 @@ makeLDA <-
     
     # Subset data
     #replace flower NA with zero
-    df$flwr_avg_ind_len <-
-      df$flwr_avg_ind_len %>% replace_na(0)
-    df$flwr_avg_ind_mass <-
-      df$flwr_avg_ind_mass %>% replace_na(0)
     df$flwr_mass_lifetime <-
       df$flwr_mass_lifetime %>% replace_na(0)
     df$flwr_count_1.2  <-
@@ -45,16 +41,13 @@ makeLDA <-
     
     if (scale_factor == "regional") {
       restrictions <- df %>% filter(region != "Boulder")
-      # group_var <- "region"
-      # lda_form <- as.formula(paste("region ~ ."))
+      group_var <- "region"
+      lda_form <- as.formula(paste("region ~ ."))
     } else if (scale_factor == "local") {
       restrictions <- df %>% filter(region == "Boulder")
-      # group_var <- "pop"
-      # lda_form <- as.formula(paste("pop ~ ."))
+      group_var <- "pop"
+      lda_form <- as.formula(paste("pop ~ ."))
     }
-    
-    group_var <- "pop"
-    lda_form <- as.formula(paste("pop ~ ."))
     
     feats <-
       restrictions %>% dplyr::select(
@@ -95,10 +88,10 @@ makeLDA <-
         
       }
       
-      feats <- feats %>% select(-(group_var))
+      feats <- feats %>% dplyr::select(-c(group_var))
     } else {
       # Iterativa PCA to impute for missing values
-      feats <- feats %>% select(-c(group_var))
+      feats <- feats %>% dplyr::select(-c(group_var))
       
       imputed <-
         # Run estim_ncpPCA(feats, ncp.min=1, ncp.max = 5) to determine number ncp
@@ -111,7 +104,7 @@ makeLDA <-
     newfeats_scaled <- scale(feats)
     
     ldadat <-
-      cbind(restrictions %>% select(group_var),
+      cbind(restrictions %>% dplyr::select(group_var),
             as.data.frame(newfeats_scaled))
     lda_results <- lda(formula = lda_form, data = ldadat)
     prop.lda = lda_results$svd ^ 2 / sum(lda_results$svd ^ 2)
@@ -177,7 +170,7 @@ makeLDA <-
       mutate(h_just = replace(h_just, x_end >= 0, 0))
     
     plotdat <-
-      data.frame(pop = restrictions %>% select(pop), plda$x)
+      data.frame(pop = restrictions %>% dplyr::select(pop), plda$x)
     col.pal <- col_pal()[[4]]
     colnames(plotdat)[1] <- "pop"
     colnames(col.pal)[2] <- "full"
@@ -331,27 +324,29 @@ make_regional_lda_trait_plots <-
           get_bogr_data(script = "LDA_plasticity"),
           scale_factor = "regional",
           drop_threshold = 7,
-          lda_1_num = 2,
-          n_pca_impute = 6
+          radlength = 0.7,
+          lda_1_num = 3,
+          n_pca_impute = 2,
+          v_just = c(1,0,0.5)
         ) +
           theme(legend.position = "none"),
         do_rank(
-          infile = "posterior_output_plasticity/\ max_height\ .csv",
-          trait.name = "Maximum height plasticity (cm)",
+          infile = "posterior_output_plasticity/\ biomass_aboveground\ .csv",
+          trait.name = "Aboveground biomass plasticity (g)" ,
           restrictions = res,
           xlabs = xlabs,
           plasticity = T
         ),
         do_rank(
-          infile = "posterior_output_plasticity/\ biomass_belowground\ .csv",
-          trait.name = "Belowground biomass plasticity (g)",
+          infile = "posterior_output_plasticity/\ biomass_rhizome\ .csv",
+          trait.name = "Rhizome biomass plasticity (g)" ,
           restrictions = res,
           xlabs = xlabs,
           plasticity = T
         ),
         do_rank(
-          infile = "posterior_output_plasticity/\ Root\ to\ shoot\ biomass\ ratio\ .csv",
-          trait.name = "Root:shoot ratio",
+          infile = "posterior_output_plasticity/\ biomass_total\ .csv",
+          trait.name = "Total biomass plasticity (g)" ,
           restrictions = res,
           xlabs = xlabs,
           plasticity = T
@@ -384,7 +379,7 @@ make_regional_lda_trait_plots <-
     ggsave(final,
            file = "LDA/LDA_regional.jpg",
            height = 7,
-           width = 15.5)
+           width = 16.5)
   }
 
 
@@ -437,13 +432,13 @@ make_local_lda_trait_plots <-
     
     fig2 <-
       plot_grid(
-        makeLDA(
-          get_bogr_data(script = "LDA_plasticity"),
-          scale_factor = "local",
-          drop_threshold = 12,
-          n_pca_impute = 6,
-          lda_1_num = 2
-        ) +
+          makeLDA(
+            get_bogr_data(script = "LDA_plasticity"),
+            scale_factor = "local",
+            drop_threshold = 8,
+            n_pca_impute = 3,
+            lda_1_num = 2
+          ) +
           theme(legend.position = "none"),
         do_rank(
           infile = "posterior_output_plasticity/\ biomass_aboveground\ .csv",
@@ -453,7 +448,7 @@ make_local_lda_trait_plots <-
           plasticity = T
         ),
         do_rank(
-          infile = "posterior_output_plasticity/\ flwr_count_1.2\ .csv",
+          infile = "posterior_output_plasticity/\ biomass_total\ .csv",
           trait.name = "Total biomass plasticity (g)",
           restrictions = res,
           xlabs = xlabs,

@@ -105,12 +105,9 @@ get_bogr_data <-
       return(bogr_data)
     } else if (script == "LDA_plasticity") {
       bogr_data$root_shoot <-
-        as.numeric(as.character(bogr_data$roottoshoot))
+        as.numeric(as.character(bogr_data$root_shoot))
       bogr_data$biomass_total <-
         as.numeric(as.character(bogr_data$biomass_total))
-      bogr_data <-
-        bogr_data %>%
-        select(-c(roottoshoot))
       
       return(bogr_data)
     }
