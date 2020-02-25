@@ -290,7 +290,7 @@ make_regional_lda_trait_plots <-
                 lda_1_num = 2,
                 v_just = 0.5) +
           theme(legend.position = "none") +
-          theme(plot.margin = unit(c(7, 7, 7, 14), "pt")),
+          theme(plot.margin = unit(c(7, 7, 7, 10), "pt")),
         # Slight misalignment otherwise
         do_rank(
           infile = "posterior_output/\ biomass_aboveground\ .csv",
@@ -307,10 +307,10 @@ make_regional_lda_trait_plots <-
           trait.name = "Total biomass (g)" ,
           restrictions = res
         ),
-        labels = c(" (a)",
-                   " (b)",
-                   " (c)",
-                   " (d)"),
+        labels = c("(a)",
+                   "(b)",
+                   "(c)",
+                   "(d)"),
         hjust = -3.2,
         vjust = 2,
         nrow = 1,
@@ -351,10 +351,10 @@ make_regional_lda_trait_plots <-
           xlabs = xlabs,
           plasticity = T
         ),
-        labels = c(" (e)",
+        labels = c("(e)",
                    " (f)",
-                   " (g)",
-                   " (h)"),
+                   "(g)",
+                   "(h)"),
         hjust = -3.2,
         vjust = 2,
         nrow = 1,
@@ -407,7 +407,7 @@ make_local_lda_trait_plots <-
                 scale_factor = "local",
                 lda_1_num = 2) +
           theme(legend.position = "none") +
-          theme(plot.margin = unit(c(7, 7, 7, 4), "pt")),
+          theme(plot.margin = unit(c(7, 7, 7, 17), "pt")),
         do_rank(
           infile = "posterior_output/\ biomass_aboveground\ .csv",
           trait.name = "Aboveground biomass (g)" ,
