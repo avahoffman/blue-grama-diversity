@@ -150,7 +150,7 @@ g_legend <- function(a.gplot) {
 
 
 get_genind_data <-
-  function() {
+  function(impute_mean = T) {
     ## several options depending on what samples desired..
     load("src/genomics_prep/genind_all.R")
     
@@ -165,8 +165,10 @@ get_genind_data <-
     indNames(genind.1clone.only)
     
     ## impute mean for missing data
-    genind.1clone.only$tab <-
-      tab(genind.1clone.only, NA.method = "mean")
-    
+    if (impute_mean){
+      genind.1clone.only$tab <-
+        tab(genind.1clone.only, NA.method = "mean")
+    }
+
     return(genind.1clone.only)
   }

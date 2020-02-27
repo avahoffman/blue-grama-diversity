@@ -26,6 +26,7 @@ source("src/Total_genome_diversity.R")
 source("src/partial_corr_matrices.R")
 source("src/Interval_plots.R")
 source("src/Maps_genomics.R")
+source("src/Site_tree_hierarchical.R")
 
 ###########################################################################################
 
@@ -45,6 +46,9 @@ run_Local_genomics()
 make_regional_pie_map()
 make_local_pie_map()
 
+# Create regional phylogeny
+create_reigonal_site_tree()
+
 # Create LDAs and posterior plots
 make_regional_lda_trait_plots()
 make_local_lda_trait_plots()
@@ -57,6 +61,9 @@ run_plasticity_corrs()
 
 # Run genomics analysis for all populations together
 run_total_genomics()
+
+# Make total site tree
+create_total_site_tree()
 
 # Make 95% CI plots for phenotypes and phenotypic plasticity
 render_phenotype_intervals()
