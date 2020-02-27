@@ -27,6 +27,7 @@ source("src/partial_corr_matrices.R")
 source("src/Interval_plots.R")
 source("src/Maps_genomics.R")
 source("src/Site_tree_hierarchical.R")
+source("src/Poppr_genetic_diversity.R")
 
 ###########################################################################################
 
@@ -49,6 +50,9 @@ make_local_pie_map()
 # Create regional phylogeny
 create_reigonal_site_tree()
 
+# Calculate genomics measures (# genotypes, heterozygosity, etc)
+calculate_genotype_diversity()
+
 # Create LDAs and posterior plots
 make_regional_lda_trait_plots()
 make_local_lda_trait_plots()
@@ -58,6 +62,9 @@ run_phenotype_corrs()
 run_plasticity_corrs()
 
 ## Supplemental ----
+
+# Perform clone validation for the genomics technique
+run_clone_validation()
 
 # Run genomics analysis for all populations together
 run_total_genomics()
