@@ -13,6 +13,56 @@ library(reshape2)
 ## Discriminant Analysis of Principal Components (DAPC)
 ## https://github.com/thibautjombart/adegenet/raw/master/tutorials/tutorial-dapc.pdf
 
+run_regional_genomics_cross_val <- 
+  function() {
+    ## keep only regional populations
+    genind.regional <- get_genind_data()[(
+      get_genind_data()@pop %in%
+        c(
+          'Cibola',
+          'Sevilleta',
+          'SGS',
+          'Comanche',
+          'Konza',
+          'Cedar Point',
+          'Buffalo Gap'
+        )
+    ),]
+    grp <- pop(genind.regional)
+    
+    # Plot results of cross validation
+    pdf(
+      "genomics_output/figures/Xval_plot_regional.pdf",
+      height = 6,
+      width = 6
+    )
+    # Run through iterations
+    xval <-
+      xvalDapc(
+        genind.regional$tab,
+        grp,
+        n.pca.max = 160,
+        training.set = 0.9,
+        result = "groupMean",
+        center = TRUE,
+        scale = FALSE,
+        n.pca = NULL,
+        n.rep = 30,
+        xval.plot = TRUE,
+        parallel = "multicore"
+      )
+    dev.off()
+    # Summary report of DAPC -- we are very interested in xval$DAPC$n.pca for following steps
+    print(xval$DAPC)
+    save(xval, file = "genomics_output/xval_regional.R")
+    ## DAPC knows to use populations as prior groups
+    load(file = "genomics_output/xval_regional.R")
+    DAPC <- xval$DAPC
+    
+    return(DAPC)
+  }
+
+
 run_regional_genomics <-
   function() {
     ## keep only regional populations
@@ -30,23 +80,16 @@ run_regional_genomics <-
     ),]
     
     grp <- pop(genind.regional)
-    # pdf("Analysis/genomics_output/figures/Xval_plot_regional.pdf",height=6,width=6)
-    # xval <- xvalDapc(genind.regional$tab, grp, n.pca.max = 160, training.set = 0.9,
-    #                  result = "groupMean", center = TRUE, scale = FALSE,
-    #                  n.pca = NULL, n.rep = 30, xval.plot = TRUE, parallel = "multicore")
-    # dev.off()
-    # save(xval, file="Analysis/genomics_output/xval_regional.R")
-    # ## DAPC knows to use populations as prior groups
-    # load(file="Analysis/genomics_output/xval_regional.R")
-    # DAPC <- xval$DAPC
-    
-    
     ## n.da should be one less than the number of groups
-    DAPC <- dapc(genind.regional$tab, grp, n.pca = 60, n.da = 6)
+    DAPC <- dapc(
+      genind.regional$tab,
+      grp,
+      n.pca = 60,
+      n.da = 6
+    )
     ## how much variance retained?
-    DAPC$var
-    DAPC
-    
+    print(DAPC$var)
+    print(DAPC)
     
     ## plot as groups
     plot.dat <- as.data.frame(DAPC$ind.coord)

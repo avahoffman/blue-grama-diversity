@@ -14,6 +14,11 @@ library(reshape2)
 
 run_total_genomics_cross_val <- 
   function() {
+    # Load data
+    genind.1clone.only <- get_genind_data()
+    grp <- pop(genind.1clone.only)
+    
+    # Plot results of cross validation
     pdf(
       "genomics_output/figures/Xval_plot_total.pdf",
       height = 6,
@@ -41,6 +46,8 @@ run_total_genomics_cross_val <-
     ## DAPC knows to use populations as prior groups
     load(file = "genomics_output/xval_total.R")
     DAPC <- xval$DAPC
+    
+    return(DAPC)
   }
 
 
