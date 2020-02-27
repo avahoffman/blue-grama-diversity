@@ -3,6 +3,7 @@
 # Execution script for project pipeline.
 
 ###########################################################################################
+
 # Set working directory for the repository (should be the git repo):
 wd <- "/Users/hoffman ava/blue-grama-diversity/"
  #"/Users/avahoffman/Dropbox/Research/Bouteloua_diversity/blue-grama-diversity/"
@@ -24,6 +25,7 @@ source("src/regional_genome_diversity.R")
 source("src/Total_genome_diversity.R")
 source("src/partial_corr_matrices.R")
 source("src/Interval_plots.R")
+source("src/Maps_genomics.R")
 
 ###########################################################################################
 
@@ -38,6 +40,10 @@ run_mcmc_plasticity()
 # Run genomics analysis (posteriors, DAPC, structure) and make plots
 run_regional_genomics()
 run_Local_genomics()
+
+# Genomics as pie plots on maps
+make_regional_pie_map()
+make_local_pie_map()
 
 # Create LDAs and posterior plots
 make_regional_lda_trait_plots()

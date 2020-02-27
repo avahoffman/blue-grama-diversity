@@ -54,6 +54,7 @@ create_plasticity_data <-
     write.csv(plasticity_data, "data/BOGR_DATA_plasticity_master.csv")
   }
 
+
 get_bogr_data <-
   function(script = "phenotype") {
     ## open data
