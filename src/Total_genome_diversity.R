@@ -12,29 +12,51 @@ library(reshape2)
 ## Discriminant Analysis of Principal Components (DAPC)
 ## https://github.com/thibautjombart/adegenet/raw/master/tutorials/tutorial-dapc.pdf
 
+run_total_genomics_cross_val <- 
+  function() {
+    pdf(
+      "genomics_output/figures/Xval_plot_total.pdf",
+      height = 6,
+      width = 6
+    )
+    # Run through iterations
+    xval <-
+      xvalDapc(
+        genind.1clone.only$tab,
+        grp,
+        n.pca.max = 160,
+        training.set = 0.9,
+        result = "groupMean",
+        center = TRUE,
+        scale = FALSE,
+        n.pca = NULL,
+        n.rep = 30,
+        xval.plot = TRUE,
+        parallel = "multicore"
+      )
+    dev.off()
+    # Summary report of DAPC -- we are very interested in xval$DAPC$n.pca for following steps
+    print(xval$DAPC)
+    save(xval, file = "genomics_output/xval_total.R")
+    ## DAPC knows to use populations as prior groups
+    load(file = "genomics_output/xval_total.R")
+    DAPC <- xval$DAPC
+  }
+
+
 run_total_genomics <-
   function() {
     genind.1clone.only <- get_genind_data()
     grp <- pop(genind.1clone.only)
-    
-    # pdf("Analysis/genomics_output/figures/Xval_plot_total.pdf",height=6,width=6)
-    # xval <- xvalDapc(genind.1clone.only$tab, grp, n.pca.max = 160, training.set = 0.9,
-    #                  result = "groupMean", center = TRUE, scale = FALSE,
-    #                  n.pca = NULL, n.rep = 30, xval.plot = TRUE, parallel = "multicore")
-    # dev.off()
-    # save(xval, file="Analysis/genomics_output/xval_total.R")
-    # ## DAPC knows to use populations as prior groups
-    # load(file="Analysis/genomics_output/xval_total.R")
-    # DAPC <- xval$DAPC
-    
+
     ## n.da should be one less than the number of groups
     DAPC <- dapc(genind.1clone.only$tab,
                  grp,
                  n.pca = 100,
                  n.da = 16)
     ## how much variance retained?
-    DAPC$var
-    DAPC
+    print(DAPC$var)
+    print(DAPC)
     
     ## plot as groups
     plot.dat <- as.data.frame(DAPC$ind.coord)
@@ -119,7 +141,6 @@ run_total_genomics <-
       theme(
         axis.line = element_blank(),
         axis.text.x = element_blank(),
-        #axis.text.y=element_blank(),
         axis.ticks = element_blank()
       ) +
       theme_void() +
