@@ -3,20 +3,11 @@
 # This code plots the posterior intervals of all phenotypes by site
 #
 ###########################################################################################
-# Set working directory
-source("config.R")
-setwd(wd)
+# Load libraries
 library(cowplot)
 library(ggplot2)
 library(grid)
 library(gridExtra)
-
-###########################################################################################
-
-col.pal <- read.csv("utils/color_key.csv",header=T)
-col.pal.names <- as.vector(col.pal[,2]) ; names(col.pal.names) <- col.pal[,6]
-col.pal.colors <- as.vector(col.pal[,3]) ; names(col.pal.colors) <- col.pal[,6]
-col.pal.v <- as.vector(col.pal[,3]) ; names(col.pal.v) <- col.pal[,2]
 
 ###########################################################################################
 
@@ -163,160 +154,171 @@ render_interval_plot <-
 ###########################################################################################
 # Phenotype means
 
-render_interval_plot(
-  data_sources =
-    list(
-      "posterior_output/\ biomass_aboveground\ .csv",
-      "posterior_output/\ biomass_belowground\ .csv",
-      "posterior_output/\ biomass_rhizome\ .csv",
-      "posterior_output/\ Total\ Biomass\ .csv",
-      "posterior_output/\ Root\ to\ shoot\ biomass\ ratio\ .csv",
-      "posterior_output/\ max_height\ .csv",
-      "posterior_output/\ avg_midday_mpa_expt\ .csv",
-      "posterior_output/\ avg_predawn_mpa_expt\ .csv",
-      "posterior_output/\ flwr_mass_lifetime\ .csv",
-      "posterior_output/\ flwr_count_1.2\ .csv",
-      "posterior_output/\ flwr_avg_ind_mass\ .csv",
-      "posterior_output/\ flwr_avg_ind_len\ .csv"
-    ),
-  trait_names =
-    list(
-      "Aboveground biomass (g)",
-      "Belowground biomass (g)",
-      "Rhizome biomass (g)",
-      "Total Biomass (g)",
-      "Root:Shoot ratio",
-      "Maximum height (cm)",
-      "Midday leaf water potential (MPa)",
-      "Predawn leaf water potential (MPa)",
-      "Lifetime flowering mass (g)",
-      "Flower count",
-      "Average flower mass (mg)",
-      "Average flower length (mm)"
-    ),
-  plot_title = "Phenotype means",
-  filename = "posterior_output/Trait_means.jpg",
-  mcmc_ref = "trait"
-)
+render_phenotype_intervals <-
+  function() {
+    render_interval_plot(
+      data_sources =
+        list(
+          "posterior_output/\ biomass_aboveground\ .csv",
+          "posterior_output/\ biomass_belowground\ .csv",
+          "posterior_output/\ biomass_rhizome\ .csv",
+          "posterior_output/\ Total\ Biomass\ .csv",
+          "posterior_output/\ Root\ to\ shoot\ biomass\ ratio\ .csv",
+          "posterior_output/\ max_height\ .csv",
+          "posterior_output/\ avg_midday_mpa_expt\ .csv",
+          "posterior_output/\ avg_predawn_mpa_expt\ .csv",
+          "posterior_output/\ flwr_mass_lifetime\ .csv",
+          "posterior_output/\ flwr_count_1.2\ .csv",
+          "posterior_output/\ flwr_avg_ind_mass\ .csv",
+          "posterior_output/\ flwr_avg_ind_len\ .csv"
+        ),
+      trait_names =
+        list(
+          "Aboveground biomass (g)",
+          "Belowground biomass (g)",
+          "Rhizome biomass (g)",
+          "Total Biomass (g)",
+          "Root:Shoot ratio",
+          "Maximum height (cm)",
+          "Midday leaf water potential (MPa)",
+          "Predawn leaf water potential (MPa)",
+          "Lifetime flowering mass (g)",
+          "Flower count",
+          "Average flower mass (mg)",
+          "Average flower length (mm)"
+        ),
+      plot_title = "Phenotype means",
+      filename = "posterior_output/Trait_means.jpg",
+      mcmc_ref = "trait"
+    )
+  }
 
 
 ###########################################################################################
 # Phenotype variance
 
-render_interval_plot(
-  data_sources =
-    list(
-      "posterior_output/\ biomass_aboveground\ .csv",
-      "posterior_output/\ biomass_belowground\ .csv",
-      "posterior_output/\ biomass_rhizome\ .csv",
-      "posterior_output/\ Total\ Biomass\ .csv",
-      "posterior_output/\ Root\ to\ shoot\ biomass\ ratio\ .csv",
-      "posterior_output/\ max_height\ .csv",
-      "posterior_output/\ avg_midday_mpa_expt\ .csv",
-      "posterior_output/\ avg_predawn_mpa_expt\ .csv",
-      "posterior_output/\ flwr_mass_lifetime\ .csv",
-      "posterior_output/\ flwr_count_1.2\ .csv",
-      "posterior_output/\ flwr_avg_ind_mass\ .csv",
-      "posterior_output/\ flwr_avg_ind_len\ .csv"
-    ),
-  trait_names =
-    list(
-      "Aboveground biomass (g)",
-      "Belowground biomass (g)",
-      "Rhizome biomass (g)",
-      "Total Biomass (g)",
-      "Root:Shoot ratio",
-      "Maximum height (cm)",
-      "Midday leaf water potential (MPa)",
-      "Predawn leaf water potential (MPa)",
-      "Lifetime flowering mass (g)",
-      "Flower count",
-      "Average flower mass (mg)",
-      "Average flower length (mm)"
-    ),
-  plot_title = "Phenotype variances",
-  filename = "posterior_output/Trait_variance.jpg",
-  mcmc_ref = "sigma_pop"
-)
+render_phenotype_variance_intervals <-
+  function() {
+    render_interval_plot(
+      data_sources =
+        list(
+          "posterior_output/\ biomass_aboveground\ .csv",
+          "posterior_output/\ biomass_belowground\ .csv",
+          "posterior_output/\ biomass_rhizome\ .csv",
+          "posterior_output/\ Total\ Biomass\ .csv",
+          "posterior_output/\ Root\ to\ shoot\ biomass\ ratio\ .csv",
+          "posterior_output/\ max_height\ .csv",
+          "posterior_output/\ avg_midday_mpa_expt\ .csv",
+          "posterior_output/\ avg_predawn_mpa_expt\ .csv",
+          "posterior_output/\ flwr_mass_lifetime\ .csv",
+          "posterior_output/\ flwr_count_1.2\ .csv",
+          "posterior_output/\ flwr_avg_ind_mass\ .csv",
+          "posterior_output/\ flwr_avg_ind_len\ .csv"
+        ),
+      trait_names =
+        list(
+          "Aboveground biomass (g)",
+          "Belowground biomass (g)",
+          "Rhizome biomass (g)",
+          "Total Biomass (g)",
+          "Root:Shoot ratio",
+          "Maximum height (cm)",
+          "Midday leaf water potential (MPa)",
+          "Predawn leaf water potential (MPa)",
+          "Lifetime flowering mass (g)",
+          "Flower count",
+          "Average flower mass (mg)",
+          "Average flower length (mm)"
+        ),
+      plot_title = "Phenotype variances",
+      filename = "posterior_output/Trait_variance.jpg",
+      mcmc_ref = "sigma_pop"
+    )
+  }
 
 
 ###########################################################################################
 # Phenotypic plsticity means
 
-render_interval_plot(
-  data_sources =
-    list(
-      "posterior_output_plasticity/\ biomass_aboveground\ .csv",
-      "posterior_output_plasticity/\ biomass_belowground\ .csv",
-      "posterior_output_plasticity/\ biomass_rhizome\ .csv",
-      "posterior_output_plasticity/\ biomass_total\ .csv",
-      "posterior_output_plasticity/\ root_shoot\ .csv",
-      "posterior_output_plasticity/\ max_height\ .csv",
-      "posterior_output_plasticity/\ avg_midday_mpa_expt\ .csv",
-      "posterior_output_plasticity/\ avg_predawn_mpa_expt\ .csv",
-      "posterior_output_plasticity/\ flwr_mass_lifetime\ .csv",
-      "posterior_output_plasticity/\ flwr_count_1.2\ .csv",
-      "posterior_output_plasticity/\ flwr_avg_ind_mass\ .csv",
-      "posterior_output_plasticity/\ flwr_avg_ind_len\ .csv"
-    ),
-  trait_names =
-    list(
-      "Aboveground biomass (g)",
-      "Belowground biomass (g)",
-      "Rhizome biomass (g)",
-      "Total Biomass (g)",
-      "Root:Shoot ratio",
-      "Maximum height (cm)",
-      "Midday leaf water potential (MPa)",
-      "Predawn leaf water potential (MPa)",
-      "Lifetime flowering mass (g)",
-      "Flower count",
-      "Average flower mass (mg)",
-      "Average flower length (mm)"
-    ),
-  plot_title = "Phenotypic plasticity means",
-  filename = "posterior_output_plasticity/Trait_plasticity.jpg",
-  mcmc_ref = "trait",
-  zero_line = T
-)
+render_plasticity_intervals <-
+  function() {
+    render_interval_plot(
+      data_sources =
+        list(
+          "posterior_output_plasticity/\ biomass_aboveground\ .csv",
+          "posterior_output_plasticity/\ biomass_belowground\ .csv",
+          "posterior_output_plasticity/\ biomass_rhizome\ .csv",
+          "posterior_output_plasticity/\ biomass_total\ .csv",
+          "posterior_output_plasticity/\ root_shoot\ .csv",
+          "posterior_output_plasticity/\ max_height\ .csv",
+          "posterior_output_plasticity/\ avg_midday_mpa_expt\ .csv",
+          "posterior_output_plasticity/\ avg_predawn_mpa_expt\ .csv",
+          "posterior_output_plasticity/\ flwr_mass_lifetime\ .csv",
+          "posterior_output_plasticity/\ flwr_count_1.2\ .csv",
+          "posterior_output_plasticity/\ flwr_avg_ind_mass\ .csv",
+          "posterior_output_plasticity/\ flwr_avg_ind_len\ .csv"
+        ),
+      trait_names =
+        list(
+          "Aboveground biomass (g)",
+          "Belowground biomass (g)",
+          "Rhizome biomass (g)",
+          "Total Biomass (g)",
+          "Root:Shoot ratio",
+          "Maximum height (cm)",
+          "Midday leaf water potential (MPa)",
+          "Predawn leaf water potential (MPa)",
+          "Lifetime flowering mass (g)",
+          "Flower count",
+          "Average flower mass (mg)",
+          "Average flower length (mm)"
+        ),
+      plot_title = "Phenotypic plasticity means",
+      filename = "posterior_output_plasticity/Trait_plasticity.jpg",
+      mcmc_ref = "trait",
+      zero_line = T
+    )
+  }
 
 
 ###########################################################################################
 # Phenotypic plasticity variance
 
-render_interval_plot(
-  data_sources =
-    list(
-      "posterior_output_plasticity/\ biomass_aboveground\ .csv",
-      "posterior_output_plasticity/\ biomass_belowground\ .csv",
-      "posterior_output_plasticity/\ biomass_rhizome\ .csv",
-      "posterior_output_plasticity/\ biomass_total\ .csv",
-      "posterior_output_plasticity/\ root_shoot\ .csv",
-      "posterior_output_plasticity/\ max_height\ .csv",
-      "posterior_output_plasticity/\ avg_midday_mpa_expt\ .csv",
-      "posterior_output_plasticity/\ avg_predawn_mpa_expt\ .csv",
-      "posterior_output_plasticity/\ flwr_mass_lifetime\ .csv",
-      "posterior_output_plasticity/\ flwr_count_1.2\ .csv",
-      "posterior_output_plasticity/\ flwr_avg_ind_mass\ .csv",
-      "posterior_output_plasticity/\ flwr_avg_ind_len\ .csv"
-    ),
-  trait_names =
-    list(
-      "Aboveground biomass (g)",
-      "Belowground biomass (g)",
-      "Rhizome biomass (g)",
-      "Total Biomass (g)",
-      "Root:Shoot ratio",
-      "Maximum height (cm)",
-      "Midday leaf water potential (MPa)",
-      "Predawn leaf water potential (MPa)",
-      "Lifetime flowering mass (g)",
-      "Flower count",
-      "Average flower mass (mg)",
-      "Average flower length (mm)"
-    ),
-  plot_title = "Phenotypic plasticity variances",
-  filename = "posterior_output_plasticity/Trait_plasticity_variance.jpg",
-  mcmc_ref = "sigma_pop"
-)
-
+render_plasticity_variance_intervals <-
+  function() {
+    render_interval_plot(
+      data_sources =
+        list(
+          "posterior_output_plasticity/\ biomass_aboveground\ .csv",
+          "posterior_output_plasticity/\ biomass_belowground\ .csv",
+          "posterior_output_plasticity/\ biomass_rhizome\ .csv",
+          "posterior_output_plasticity/\ biomass_total\ .csv",
+          "posterior_output_plasticity/\ root_shoot\ .csv",
+          "posterior_output_plasticity/\ max_height\ .csv",
+          "posterior_output_plasticity/\ avg_midday_mpa_expt\ .csv",
+          "posterior_output_plasticity/\ avg_predawn_mpa_expt\ .csv",
+          "posterior_output_plasticity/\ flwr_mass_lifetime\ .csv",
+          "posterior_output_plasticity/\ flwr_count_1.2\ .csv",
+          "posterior_output_plasticity/\ flwr_avg_ind_mass\ .csv",
+          "posterior_output_plasticity/\ flwr_avg_ind_len\ .csv"
+        ),
+      trait_names =
+        list(
+          "Aboveground biomass (g)",
+          "Belowground biomass (g)",
+          "Rhizome biomass (g)",
+          "Total Biomass (g)",
+          "Root:Shoot ratio",
+          "Maximum height (cm)",
+          "Midday leaf water potential (MPa)",
+          "Predawn leaf water potential (MPa)",
+          "Lifetime flowering mass (g)",
+          "Flower count",
+          "Average flower mass (mg)",
+          "Average flower length (mm)"
+        ),
+      plot_title = "Phenotypic plasticity variances",
+      filename = "posterior_output_plasticity/Trait_plasticity_variance.jpg",
+      mcmc_ref = "sigma_pop"
+    )
+  }

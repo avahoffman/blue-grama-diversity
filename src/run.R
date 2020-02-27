@@ -4,8 +4,8 @@
 
 ###########################################################################################
 # Set working directory for the repository (should be the git repo):
-wd <- #"/Users/hoffman ava/blue-grama-diversity/"
- "/Users/avahoffman/Dropbox/Research/Bouteloua_diversity/blue-grama-diversity/"
+wd <- "/Users/hoffman ava/blue-grama-diversity/"
+ #"/Users/avahoffman/Dropbox/Research/Bouteloua_diversity/blue-grama-diversity/"
 
 setwd(wd)
 
@@ -48,3 +48,9 @@ run_plasticity_corrs()
 # Run genomics analysis for all populations together
 run_total_genomics()
 
+# Make 95% CI plots for phenotypes and phenotypic plasticity
+render_phenotype_intervals()
+
+render_phenotype_variance_intervals()
+render_plasticity_intervals()
+render_plasticity_variance_intervals()

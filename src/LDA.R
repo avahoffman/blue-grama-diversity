@@ -170,12 +170,13 @@ makeLDA <-
       mutate(h_just = replace(h_just, x_end >= 0, 0))
     
     plotdat <-
-      data.frame(pop = restrictions %>% dplyr::select(pop), plda$x)
-    col.pal <- col_pal()[[4]]
+      data.frame(pop = restrictions %>% 
+                   dplyr::select(pop), plda$x)
+    col_temp <- col_pal()[[4]]
     colnames(plotdat)[1] <- "pop"
-    colnames(col.pal)[2] <- "full"
-    colnames(col.pal)[1] <- "pop"
-    plotdat <-  merge(plotdat, col.pal)
+    colnames(col_temp)[2] <- "full"
+    colnames(col_temp)[1] <- "pop"
+    plotdat <-  merge(plotdat, col_temp)
     
     plot_1 <-
       ggplot(plotdat, aes(LD1, LD2)) +
