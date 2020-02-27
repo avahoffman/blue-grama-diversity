@@ -23,8 +23,11 @@ source("src/local_genome_diversity.R")
 source("src/regional_genome_diversity.R")
 source("src/Total_genome_diversity.R")
 source("src/partial_corr_matrices.R")
+source("src/Interval_plots.R")
 
 ###########################################################################################
+
+## Main text ----
 
 # Generate posterior samples for phenotypes
 run_mcmc_phenotypes()
@@ -44,13 +47,13 @@ make_local_lda_trait_plots()
 run_phenotype_corrs()
 run_plasticity_corrs()
 
-## Supplemental
+## Supplemental ----
+
 # Run genomics analysis for all populations together
 run_total_genomics()
 
 # Make 95% CI plots for phenotypes and phenotypic plasticity
 render_phenotype_intervals()
-
 render_phenotype_variance_intervals()
 render_plasticity_intervals()
 render_plasticity_variance_intervals()
