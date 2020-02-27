@@ -63,3 +63,6 @@ render_phenotype_intervals()
 render_phenotype_variance_intervals()
 render_plasticity_intervals()
 render_plasticity_variance_intervals()
+
+# Correlations between phenotype/plasticity variance and genomic variance
+calculate_genomics_trait_variance_corr()
