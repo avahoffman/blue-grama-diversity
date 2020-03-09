@@ -5,8 +5,8 @@
 ###########################################################################################
 
 # Set working directory for the repository (should be the git repo):
-wd <- "/Users/hoffman ava/blue-grama-diversity/"
- #"/Users/avahoffman/Dropbox/Research/Bouteloua_diversity/blue-grama-diversity/"
+wd <-
+ "/Users/avahoffman/Dropbox/Research/Bouteloua_diversity/blue-grama-diversity/"
 
 setwd(wd)
 

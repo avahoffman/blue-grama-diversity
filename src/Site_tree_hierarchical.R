@@ -162,7 +162,7 @@ create_reigonal_site_tree <-
     
     ## each pop individual
     localcls <- as.list(unique(genind.obj$pop))
-    regionaltree <- groupOTU(regionaltree, cls)
+    regionaltree <- groupOTU(regionaltree, localcls)
     #regionaltree$node.label[4] <- ""
     ggtree(regionaltree, aes(color = group), layout = "rectangular") +
       geom_label_repel(
