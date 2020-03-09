@@ -29,6 +29,8 @@ source("src/Maps_genomics.R")
 source("src/Site_tree_hierarchical.R")
 source("src/Poppr_genetic_diversity.R")
 
+# TODO : Update readme with new file structure
+
 ###########################################################################################
 
 ## Main text ----
