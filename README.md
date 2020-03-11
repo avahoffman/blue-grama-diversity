@@ -72,11 +72,13 @@ This directory contains several useful references for packages and theory used i
 │   ├── genomics_variance.R
 │   ├── local_genome_diversity.R
 │   ├── partial_corr_matrices.R
-│   └── regional_genome_diversity.R
+│   ├── regional_genome_diversity.R
+│   └── run.R
 └── utils
     ├── color_key.csv
     ├── color_key_alt.csv
+    ├── data_utils.R
     ├── mcmc_output.R
     └── partial_corr.R
 ```
-This directory contains code for preprocessing and analyzing all the data. Because genomics preprocessing is complex with multiple steps, separate bash scripts can be found in `genomics_prep/`.
+This directory contains code for preprocessing and analyzing all the data. Because genomics preprocessing is complex with multiple steps, separate bash scripts can be found in `genomics_prep/`. The majority of analyses and plotting can be done by executing the `run.R` script.
