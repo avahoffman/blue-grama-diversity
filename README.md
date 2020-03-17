@@ -1,6 +1,4 @@
-# blue-grama-diversity
-
-### Code and data from the publication *Genetic and functional variation across regional and local scales is associated with climate in a foundational prairie grass*
+## Code and data from the publication *Genetic and functional variation across regional and local scales is associated with climate in a foundational prairie grass*
 
 [![DOI](https://zenodo.org/badge/doi/10.1111/nph.16547.svg)](https://doi.org/10.1111/nph.16547)
 
